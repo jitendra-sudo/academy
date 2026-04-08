@@ -19,15 +19,35 @@ export default function AdmissionSection() {
     name: "", email: "", phone: "", course: "", city: "", message: "",
   });
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmitted(true);
-    setTimeout(() => setSubmitted(false), 4000);
-    setForm({ name: "", email: "", phone: "", course: "", city: "", message: "" });
+    setError("");
+    setLoading(true);
+    try {
+      const res = await fetch("/api/admissions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setSubmitted(true);
+        setForm({ name: "", email: "", phone: "", course: "", city: "", message: "" });
+        setTimeout(() => setSubmitted(false), 5000);
+      } else {
+        setError(data.error || "Submission failed. Please try again.");
+      }
+    } catch {
+      setError("Network error. Please check your connection.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -166,7 +186,12 @@ export default function AdmissionSection() {
               </h3>
               {submitted && (
                 <div className="mb-4 bg-green-50 border border-green-200 text-green-700 rounded-lg p-3 text-sm font-medium">
-                  ✅ Thank you! We'll contact you within 24 hours.
+                  ✅ Thank you! Your enquiry (ID: submitted) has been received. We&apos;ll contact you within 24 hours.
+                </div>
+              )}
+              {error && (
+                <div className="mb-4 bg-red-50 border border-red-200 text-red-700 rounded-lg p-3 text-sm font-medium">
+                  ⚠️ {error}
                 </div>
               )}
               <form onSubmit={handleSubmit} className="space-y-4">
@@ -261,9 +286,18 @@ export default function AdmissionSection() {
                 <button
                   type="submit"
                   id="admission-submit-btn"
-                  className="w-full shimmer-btn text-white py-3 rounded-xl font-bold text-base hover:opacity-90 hover:shadow-lg transition-all"
+                  disabled={loading}
+                  className="w-full shimmer-btn text-white py-3 rounded-xl font-bold text-base hover:opacity-90 hover:shadow-lg transition-all disabled:opacity-60 flex items-center justify-center gap-2"
                 >
-                  Submit Enquiry →
+                  {loading ? (
+                    <>
+                      <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                      </svg>
+                      Submitting...
+                    </>
+                  ) : "Submit Enquiry →"}
                 </button>
               </form>
             </div>

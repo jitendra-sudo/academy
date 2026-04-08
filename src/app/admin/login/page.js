@@ -2,11 +2,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-const ADMIN_CREDENTIALS = {
-  username: "admin",
-  password: "shankar@2026",
-};
-
 export default function AdminLoginPage() {
   const router = useRouter();
   const [form, setForm] = useState({ username: "", password: "" });
@@ -22,18 +17,24 @@ export default function AdminLoginPage() {
     setError("");
     setLoading(true);
 
-    // Simulate async check
-    await new Promise((r) => setTimeout(r, 800));
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: form.username, password: form.password }),
+      });
+      const data = await res.json();
 
-    if (
-      form.username === ADMIN_CREDENTIALS.username &&
-      form.password === ADMIN_CREDENTIALS.password
-    ) {
-      // Store auth flag in sessionStorage
-      sessionStorage.setItem("admin_auth", "true");
-      router.push("/admin/dashboard");
-    } else {
-      setError("Invalid username or password. Please try again.");
+      if (data.success) {
+        sessionStorage.setItem("admin_auth", "true");
+        sessionStorage.setItem("admin_token", data.token);
+        router.push("/admin/dashboard");
+      } else {
+        setError(data.error || "Invalid username or password.");
+        setLoading(false);
+      }
+    } catch {
+      setError("Cannot connect to server. Please try again.");
       setLoading(false);
     }
   };
