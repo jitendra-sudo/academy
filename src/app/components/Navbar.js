@@ -74,6 +74,9 @@ export default function Navbar() {
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [mobileExpanded, setMobileExpanded] = useState(null);
   const [contactModal, setContactModal] = useState(false);
+  const [leadForm, setLeadForm] = useState({ name: "", phone: "", course: "" });
+  const [leadStatus, setLeadStatus] = useState(""); // ""|"loading"|"success"|"error"
+  const [leadError, setLeadError] = useState("");
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
@@ -86,6 +89,41 @@ export default function Navbar() {
     document.body.style.overflow = contactModal ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
   }, [contactModal]);
+
+  const closeContactModal = () => {
+    setContactModal(false);
+    setLeadForm({ name: "", phone: "", course: "" });
+    setLeadStatus("");
+    setLeadError("");
+  };
+
+  const submitLead = async (e) => {
+    e.preventDefault();
+    if (!leadForm.name.trim() || !leadForm.phone.trim()) {
+      setLeadError("Name and phone are required.");
+      return;
+    }
+    setLeadStatus("loading");
+    setLeadError("");
+    try {
+      const res = await fetch("/api/leads", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...leadForm, source: "contact-modal" }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setLeadStatus("success");
+        setLeadForm({ name: "", phone: "", course: "" });
+      } else {
+        setLeadError(data.error || "Submission failed.");
+        setLeadStatus("");
+      }
+    } catch {
+      setLeadError("Network error. Please try again.");
+      setLeadStatus("");
+    }
+  };
 
   const handleNavClick = (item, e) => {
     if (item.isContactModal) {

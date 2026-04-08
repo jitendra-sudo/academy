@@ -30,10 +30,10 @@ export default function AdmissionSection() {
     setError("");
     setLoading(true);
     try {
-      const res = await fetch("/api/admissions", {
+      const res = await fetch("/api/leads", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, source: "admission" }),
       });
       const data = await res.json();
       if (data.success) {

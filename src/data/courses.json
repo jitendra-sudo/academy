@@ -1,0 +1,50 @@
+[
+  {
+    "id": 1,
+    "category": "UPSC",
+    "color": "bg-blue-50 border-blue-200",
+    "accent": "bg-[#1e3a8a]",
+    "textAccent": "text-[#1e3a8a]",
+    "dot": "bg-[#1e3a8a]",
+    "items": [
+      "UPSC 2026 Admissions Open – Pre-Booking Now",
+      "All India UPSC Prelims Mock Test 2026",
+      "UPSC Chakra Current Affairs Programme 2026",
+      "UPSC Optional Programme 2026",
+      "Prelims Test Series 2026",
+      "Sadhana (II Year UPSC Foundation Course)",
+      "Civils & Forest Service Interview Guidance 2026",
+      "UPSC GS-Mains Test Series 2025 (Moksha)"
+    ]
+  },
+  {
+    "id": 2,
+    "category": "TNPSC",
+    "color": "bg-green-50 border-green-200",
+    "accent": "bg-green-700",
+    "textAccent": "text-green-700",
+    "dot": "bg-green-600",
+    "items": [
+      "TNPSC Group I & II Preliminary Course 2026",
+      "TNPSC Group I Mock Interview Programme 2026",
+      "I'M TOP TNPSC Group I Prelims Test Series 2026",
+      "I'M TOP TNPSC Group II/IIA Prelims Test Series",
+      "I'M TOP TNPSC General English Workshop 2026"
+    ]
+  },
+  {
+    "id": 3,
+    "category": "Banking & SSC",
+    "color": "bg-purple-50 border-purple-200",
+    "accent": "bg-purple-700",
+    "textAccent": "text-purple-700",
+    "dot": "bg-purple-600",
+    "items": [
+      "BANKING / SSC Admission 2026",
+      "IB ACIO Free Mock Interview",
+      "SSC CGL Tier I – Test Series 2026",
+      "IBPS PO/Clerk Admissions",
+      "RRB NTPC Coaching 2026"
+    ]
+  }
+]
