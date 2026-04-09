@@ -84,7 +84,7 @@ export default function Navbar() {
           if (d.data?.images?.logoUrl) setLogoUrl(d.data.images.logoUrl);
         }
       })
-      .catch(() => {});
+      .catch(() => { });
   }, []);
 
   // Lock body scroll when modal open
@@ -137,11 +137,11 @@ export default function Navbar() {
   };
 
   // Build dynamic contactInfo array from fetched settings
-  const upscPhone = contact?.upscPhone || "9003190030";
-  const upscPhone2 = contact?.upscPhone2 || "044-66024500";
+  const upscPhone = contact?.upscPhone || "9876543210";
+  const upscPhone2 = contact?.upscPhone2 || "9876543210";
   const tnpscPhone = contact?.tnpscPhone || "7667766266";
-  const tnpscPhone2 = contact?.tnpscPhone2 || "044-43533445";
-  const whatsappNum = contact?.whatsapp || "+919003190030";
+  const tnpscPhone2 = contact?.tnpscPhone2 || "9876543210";
+  const whatsappNum = contact?.whatsapp || "+919876543210";
   const email = contact?.email || "admissions@mentorsmerits.in";
   const enquiryEmail = contact?.enquiryEmail || "enquiry@mentorsmerits.in";
   const address = contact?.address || "Anna Nagar, Chennai";
@@ -195,11 +195,10 @@ export default function Navbar() {
 
       {/* Main Navbar */}
       <nav
-        className={`sticky top-0 z-50 transition-all duration-300 ${
-          isScrolled
+        className={`sticky top-0 z-50 transition-all duration-300 ${isScrolled
             ? "bg-white shadow-lg border-b border-gray-100"
             : "bg-white shadow-md"
-        }`}
+          }`}
         id="main-navbar"
       >
         <div className="max-w-7xl mx-auto px-4">
