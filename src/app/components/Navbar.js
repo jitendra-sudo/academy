@@ -34,18 +34,12 @@ const navItems = [
       { label: "General English Workshop", href: "#courses" },
     ],
   },
-  { label: "Banking", href: "#banking" },
+
   {
-    label: "Learning Corner",
-    href: "#learning",
-    dropdown: [
-      { label: "Study Materials", href: "#resources" },
-      { label: "Current Affairs", href: "#current-affairs" },
-      { label: "Daily Quiz", href: "#quiz" },
-      { label: "Mentoring Support", href: "#mentoring" },
-    ],
+    label: "Lectures",
+    href: "/lectures",
+    isLink: true,
   },
-  { label: "Achievements", href: "#achievements" },
   {
     label: "Gallery",
     href: "/gallery",
@@ -60,13 +54,7 @@ const navItems = [
   { label: "Contact", href: "#contact", isContactModal: true },
 ];
 
-const contactInfo = [
-  { icon: "📞", label: "UPSC Admissions", value: "9003190030", sub: "044-66024500" },
-  { icon: "📞", label: "TNPSC Admissions", value: "7667766266", sub: "044-43533445" },
-  { icon: "📧", label: "Email", value: "admissions@mentorsmerits.in", sub: "enquiry@mentorsmerits.in" },
-  { icon: "🕐", label: "Working Hours", value: "Mon – Sat: 9AM – 7PM", sub: "Sunday: 10AM – 2PM" },
-  { icon: "📍", label: "Head Office", value: "Anna Nagar, Chennai", sub: "Tamil Nadu – 600040" },
-];
+// contactInfo is now built dynamically from settings
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -77,11 +65,20 @@ export default function Navbar() {
   const [leadForm, setLeadForm] = useState({ name: "", phone: "", course: "" });
   const [leadStatus, setLeadStatus] = useState(""); // ""|"loading"|"success"|"error"
   const [leadError, setLeadError] = useState("");
+  const [contact, setContact] = useState(null);
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Fetch contact settings from CMS
+  useEffect(() => {
+    fetch("/api/settings")
+      .then((r) => r.json())
+      .then((d) => { if (d.success && d.data?.contact) setContact(d.data.contact); })
+      .catch(() => {});
   }, []);
 
   // Lock body scroll when modal open
@@ -133,6 +130,30 @@ export default function Navbar() {
     }
   };
 
+  // Build dynamic contactInfo array from fetched settings
+  const upscPhone = contact?.upscPhone || "9003190030";
+  const upscPhone2 = contact?.upscPhone2 || "044-66024500";
+  const tnpscPhone = contact?.tnpscPhone || "7667766266";
+  const tnpscPhone2 = contact?.tnpscPhone2 || "044-43533445";
+  const whatsappNum = contact?.whatsapp || "+919003190030";
+  const email = contact?.email || "admissions@mentorsmerits.in";
+  const enquiryEmail = contact?.enquiryEmail || "enquiry@mentorsmerits.in";
+  const address = contact?.address || "Anna Nagar, Chennai";
+  const addressLine2 = contact?.addressLine2 || "Tamil Nadu – 600040";
+  const workingHours = contact?.workingHours || "Mon – Sat: 9AM – 7PM";
+  const workingHours2 = contact?.workingHours2 || "Sunday: 10AM – 2PM";
+
+  const contactInfo = [
+    { icon: "📞", label: "UPSC Admissions", value: upscPhone, sub: upscPhone2 },
+    { icon: "📞", label: "TNPSC Admissions", value: tnpscPhone, sub: tnpscPhone2 },
+    { icon: "📧", label: "Email", value: email, sub: enquiryEmail },
+    { icon: "🕐", label: "Working Hours", value: workingHours, sub: workingHours2 },
+    { icon: "📍", label: "Head Office", value: address, sub: addressLine2 },
+  ];
+
+  // Strip leading + and non-digits for wa.me link
+  const waNum = whatsappNum.replace(/\D/g, "");
+
   return (
     <>
       {/* Top Bar */}
@@ -144,13 +165,13 @@ export default function Navbar() {
                 <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
                 <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
               </svg>
-              admissions@mentorsmerits.in
+              {email}
             </span>
             <span className="flex items-center gap-1">
               <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
               </svg>
-              UPSC: 9003190030 | TNPSC: 7667766266
+              UPSC: {upscPhone} | TNPSC: {tnpscPhone}
             </span>
           </div>
           <div className="flex gap-4 items-center">
@@ -421,7 +442,7 @@ export default function Navbar() {
             {/* CTA */}
             <div className="px-6 pb-6 grid grid-cols-2 gap-3">
               <a
-                href="https://wa.me/919003190030?text=Hi, I am looking for UPSC admissions"
+                href={`https://wa.me/${waNum}?text=Hi, I am looking for UPSC admissions`}
                 target="_blank"
                 rel="noreferrer"
                 id="contact-modal-whatsapp"

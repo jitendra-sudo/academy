@@ -4,6 +4,7 @@ import HeroSlider from "./components/HeroSlider";
 import CoursesSection from "./components/CoursesSection";
 import AchievementsSection from "./components/AchievementsSection";
 import AdmissionSection from "./components/AdmissionSection";
+import HomepageLectures from "./components/HomepageLectures";
 
 export default function HomePage() {
   return (
@@ -12,6 +13,7 @@ export default function HomePage() {
       <HeroSlider />
       <AchievementsSection />
       <CoursesSection />
+      <HomepageLectures />
       <AdmissionSection />
       <Footer />
 

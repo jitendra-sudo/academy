@@ -10,6 +10,14 @@
     "foundedYear": "2004",
     "experience": "20+"
   },
+  "images": {
+    "logoUrl": "",
+    "heroBannerUrl": "",
+    "heroBanner2Url": "",
+    "aboutImageUrl": "",
+    "ogImageUrl": "",
+    "faviconUrl": ""
+  },
   "contact": {
     "upscPhone": "9003190030",
     "upscPhone2": "044-66024500",
@@ -55,11 +63,11 @@
   "govtPartners": [
     "Ministry of Social Justice and Empowerment",
     "Government of Karnataka, 2019, 2023 & 2024",
-    "Government of West Bengal, 2021–2024",
-    "Government of Kerala, 2023–24",
+    "Government of West Bengal, 2021-2024",
+    "Government of Kerala, 2023-24",
     "Government of Himachal Pradesh, 2024",
     "Government of Meghalaya, 2024",
-    "YSR Vidyonnathi – Andhra Pradesh, 2019",
+    "YSR Vidyonnathi - Andhra Pradesh, 2019",
     "Government of Jammu & Kashmir, 2024"
   ]
 }

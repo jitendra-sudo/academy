@@ -3,6 +3,9 @@ import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import LeadsManager from "./LeadsManager";
+import MediaSettings from "./MediaSettings";
+import AccountSettings from "./AccountSettings";
+import LecturesManager from "./LecturesManager";
 
 // ─── Sidebar menu ────────────────────────────────────────────────────────────
 const menuItems = [
@@ -11,9 +14,11 @@ const menuItems = [
   { id: "contact-settings", label: "Contact Info", icon: "📞", group: "Content" },
   { id: "social-settings", label: "Social Links", icon: "🔗", group: "Content" },
   { id: "stats-settings", label: "Stats & Numbers", icon: "📈", group: "Content" },
+  { id: "media-settings", label: "Images & Media", icon: "🖼️", group: "Content" },
   { id: "courses", label: "Courses", icon: "📚", group: "Content" },
   { id: "achievers", label: "Achievers", icon: "🏆", group: "Content" },
   { id: "gallery", label: "Gallery", icon: "📸", group: "Content" },
+  { id: "lectures", label: "Lectures", icon: "🎬", group: "Content" },
   { id: "leads", label: "Leads", icon: "🎯", group: "Operations" },
   { id: "admissions", label: "Admissions", icon: "📝", group: "Operations" },
   { id: "reports", label: "Reports", icon: "📊", group: "Operations" },
@@ -78,10 +83,12 @@ function Dashboard({ setSection }) {
   const quickLinks = [
     { label: "Edit Site Name", section: "site-settings", icon: "🏛️", color: "bg-blue-500" },
     { label: "Edit Contact Info", section: "contact-settings", icon: "📞", color: "bg-green-500" },
+    { label: "Images & Banners", section: "media-settings", icon: "🖼️", color: "bg-indigo-500" },
     { label: "Manage Courses", section: "courses", icon: "📚", color: "bg-purple-500" },
-    { label: "Manage Achievers", section: "achievers", icon: "🏆", color: "bg-amber-500" },
+    { label: "Manage Lectures", section: "lectures", icon: "🎬", color: "bg-rose-500" },
     { label: "Manage Gallery", section: "gallery", icon: "📸", color: "bg-pink-500" },
-    { label: "View Admissions", section: "admissions", icon: "📝", color: "bg-cyan-500" },
+    { label: "View Leads", section: "leads", icon: "🎯", color: "bg-cyan-500" },
+    { label: "Account Settings", section: "settings", icon: "⚙️", color: "bg-slate-500" },
   ];
   return (
     <div className="space-y-6">
@@ -164,8 +171,18 @@ function ContactSettings({ settings, onSettingsChange }) {
   const [form, setForm] = useState({});
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [envDefaults, setEnvDefaults] = useState({});
+  const [resetting, setResetting] = useState(false);
 
+  // Load current contact settings
   useEffect(() => { if (settings?.contact) setForm({ ...settings.contact }); }, [settings]);
+
+  // Load .env defaults for badge display & reset
+  useEffect(() => {
+    fetch("/api/contact-numbers")
+      .then((r) => r.json())
+      .then((d) => { if (d.success) setEnvDefaults(d.envDefaults); });
+  }, []);
 
   const save = async () => {
     setSaving(true);
@@ -176,24 +193,132 @@ function ContactSettings({ settings, onSettingsChange }) {
     } finally { setSaving(false); }
   };
 
+  // Reset phone/whatsapp fields to .env values
+  const resetToEnv = async () => {
+    if (!confirm("Reset all phone & WhatsApp numbers to .env defaults?")) return;
+    setResetting(true);
+    const updated = {
+      ...form,
+      upscPhone:   envDefaults.upscPhone   || form.upscPhone,
+      upscPhone2:  envDefaults.upscPhone2  || form.upscPhone2,
+      tnpscPhone:  envDefaults.tnpscPhone  || form.tnpscPhone,
+      tnpscPhone2: envDefaults.tnpscPhone2 || form.tnpscPhone2,
+      whatsapp:    envDefaults.whatsapp    || form.whatsapp,
+    };
+    setForm(updated);
+    try {
+      const res = await fetch("/api/settings", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ section: "contact", data: updated }) });
+      const d = await res.json();
+      if (d.success) { onSettingsChange(d.data); setSaved(true); setTimeout(() => setSaved(false), 3000); }
+    } finally { setResetting(false); }
+  };
+
   const f = (key) => ({ value: form[key] || "", onChange: (e) => setForm({ ...form, [key]: e.target.value }) });
 
+  // EnvBadge — shows a small pill when the current value matches the .env default
+  const EnvBadge = ({ fieldKey }) => {
+    const isEnvValue = envDefaults[fieldKey] && form[fieldKey] === envDefaults[fieldKey];
+    if (!isEnvValue) return null;
+    return (
+      <span className="inline-flex items-center gap-1 text-[10px] font-bold bg-emerald-50 text-emerald-600 border border-emerald-200 rounded-full px-2 py-0.5 ml-1">
+        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block"/>
+        .env
+      </span>
+    );
+  };
+
+  // LabelWithBadge — label row + env badge
+  const LabelWithBadge = ({ label, fieldKey }) => (
+    <div className="flex items-center mb-1">
+      <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">{label}</label>
+      <EnvBadge fieldKey={fieldKey} />
+    </div>
+  );
+
   return (
-    <SectionCard title="Contact Information" icon="📞" onSave={save} saving={saving} saved={saved}>
-      <div className="grid md:grid-cols-2 gap-4">
-        <Field label="UPSC Phone" id="c-upsc-phone" {...f("upscPhone")}/>
-        <Field label="UPSC Phone 2" id="c-upsc-phone2" {...f("upscPhone2")}/>
-        <Field label="TNPSC Phone" id="c-tnpsc-phone" {...f("tnpscPhone")}/>
-        <Field label="TNPSC Phone 2" id="c-tnpsc-phone2" {...f("tnpscPhone2")}/>
-        <Field label="Primary Email" id="c-email" type="email" {...f("email")}/>
-        <Field label="Enquiry Email" id="c-enquiry-email" type="email" {...f("enquiryEmail")}/>
-        <Field label="WhatsApp Number" id="c-whatsapp" placeholder="+919003190030" {...f("whatsapp")}/>
-        <Field label="Address Line 1" id="c-addr1" {...f("address")}/>
-        <Field label="Address Line 2" id="c-addr2" {...f("addressLine2")}/>
-        <Field label="Working Hours" id="c-hours" placeholder="Mon – Sat: 9AM – 7PM" {...f("workingHours")}/>
-        <Field label="Working Hours 2" id="c-hours2" placeholder="Sunday: 10AM – 2PM" {...f("workingHours2")}/>
+    <div className="space-y-5">
+      {/* Info banner */}
+      <div className="bg-blue-50 border border-blue-200 rounded-xl px-4 py-3 flex items-start gap-3">
+        <span className="text-xl mt-0.5">📋</span>
+        <div>
+          <p className="text-sm font-semibold text-blue-800">Phone & WhatsApp numbers are managed here</p>
+          <p className="text-xs text-blue-600 mt-0.5">
+            Default values come from your <code className="bg-blue-100 px-1 rounded">.env</code> file.
+            Changes saved here override the env defaults permanently.
+            <span className="inline-flex items-center gap-1 ml-1 bg-emerald-50 text-emerald-600 border border-emerald-200 rounded-full px-1.5 py-0.5 text-[10px] font-bold">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block"/> .env
+            </span>
+            {" "}badge means the field is using the env value.
+          </p>
+        </div>
       </div>
-    </SectionCard>
+
+      <SectionCard title="Contact Information" icon="📞" onSave={save} saving={saving} saved={saved}>
+        {/* Phone Numbers */}
+        <div className="mb-5">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-sm font-bold text-gray-700 flex items-center gap-2">📱 Phone Numbers</h3>
+            <button
+              onClick={resetToEnv}
+              disabled={resetting || !Object.keys(envDefaults).length}
+              title="Reset phone & WhatsApp to .env defaults"
+              className="text-xs text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 px-3 py-1.5 rounded-lg font-semibold transition-all disabled:opacity-40 flex items-center gap-1.5"
+            >
+              {resetting ? "Resetting..." : "↺ Reset to .env Defaults"}
+            </button>
+          </div>
+          <div className="grid md:grid-cols-2 gap-4">
+            <div>
+              <LabelWithBadge label="UPSC Phone 1" fieldKey="upscPhone" />
+              <input id="c-upsc-phone" type="text" {...f("upscPhone")} placeholder={envDefaults.upscPhone || "+91..."}
+                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1e3a8a] focus:border-transparent"/>
+            </div>
+            <div>
+              <LabelWithBadge label="UPSC Phone 2" fieldKey="upscPhone2" />
+              <input id="c-upsc-phone2" type="text" {...f("upscPhone2")} placeholder={envDefaults.upscPhone2 || "+91..."}
+                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1e3a8a] focus:border-transparent"/>
+            </div>
+            <div>
+              <LabelWithBadge label="TNPSC Phone 1" fieldKey="tnpscPhone" />
+              <input id="c-tnpsc-phone" type="text" {...f("tnpscPhone")} placeholder={envDefaults.tnpscPhone || "+91..."}
+                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1e3a8a] focus:border-transparent"/>
+            </div>
+            <div>
+              <LabelWithBadge label="TNPSC Phone 2" fieldKey="tnpscPhone2" />
+              <input id="c-tnpsc-phone2" type="text" {...f("tnpscPhone2")} placeholder={envDefaults.tnpscPhone2 || "+91..."}
+                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1e3a8a] focus:border-transparent"/>
+            </div>
+          </div>
+        </div>
+
+        {/* WhatsApp */}
+        <div className="mb-5 p-4 bg-emerald-50 border border-emerald-200 rounded-xl">
+          <div className="flex items-center gap-2 mb-3">
+            <span className="text-lg">💬</span>
+            <h3 className="text-sm font-bold text-emerald-800">WhatsApp Number</h3>
+            <EnvBadge fieldKey="whatsapp" />
+          </div>
+          <input
+            id="c-whatsapp"
+            type="text"
+            {...f("whatsapp")}
+            placeholder={envDefaults.whatsapp || "+919003190030"}
+            className="w-full border border-emerald-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white"
+          />
+          <p className="text-xs text-emerald-600 mt-1.5">Include country code (e.g. +91). Used for WhatsApp chat buttons across the site.</p>
+        </div>
+
+        {/* Other contact fields */}
+        <div className="grid md:grid-cols-2 gap-4">
+          <Field label="Primary Email" id="c-email" type="email" {...f("email")}/>
+          <Field label="Enquiry Email" id="c-enquiry-email" type="email" {...f("enquiryEmail")}/>
+          <Field label="Address Line 1" id="c-addr1" {...f("address")}/>
+          <Field label="Address Line 2" id="c-addr2" {...f("addressLine2")}/>
+          <Field label="Working Hours" id="c-hours" placeholder="Mon – Sat: 9AM – 7PM" {...f("workingHours")}/>
+          <Field label="Working Hours 2" id="c-hours2" placeholder="Sunday: 10AM – 2PM" {...f("workingHours2")}/>
+        </div>
+      </SectionCard>
+    </div>
   );
 }
 
@@ -721,8 +846,11 @@ export function AdminDashboard() {
       case "courses": return <CoursesManager/>;
       case "achievers": return <AchieversManager/>;
       case "gallery": return <GalleryManager/>;
+      case "lectures": return <LecturesManager/>;
+      case "media-settings": return <MediaSettings settings={settings} onSettingsChange={setSettings}/>;
       case "leads": return <LeadsManager/>;
       case "admissions": return <AdmissionsList/>;
+      case "settings": return <AccountSettings/>;
       default: return (
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-10 text-center">
           <div className="text-5xl mb-3">{currentMenu?.icon}</div>

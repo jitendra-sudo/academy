@@ -1,5 +1,23 @@
+import { readFileSync } from "fs";
+import { join } from "path";
+
+// Read override credentials (set via Admin Panel > Account Settings)
+function getEffectiveCreds() {
+  try {
+    const stored = JSON.parse(readFileSync(join(process.cwd(), "src/data/credentials.json"), "utf-8"));
+    return {
+      username: stored.username || process.env.ADMIN_USERNAME || "admin",
+      password: stored.passwordHash || process.env.ADMIN_PASSWORD || "shankar@2026",
+    };
+  } catch {
+    return {
+      username: process.env.ADMIN_USERNAME || "admin",
+      password: process.env.ADMIN_PASSWORD || "shankar@2026",
+    };
+  }
+}
+
 // POST /api/auth/login
-// Validates admin credentials and returns auth token
 export async function POST(request) {
   try {
     const body = await request.json();
@@ -12,37 +30,26 @@ export async function POST(request) {
       );
     }
 
-    // Compare against env vars (in prod: use hashed passwords + DB lookup)
-    const validUsername = process.env.ADMIN_USERNAME || "admin";
-    const validPassword = process.env.ADMIN_PASSWORD || "shankar@2026";
+    const creds = getEffectiveCreds();
 
-    if (username !== validUsername || password !== validPassword) {
+    if (username !== creds.username || password !== creds.password) {
       return Response.json(
         { success: false, error: "Invalid credentials." },
         { status: 401 }
       );
     }
 
-    // In production: generate a real JWT token
-    // const token = jwt.sign({ username, role: "admin" }, process.env.JWT_SECRET, { expiresIn: "8h" });
-
-    const mockToken = Buffer.from(`${username}:${Date.now()}`).toString("base64");
+    // Generate a simple token (use proper JWT in production)
+    const token = Buffer.from(`${username}:${Date.now()}:${process.env.JWT_SECRET || "dev"}`).toString("base64");
 
     return Response.json({
       success: true,
-      token: mockToken,
-      user: {
-        username,
-        role: "admin",
-        name: "Admin User",
-      },
+      token,
+      user: { username, role: "admin", name: "Admin User" },
       expiresIn: "8h",
     });
   } catch (error) {
     console.error("[Auth API Error]", error);
-    return Response.json(
-      { success: false, error: "Server error." },
-      { status: 500 }
-    );
+    return Response.json({ success: false, error: "Server error." }, { status: 500 });
   }
 }

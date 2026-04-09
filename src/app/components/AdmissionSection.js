@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const branches = [
   { city: "Anna Nagar, Chennai", type: "Main Campus", phone: "9003190030", color: "bg-blue-600" },
@@ -21,6 +21,23 @@ export default function AdmissionSection() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [contact, setContact] = useState(null);
+
+  // Fetch CMS contact settings
+  useEffect(() => {
+    fetch("/api/settings")
+      .then((r) => r.json())
+      .then((d) => { if (d.success && d.data?.contact) setContact(d.data.contact); })
+      .catch(() => {});
+  }, []);
+
+  // Resolved values (fallback to hardcoded defaults)
+  const upscPhone = contact?.upscPhone || "9003190030";
+  const upscPhone2 = contact?.upscPhone2 || "044-66024500";
+  const tnpscPhone = contact?.tnpscPhone || "7667766266";
+  const tnpscPhone2 = contact?.tnpscPhone2 || "044-43533445";
+  const admissionEmail = contact?.email || "admissions@mentorsmerits.in";
+  const workingHours = contact?.workingHours || "Mon-Sat: 9AM – 7PM";
 
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -122,32 +139,6 @@ export default function AdmissionSection() {
         </div>
       </section>
 
-      {/* Branches */}
-      <section className="py-16 bg-gray-50" id="branches">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center mb-10">
-            <h2 className="text-3xl font-black text-gray-900 mb-3">
-              Our <span className="gradient-text">Branch Network</span>
-            </h2>
-            <p className="text-gray-600">10 cities across India, one mission — your success</p>
-          </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-            {branches.map((b) => (
-              <div key={b.city} className="bg-white rounded-2xl p-4 text-center card-hover shadow-sm border border-gray-100">
-                <div className={`w-10 h-10 ${b.color} rounded-xl flex items-center justify-center mx-auto mb-2`}>
-                  <span className="text-white text-lg">🏢</span>
-                </div>
-                <div className="font-bold text-gray-900 text-sm">{b.city}</div>
-                <div className={`text-xs mb-1 ${b.type === "Main Campus" ? "text-amber-600 font-semibold" : "text-gray-500"}`}>
-                  {b.type}
-                </div>
-                <div className="text-xs text-[#1e3a8a]">{b.phone}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Admission Form */}
       <section className="py-20 bg-gradient-to-br from-[#0f172a] via-[#1e3a8a] to-[#1d4ed8]" id="admission">
         <div className="max-w-7xl mx-auto px-4">
@@ -166,10 +157,10 @@ export default function AdmissionSection() {
               </p>
               <div className="space-y-4">
                 {[
-                  { icon: "📞", text: "UPSC: 9003190030 | 044-66024500" },
-                  { icon: "📞", text: "TNPSC: 7667766266 | 044-43533445" },
-                  { icon: "📧", text: "admissions@mentorsmerits.in" },
-                  { icon: "🕐", text: "Mon-Sat: 9AM – 7PM" },
+                  { icon: "📞", text: `UPSC: ${upscPhone} | ${upscPhone2}` },
+                  { icon: "📞", text: `TNPSC: ${tnpscPhone} | ${tnpscPhone2}` },
+                  { icon: "📧", text: admissionEmail },
+                  { icon: "🕐", text: workingHours },
                 ].map((c) => (
                   <div key={c.text} className="flex items-center gap-3">
                     <span className="text-xl">{c.icon}</span>

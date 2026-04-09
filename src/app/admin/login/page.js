@@ -197,13 +197,6 @@ export default function AdminLoginPage() {
               </div>
             </div>
 
-            {/* Hint */}
-            <div className="bg-blue-50 border border-blue-100 rounded-xl px-4 py-2.5 text-xs text-blue-700">
-              <span className="font-semibold">Demo credentials:</span> username:{" "}
-              <span className="font-mono font-bold">admin</span> &nbsp;/&nbsp; password:{" "}
-              <span className="font-mono font-bold">shankar@2026</span>
-            </div>
-
             {/* Submit */}
             <button
               type="submit"

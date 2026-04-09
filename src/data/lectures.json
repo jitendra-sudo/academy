@@ -1,0 +1,20 @@
+[
+  {
+    "id": "LEC-1775711876018",
+    "title": "Indian Constitution - Fundamental Rights",
+    "description": "",
+    "course": "UPSC CSE",
+    "subject": "General Studies",
+    "instructor": "Test Faculty",
+    "videoUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+    "videoType": "youtube",
+    "thumbnailUrl": "https://img.youtube.com/vi/d/hqdefault.jpg",
+    "duration": "1h 30min",
+    "isPublic": true,
+    "isFeatured": false,
+    "order": 1,
+    "views": 0,
+    "createdAt": "2026-04-09T05:17:56.019Z",
+    "updatedAt": "2026-04-09T05:17:56.019Z"
+  }
+]

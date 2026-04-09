@@ -15,10 +15,32 @@ function writeSettings(data) {
   writeFileSync(DATA_FILE, JSON.stringify(data, null, 2), "utf-8");
 }
 
-// GET /api/settings — return all settings
+// ─── Inject .env phone/WhatsApp defaults into contact section ────────────────
+// If admin hasn't overridden a field yet, the .env value is used as the default.
+function mergeEnvContactDefaults(settings) {
+  const envDefaults = {
+    upscPhone:   process.env.PHONE_UPSC_1    || "",
+    upscPhone2:  process.env.PHONE_UPSC_2    || "",
+    tnpscPhone:  process.env.PHONE_TNPSC_1   || "",
+    tnpscPhone2: process.env.PHONE_TNPSC_2   || "",
+    whatsapp:    process.env.WHATSAPP_NUMBER  || "",
+  };
+
+  const contact = { ...(settings.contact || {}) };
+
+  // Only fill in env value when the JSON field is blank / missing
+  Object.entries(envDefaults).forEach(([key, envVal]) => {
+    if (!contact[key] && envVal) contact[key] = envVal;
+  });
+
+  return { ...settings, contact };
+}
+
+// GET /api/settings — return all settings (with .env contact defaults merged)
 export async function GET() {
   try {
-    const settings = readSettings();
+    const raw = readSettings();
+    const settings = mergeEnvContactDefaults(raw);
     return Response.json({ success: true, data: settings });
   } catch (error) {
     return Response.json({ success: false, error: "Failed to load settings." }, { status: 500 });
@@ -47,7 +69,9 @@ export async function PUT(request) {
       writeSettings(settings);
     }
 
-    return Response.json({ success: true, message: `${section} settings updated successfully.`, data: settings });
+    // Always return merged-with-env version so frontend stays consistent
+    const merged = mergeEnvContactDefaults(settings);
+    return Response.json({ success: true, message: `${section} settings updated successfully.`, data: merged });
   } catch (error) {
     console.error("[Settings PUT Error]", error);
     return Response.json({ success: false, error: "Failed to save settings." }, { status: 500 });
