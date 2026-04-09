@@ -756,9 +756,11 @@ function Sidebar({ active, setActive, sidebarOpen, setSidebarOpen, onLogout, sit
       <aside className={`fixed top-0 left-0 h-full w-64 bg-gradient-to-b from-[#0f172a] to-[#1e3a8a] z-30 flex flex-col transform transition-transform duration-300 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0 lg:static`}>
         <div className="p-5 border-b border-white/10">
           <Link href="/" className="flex items-center gap-2">
-            <div className="w-9 h-9 bg-amber-500 rounded-lg flex items-center justify-center shrink-0">
-              <span className="text-white font-black text-sm">M</span>
-            </div>
+            <img
+              src="/logo.jpg"
+              alt="Mentors Merits Academy"
+              className="w-10 h-10 object-contain rounded-full shrink-0 bg-white/10"
+            />
             <div className="min-w-0">
               <div className="text-white font-black text-xs leading-tight truncate">{siteName || "MENTORS MERITS"}</div>
               <div className="text-amber-400 text-xs">Admin CMS</div>

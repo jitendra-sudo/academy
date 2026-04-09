@@ -66,6 +66,7 @@ export default function Navbar() {
   const [leadStatus, setLeadStatus] = useState(""); // ""|"loading"|"success"|"error"
   const [leadError, setLeadError] = useState("");
   const [contact, setContact] = useState(null);
+  const [logoUrl, setLogoUrl] = useState("");
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
@@ -73,11 +74,16 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Fetch contact settings from CMS
+  // Fetch contact + logo settings from CMS
   useEffect(() => {
     fetch("/api/settings")
       .then((r) => r.json())
-      .then((d) => { if (d.success && d.data?.contact) setContact(d.data.contact); })
+      .then((d) => {
+        if (d.success) {
+          if (d.data?.contact) setContact(d.data.contact);
+          if (d.data?.images?.logoUrl) setLogoUrl(d.data.images.logoUrl);
+        }
+      })
       .catch(() => {});
   }, []);
 
@@ -200,9 +206,11 @@ export default function Navbar() {
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2 group">
-              <div className="w-10 h-10 bg-gradient-to-br from-[#1e3a8a] to-[#2563eb] rounded-lg flex items-center justify-center shadow-md group-hover:scale-105 transition-transform">
-                <span className="text-white font-black text-lg">M</span>
-              </div>
+              <img
+                src={logoUrl || "/logo.jpg"}
+                alt="Mentor Merits Academy Logo"
+                className="h-12 w-12 object-contain rounded-full shadow-md group-hover:scale-105 transition-transform"
+              />
               <div>
                 <div className="text-[#1e3a8a] font-black text-lg leading-none">
                   MENTORS MERITS
@@ -410,9 +418,11 @@ export default function Navbar() {
               </button>
               <div className="relative">
                 <div className="flex items-center gap-3 mb-2">
-                  <div className="w-10 h-10 bg-amber-500 rounded-xl flex items-center justify-center">
-                    <span className="text-white font-black">M</span>
-                  </div>
+                  <img
+                    src={logoUrl || "/logo.jpg"}
+                    alt="Mentor Merits Academy"
+                    className="w-12 h-12 object-contain rounded-full bg-white/10"
+                  />
                   <div>
                     <div className="text-white font-black text-lg leading-none">MENTORS MERITS</div>
                     <div className="text-amber-300 text-xs font-semibold tracking-widest">ACADEMY</div>

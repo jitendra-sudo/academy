@@ -4,11 +4,17 @@ import Link from "next/link";
 
 export default function Footer() {
   const [contact, setContact] = useState(null);
+  const [logoUrl, setLogoUrl] = useState("");
 
   useEffect(() => {
     fetch("/api/settings")
       .then((r) => r.json())
-      .then((d) => { if (d.success && d.data?.contact) setContact(d.data.contact); })
+      .then((d) => {
+        if (d.success) {
+          if (d.data?.contact) setContact(d.data.contact);
+          if (d.data?.images?.logoUrl) setLogoUrl(d.data.images.logoUrl);
+        }
+      })
       .catch(() => {});
   }, []);
 
@@ -46,9 +52,11 @@ export default function Footer() {
         {/* Brand */}
         <div>
           <div className="flex items-center gap-2 mb-4">
-            <div className="w-10 h-10 bg-gradient-to-br from-amber-400 to-amber-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-black text-lg">M</span>
-            </div>
+            <img
+              src={logoUrl || "/logo.jpg"}
+              alt="Mentors Merits Academy"
+              className="w-12 h-12 object-contain rounded-full"
+            />
             <div>
               <div className="text-white font-black text-lg leading-none">
                 MENTORS MERITS
