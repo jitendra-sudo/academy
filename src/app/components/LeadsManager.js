@@ -30,7 +30,8 @@ export default function LeadsManager() {
     if (sourceFilter !== "all") p.set("source", sourceFilter);
     if (search) p.set("q", search);
     try {
-      const r = await fetch(apiUrl("/api/leads?" + p.toString()));
+      const headers = { Authorization: `Bearer ${sessionStorage.getItem("admin_token")}` };
+      const r = await fetch(apiUrl("/api/leads?" + p.toString()), { headers });
       const d = await r.json();
       if (d.success) {
         setLeads(d.data);
@@ -44,10 +45,11 @@ export default function LeadsManager() {
   const flash = (m) => { setMsg(m); setTimeout(() => setMsg(""), 3000); };
 
   const updateStatus = async (id, status) => {
-    const r = await fetch(apiUrl("/api/leads"), {
+    const headers = { "Content-Type": "application/json", Authorization: `Bearer ${sessionStorage.getItem("admin_token")}` };
+    const r = await fetch(apiUrl(`/api/leads/${id}`), {
       method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id, status }),
+      headers,
+      body: JSON.stringify({ status }),
     });
     const d = await r.json();
     if (d.success) { flash("✅ Status updated!"); load(); }
@@ -55,7 +57,8 @@ export default function LeadsManager() {
 
   const deleteLead = async (id) => {
     if (!confirm("Delete this lead permanently?")) return;
-    await fetch(apiUrl("/api/leads?id=" + id), { method: "DELETE" });
+    const headers = { Authorization: `Bearer ${sessionStorage.getItem("admin_token")}` };
+    await fetch(apiUrl(`/api/leads/${id}`), { method: "DELETE", headers });
     flash("🗑️ Lead deleted"); load();
   };
 

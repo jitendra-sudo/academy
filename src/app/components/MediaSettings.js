@@ -38,7 +38,7 @@ export default function MediaSettings({ settings, onSettingsChange }) {
     try {
       const res = await fetch(apiUrl("/api/settings"), {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${sessionStorage.getItem("admin_token")}` },
         body: JSON.stringify({ section: "images", data: images }),
       });
       const d = await res.json();

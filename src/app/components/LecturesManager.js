@@ -79,6 +79,7 @@ function VideoUploader({ onUploaded, uploadProgress, setUploadProgress }) {
       await new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
         xhr.open("POST", apiUrl("/api/upload"));
+        xhr.setRequestHeader("Authorization", `Bearer ${sessionStorage.getItem("admin_token")}`);
 
         xhr.upload.onprogress = (e) => {
           if (e.lengthComputable) {
@@ -225,11 +226,14 @@ export default function LecturesManager() {
     if (!form.videoUrl.trim()) { flash("Video URL or upload is required.", true); return; }
     setSaving(true);
     try {
-      const method = editing ? "PUT" : "POST";
-      const body = editing ? { ...form, id: editing.id } : form;
-      const r = await fetch(apiUrl("/api/lectures"), {
+      const isEditing = !!(editing && (editing._id || editing.id));
+      const method = isEditing ? "PUT" : "POST";
+      const url = isEditing ? `/api/lectures/${editing._id || editing.id}` : "/api/lectures";
+      const headers = { "Content-Type": "application/json", Authorization: `Bearer ${sessionStorage.getItem("admin_token")}` };
+      const body = form;
+      const r = await fetch(apiUrl(url), {
         method,
-        headers: { "Content-Type": "application/json" },
+        headers,
         body: JSON.stringify(body),
       });
       const d = await r.json();
@@ -255,15 +259,17 @@ export default function LecturesManager() {
 
   const deleteLec = async (id) => {
     if (!confirm("Delete this lecture?")) return;
-    const r = await fetch(apiUrl("/api/lectures?id=" + id), { method: "DELETE" });
+    const headers = { Authorization: `Bearer ${sessionStorage.getItem("admin_token")}` };
+    const r = await fetch(apiUrl(`/api/lectures/${id}`), { method: "DELETE", headers });
     const d = await r.json();
     if (d.success) { flash("🗑️ Deleted"); load(); }
   };
 
   const togglePublic = async (lec) => {
-    await fetch(apiUrl("/api/lectures"), {
-      method: "PATCH", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id: lec.id, isPublic: !lec.isPublic }),
+    const headers = { "Content-Type": "application/json", Authorization: `Bearer ${sessionStorage.getItem("admin_token")}` };
+    await fetch(apiUrl(`/api/lectures/${lec.id || lec._id}`), {
+      method: "PATCH", headers,
+      body: JSON.stringify({ isPublic: !lec.isPublic }),
     });
     load();
   };

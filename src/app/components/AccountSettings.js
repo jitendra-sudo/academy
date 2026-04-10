@@ -10,7 +10,8 @@ export default function AccountSettings() {
   const [msg, setMsg] = useState({ type: "", text: "" });
 
   useEffect(() => {
-    fetch(apiUrl("/api/auth/credentials")).then(r => r.json()).then(d => {
+    const headers = { Authorization: `Bearer ${sessionStorage.getItem("admin_token")}` };
+    fetch(apiUrl("/api/auth/credentials"), { headers }).then(r => r.json()).then(d => {
       if (d.success) setCurrentUsername(d.username);
     });
   }, []);
@@ -28,7 +29,7 @@ export default function AccountSettings() {
     try {
       const res = await fetch(apiUrl("/api/auth/credentials"), {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${sessionStorage.getItem("admin_token")}` },
         body: JSON.stringify({
           currentPassword: form.currentPassword,
           newUsername: form.newUsername || undefined,

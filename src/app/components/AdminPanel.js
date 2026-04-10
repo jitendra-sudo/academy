@@ -123,7 +123,8 @@ function SiteSettings({ settings, onSettingsChange }) {
   const save = async () => {
     setSaving(true);
     try {
-      const res = await fetch(apiUrl("/api/settings"), { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ section: "site", data: form }) });
+      const headers = { "Content-Type": "application/json", Authorization: `Bearer ${sessionStorage.getItem("admin_token")}` };
+      const res = await fetch(apiUrl("/api/settings"), { method: "PUT", headers, body: JSON.stringify({ section: "site", data: form }) });
       const d = await res.json();
       if (d.success) { onSettingsChange(d.data); setSaved(true); setTimeout(() => setSaved(false), 3000); }
     } finally { setSaving(false); }
@@ -190,7 +191,8 @@ function ContactSettings({ settings, onSettingsChange }) {
   const save = async () => {
     setSaving(true);
     try {
-      const res = await fetch(apiUrl("/api/settings"), { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ section: "contact", data: form }) });
+      const headers = { "Content-Type": "application/json", Authorization: `Bearer ${sessionStorage.getItem("admin_token")}` };
+      const res = await fetch(apiUrl("/api/settings"), { method: "PUT", headers, body: JSON.stringify({ section: "contact", data: form }) });
       const d = await res.json();
       if (d.success) { onSettingsChange(d.data); setSaved(true); setTimeout(() => setSaved(false), 3000); }
     } finally { setSaving(false); }
@@ -210,7 +212,8 @@ function ContactSettings({ settings, onSettingsChange }) {
     };
     setForm(updated);
     try {
-      const res = await fetch(apiUrl("/api/settings"), { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ section: "contact", data: updated }) });
+      const headers = { "Content-Type": "application/json", Authorization: `Bearer ${sessionStorage.getItem("admin_token")}` };
+      const res = await fetch(apiUrl("/api/settings"), { method: "PUT", headers, body: JSON.stringify({ section: "contact", data: updated }) });
       const d = await res.json();
       if (d.success) { onSettingsChange(d.data); setSaved(true); setTimeout(() => setSaved(false), 3000); }
     } finally { setResetting(false); }
@@ -338,7 +341,8 @@ function SocialSettings({ settings, onSettingsChange }) {
   const save = async () => {
     setSaving(true);
     try {
-      const res = await fetch(apiUrl("/api/settings"), { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ section: "social", data: form }) });
+      const headers = { "Content-Type": "application/json", Authorization: `Bearer ${sessionStorage.getItem("admin_token")}` };
+      const res = await fetch(apiUrl("/api/settings"), { method: "PUT", headers, body: JSON.stringify({ section: "social", data: form }) });
       const d = await res.json();
       if (d.success) { onSettingsChange(d.data); setSaved(true); setTimeout(() => setSaved(false), 3000); }
     } finally { setSaving(false); }
@@ -370,7 +374,8 @@ function StatsSettings({ settings, onSettingsChange }) {
   const save = async () => {
     setSaving(true);
     try {
-      const res = await fetch(apiUrl("/api/settings"), { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ section: "stats", data: form }) });
+      const headers = { "Content-Type": "application/json", Authorization: `Bearer ${sessionStorage.getItem("admin_token")}` };
+      const res = await fetch(apiUrl("/api/settings"), { method: "PUT", headers, body: JSON.stringify({ section: "stats", data: form }) });
       const d = await res.json();
       if (d.success) { onSettingsChange(d.data); setSaved(true); setTimeout(() => setSaved(false), 3000); }
     } finally { setSaving(false); }
@@ -421,15 +426,20 @@ function CoursesManager() {
   const flash = (m) => { setMsg(m); setTimeout(() => setMsg(""), 3000); };
 
   const saveEdit = async () => {
-    const res = await fetch(apiUrl("/api/courses"), { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(editing) });
+    const isEditing = !!(editing._id || editing.id);
+    const method = isEditing ? "PUT" : "POST";
+    const url = isEditing ? `/api/courses/${editing._id || editing.id}` : "/api/courses";
+    const headers = { "Content-Type": "application/json", Authorization: `Bearer ${sessionStorage.getItem("admin_token")}` };
+    const res = await fetch(apiUrl(url), { method, headers, body: JSON.stringify(editing) });
     const d = await res.json();
-    if (d.success) { flash("✅ Course updated!"); load(); }
+    if (d.success) { flash(isEditing ? "✅ Course updated!" : "✅ Course added!"); load(); }
     setEditing(null);
   };
 
   const deleteCourse = async (id) => {
     if (!confirm("Delete this course category?")) return;
-    await fetch(apiUrl(`/api/courses?id=${id}`), { method: "DELETE" });
+    const headers = { Authorization: `Bearer ${sessionStorage.getItem("admin_token")}` };
+    await fetch(apiUrl(`/api/courses/${id}`), { method: "DELETE", headers });
     flash("🗑️ Deleted"); load();
   };
 
@@ -447,9 +457,15 @@ function CoursesManager() {
     <div className="space-y-4">
       {msg && <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-2 rounded-lg text-sm font-medium">{msg}</div>}
 
+      {!editing && (
+        <button onClick={() => setEditing({ category: "", items: [] })} className="bg-[#1e3a8a] text-white px-5 py-2 rounded-xl font-bold text-sm w-full hover:bg-[#1d4ed8]">
+          ➕ Add New Course Category
+        </button>
+      )}
+
       {editing ? (
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
-          <h3 className="font-black text-gray-900 mb-4">✏️ Edit: {editing.category}</h3>
+          <h3 className="font-black text-gray-900 mb-4">{editing._id || editing.id ? `✏️ Edit: ${editing.category}` : "➕ Add Course Category"}</h3>
           <div className="mb-4">
             <label className="text-xs font-semibold text-gray-500 uppercase mb-1 block">Category Name</label>
             <input className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[#1e3a8a] focus:outline-none" value={editing.category} onChange={(e) => setEditing({ ...editing, category: e.target.value })} />
@@ -474,14 +490,21 @@ function CoursesManager() {
             <button onClick={() => setEditing(null)} className="bg-gray-100 text-gray-700 px-5 py-2 rounded-xl font-bold text-sm">Cancel</button>
           </div>
         </div>
+      ) : courses.length === 0 ? (
+        <div className="bg-gray-50 border border-gray-200 rounded-2xl py-12 text-center text-gray-500">
+          <p className="font-medium mb-2">No courses available.</p>
+          <button onClick={() => setEditing({ category: "", items: [] })} className="text-[#1e3a8a] text-sm font-bold hover:underline">
+            + Add your first course category
+          </button>
+        </div>
       ) : (
         courses.map((cat) => (
-          <div key={cat.id} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+          <div key={cat.id || cat._id} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
             <div className="flex items-center justify-between mb-3">
               <div className={`${cat.accent || "bg-gray-700"} text-white px-3 py-1 rounded-lg text-sm font-bold`}>{cat.category}</div>
               <div className="flex gap-2">
                 <button onClick={() => setEditing({ ...cat })} className="text-[#1e3a8a] text-sm font-semibold hover:underline">✏️ Edit</button>
-                <button onClick={() => deleteCourse(cat.id)} className="text-red-500 text-sm font-semibold hover:underline">🗑️ Delete</button>
+                <button onClick={() => deleteCourse(cat.id || cat._id)} className="text-red-500 text-sm font-semibold hover:underline">🗑️ Delete</button>
               </div>
             </div>
             <ul className="space-y-1">
@@ -519,15 +542,18 @@ function AchieversManager() {
 
   const save = async () => {
     const method = editing ? "PUT" : "POST";
-    const body = editing ? { ...form, id: editing.id } : form;
-    const r = await fetch(apiUrl("/api/achievers"), { method, headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+    const url = editing ? `/api/achievers/${editing._id || editing.id}` : "/api/achievers";
+    const body = form;
+    const headers = { "Content-Type": "application/json", Authorization: `Bearer ${sessionStorage.getItem("admin_token")}` };
+    const r = await fetch(apiUrl(url), { method, headers, body: JSON.stringify(body) });
     const d = await r.json();
     if (d.success) { flash(editing ? "✅ Updated!" : "✅ Added!"); load(); setForm({ name: "", rank: "", course: "", year: "", exam: "UPSC CSE" }); setEditing(null); }
   };
 
   const del = async (id) => {
     if (!confirm("Delete this achiever?")) return;
-    await fetch(apiUrl(`/api/achievers?id=${id}`), { method: "DELETE" });
+    const headers = { Authorization: `Bearer ${sessionStorage.getItem("admin_token")}` };
+    await fetch(apiUrl(`/api/achievers/${id}`), { method: "DELETE", headers });
     flash("🗑️ Deleted"); load();
   };
 
@@ -607,15 +633,18 @@ function GalleryManager() {
 
   const save = async () => {
     const method = editing ? "PUT" : "POST";
-    const body = editing ? { ...form, id: editing.id } : form;
-    const r = await fetch(apiUrl("/api/gallery"), { method, headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+    const url = editing ? `/api/gallery/${editing._id || editing.id}` : "/api/gallery";
+    const body = form;
+    const headers = { "Content-Type": "application/json", Authorization: `Bearer ${sessionStorage.getItem("admin_token")}` };
+    const r = await fetch(apiUrl(url), { method, headers, body: JSON.stringify(body) });
     const d = await r.json();
     if (d.success) { flash(editing ? "✅ Updated!" : "✅ Added!"); load(); setForm({ category: "Classroom", title: "", desc: "", event: "", date: "", emoji: "📸", tag: "", bg: "from-blue-900 to-blue-700" }); setEditing(null); }
   };
 
   const del = async (id) => {
     if (!confirm("Delete this gallery item?")) return;
-    await fetch(apiUrl(`/api/gallery?id=${id}`), { method: "DELETE" });
+    const headers = { Authorization: `Bearer ${sessionStorage.getItem("admin_token")}` };
+    await fetch(apiUrl(`/api/gallery/${id}`), { method: "DELETE", headers });
     flash("🗑️ Deleted"); load();
   };
 
@@ -700,7 +729,8 @@ function AdmissionsList() {
     const params = new URLSearchParams();
     if (filter !== "all") params.set("status", filter);
     if (search) params.set("q", search);
-    const r = await fetch(apiUrl(`/api/admissions?${params}`)); const d = await r.json();
+    const headers = { Authorization: `Bearer ${sessionStorage.getItem("admin_token")}` };
+    const r = await fetch(apiUrl(`/api/admissions?${params}`), { headers }); const d = await r.json();
     if (d.success) setList(d.data);
   }, [filter, search]);
 

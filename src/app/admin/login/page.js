@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { apiUrl } from "@/lib/api";
 import { useRouter } from "next/navigation";
 
@@ -9,6 +9,12 @@ export default function AdminLoginPage() {
   const [showPass, setShowPass] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (sessionStorage.getItem("admin_auth") === "true") {
+      router.replace("/admin/dashboard");
+    }
+  }, [router]);
 
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });

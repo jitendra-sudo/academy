@@ -35,7 +35,8 @@ export default function ImageUploader({ label, currentUrl, folder = "general", o
       form.append("file", file);
       form.append("folder", folder);
 
-      const res = await fetch(apiUrl("/api/upload"), { method: "POST", body: form });
+      const headers = { Authorization: `Bearer ${sessionStorage.getItem("admin_token")}` };
+      const res = await fetch(apiUrl("/api/upload"), { method: "POST", headers, body: form });
       const data = await res.json();
 
       if (data.success) {
