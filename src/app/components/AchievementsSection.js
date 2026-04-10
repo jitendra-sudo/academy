@@ -1,6 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
+import { apiUrl } from "@/lib/api";
 
+// ── "Why Choose Us" features – static marketing content, no API needed ──────
 const features = [
   {
     icon: "🏆",
@@ -49,20 +51,23 @@ function AchieverSkeleton() {
 export default function AchievementsSection() {
   const [achievers, setAchievers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [ticker, setTicker] = useState("🏆 Loading latest achievements...");
 
   useEffect(() => {
-    fetch("")
+    fetch(apiUrl("/api/achievers"))
       .then((r) => r.json())
-      .catch(() => {
-        setAchievers([
-          { id: 1, name: "RAJESHWARI SUVE M", rank: "AIR 02", course: "SIA Sociology Optional - Naan Mudhalvan 2025", year: "2025", exam: "UPSC CSE" },
-          { id: 2, name: "AR RAJAH MOHAIDEEN", rank: "AIR 07", course: "GS Prelims cum Mains Foundation 2025", year: "2025", exam: "UPSC CSE" },
-          { id: 3, name: "RAJKRISHNA JHA", rank: "AIR 08", course: "Civilisation 2024", year: "2024", exam: "UPSC CSE" },
-          { id: 4, name: "SHAURYA ARORA", rank: "AIR 14", course: "Civilisation 2023", year: "2023", exam: "UPSC CSE" },
-          { id: 5, name: "ISHITA KISHORE", rank: "AIR 01", course: "Civilisation 2022", year: "2022", exam: "UPSC CSE" },
-          { id: 6, name: "YAKSH CHAUDHARY", rank: "AIR 06", course: "Mainstorming 2021", year: "2021", exam: "UPSC CSE" },
-        ]);
+      .then((d) => {
+        if (d.success && d.data?.length) {
+          setAchievers(d.data);
+          // Build dynamic ticker from achievers
+          const items = d.data
+            .slice(0, 8)
+            .map((a) => `🏆 ${a.name} – ${a.rank} (${a.exam || "UPSC"} ${a.year || ""})`)
+            .join(" \u00a0|\u00a0 ");
+          setTicker(items + " \u00a0|\u00a0 ");
+        }
       })
+      .catch(() => { })
       .finally(() => setLoading(false));
   }, []);
 
@@ -72,7 +77,7 @@ export default function AchievementsSection() {
       <div className="bg-[#1e3a8a] py-2.5 overflow-hidden" id="ticker">
         <div className="ticker-wrap">
           <div className="ticker-content text-white text-sm">
-            🏆 202 Selections in UPSC CSE 2025 &nbsp;|&nbsp; 78 Selections in UPSC IFS 2024 &nbsp;|&nbsp; 47 TNPSC Group I Selections 2024 &nbsp;|&nbsp; 19 Candidates in Top 100 &nbsp;|&nbsp; AIR 01 – Ishita Kishore (2022) &nbsp;|&nbsp; AIR 02 – Rajeshwari Suve M (2025) &nbsp;|&nbsp; 2900+ Total Selections – Best IAS Academy in India &nbsp;|&nbsp; UPSC 2026 Admissions Open – Pre-Book Now! &nbsp;|&nbsp;
+            {ticker}
           </div>
         </div>
       </div>
@@ -89,7 +94,7 @@ export default function AchievementsSection() {
               <span className="gradient-text">India&apos;s Best?</span>
             </h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
-              Mentors Merits Academy stands as the best academy for TNPSC and UPSC coaching,
+              Mentor Merits Academy stands as the best academy for TNPSC and UPSC coaching,
               offering a holistic, structured, and result-oriented approach.
             </p>
           </div>
@@ -126,8 +131,15 @@ export default function AchievementsSection() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-10">
             {loading
               ? Array.from({ length: 6 }).map((_, i) => <AchieverSkeleton key={i} />)
-              : achievers.map((a) => (
-                  <div key={a.id || a.name} className="glass rounded-2xl p-5 card-hover text-center group">
+              : achievers.length === 0
+                ? (
+                  <div className="col-span-3 text-center py-12 text-blue-200">
+                    <div className="text-5xl mb-3">🏆</div>
+                    <p>Achiever profiles will appear here once added.</p>
+                  </div>
+                )
+                : achievers.map((a) => (
+                  <div key={a._id || a.id || a.name} className="glass rounded-2xl p-5 card-hover text-center group">
                     <div className="w-16 h-16 bg-gradient-to-br from-amber-400 to-amber-600 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
                       <span className="text-white font-black text-lg">{(a.name || "A")[0]}</span>
                     </div>

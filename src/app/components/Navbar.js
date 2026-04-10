@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { apiUrl } from "@/lib/api";
 
 const navItems = [
   {
@@ -86,6 +87,17 @@ export default function Navbar() {
     setLeadError("");
   };
 
+  // Fetch contact info from API
+  useEffect(() => {
+    fetch(apiUrl("/api/settings"))
+      .then((r) => r.json())
+      .then((d) => {
+        if (d.success && d.data?.contact) setContact(d.data.contact);
+        if (d.success && d.data?.media?.logoUrl) setLogoUrl(d.data.media.logoUrl);
+      })
+      .catch(() => { });
+  }, []);
+
   const submitLead = async (e) => {
     e.preventDefault();
     if (!leadForm.name.trim() || !leadForm.phone.trim()) {
@@ -95,7 +107,7 @@ export default function Navbar() {
     setLeadStatus("loading");
     setLeadError("");
     try {
-      const res = await fetch("/api/leads", {
+      const res = await fetch(apiUrl("/api/leads"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...leadForm, source: "contact-modal" }),
@@ -127,8 +139,8 @@ export default function Navbar() {
   const tnpscPhone = contact?.tnpscPhone || "7397236970";
   const tnpscPhone2 = contact?.tnpscPhone2 || "7397236970";
   const whatsappNum = contact?.whatsapp || "+917397236970";
-  const email = contact?.email || "admissions@mentorsmerits.in";
-  const enquiryEmail = contact?.enquiryEmail || "enquiry@mentorsmerits.in";
+  const email = contact?.email || "admissions@mentormerits.in";
+  const enquiryEmail = contact?.enquiryEmail || "enquiry@mentormerits.in";
   const address = contact?.address || "109/18, 2nd floor, vanavil appartment c- sector, east main road, +917397236970, Anna Nagar West Extension, Chennai";
   const addressLine2 = contact?.addressLine2 || "Tamil Nadu – 600040";
 
@@ -179,8 +191,8 @@ export default function Navbar() {
       {/* Main Navbar */}
       <nav
         className={`sticky top-0 z-50 transition-all duration-300 ${isScrolled
-            ? "bg-white shadow-lg border-b border-gray-100"
-            : "bg-white shadow-md"
+          ? "bg-white shadow-lg border-b border-gray-100"
+          : "bg-white shadow-md"
           }`}
         id="main-navbar"
       >
@@ -195,7 +207,7 @@ export default function Navbar() {
               />
               <div>
                 <div className="text-[#1e3a8a] font-black text-lg leading-none">
-                  MENTORS MERITS
+                  MENTOR MERITS
                 </div>
                 <div className="text-amber-600 font-semibold text-xs tracking-widest">
                   ACADEMY
@@ -404,7 +416,7 @@ export default function Navbar() {
                     className="w-12 h-12 object-contain rounded-full bg-white/10"
                   />
                   <div>
-                    <div className="text-white font-black text-lg leading-none">MENTORS MERITS</div>
+                    <div className="text-white font-black text-lg leading-none">MENTOR MERITS</div>
                     <div className="text-amber-300 text-xs font-semibold tracking-widest">ACADEMY</div>
                   </div>
                 </div>

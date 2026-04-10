@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import { apiUrl } from "@/lib/api";
 
 // Color palette for categories (cycles if more than 4 courses added)
 const PALETTE = [
@@ -29,20 +30,10 @@ export default function CoursesSection() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("")
+    fetch(apiUrl("/api/courses"))
       .then((r) => r.json())
-      .catch(() => {
-        setCourses([
-          {
-            id: 1, category: "UPSC",
-            items: ["UPSC 2026 Admissions Open – Pre-Booking Now", "All India UPSC Prelims Mock Test 2026", "UPSC Optional Programme 2026", "Prelims Test Series 2026"],
-          },
-          {
-            id: 2, category: "TNPSC",
-            items: ["TNPSC Group I & II Preliminary Course 2026", "TNPSC Group I Mock Interview Programme 2026", "I'M TOP TNPSC Group I Prelims Test Series 2026"],
-          },
-        ]);
-      })
+      .then((d) => { if (d.success && d.data?.length) setCourses(d.data); })
+      .catch(() => {})
       .finally(() => setLoading(false));
   }, []);
 
@@ -69,51 +60,56 @@ export default function CoursesSection() {
         </div>
 
         {/* Courses Grid */}
-        <div className={loading ? "grid md:grid-cols-2 lg:grid-cols-3 gap-6" : gridClass}>
-          {loading
-            ? Array.from({ length: 3 }).map((_, i) => <CourseSkeleton key={i} />)
-            : courses.map((cat, idx) => {
-                const theme = PALETTE[idx % PALETTE.length];
-                // Use JSON colors if they look like valid Tailwind classes, fallback to palette
-                const color = cat.color || theme.color;
-                const accent = cat.accent || theme.accent;
-                const dot = cat.dot || theme.dot;
-
-                return (
-                  <div
-                    key={cat.id || cat.category}
-                    className={`border-2 ${color} rounded-2xl p-6 card-hover`}
-                  >
-                    {/* Category Header */}
-                    <div className="flex items-center gap-3 mb-5">
-                      <div className={`${accent} text-white px-3 py-1 rounded-lg text-sm font-bold`}>
-                        {cat.category}
-                      </div>
-                      <div className="h-px flex-1 bg-current opacity-20" />
+        {loading ? (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {Array.from({ length: 3 }).map((_, i) => <CourseSkeleton key={i} />)}
+          </div>
+        ) : courses.length === 0 ? (
+          <div className="text-center py-16 text-gray-400">
+            <div className="text-5xl mb-3">📚</div>
+            <p>Courses coming soon. Check back later!</p>
+          </div>
+        ) : (
+          <div className={gridClass}>
+            {courses.map((cat, idx) => {
+              const theme = PALETTE[idx % PALETTE.length];
+              const color = cat.color || theme.color;
+              const accent = cat.accent || theme.accent;
+              const dot = cat.dot || theme.dot;
+              return (
+                <div
+                  key={cat.id || cat._id || cat.category}
+                  className={`border-2 ${color} rounded-2xl p-6 card-hover`}
+                >
+                  {/* Category Header */}
+                  <div className="flex items-center gap-3 mb-5">
+                    <div className={`${accent} text-white px-3 py-1 rounded-lg text-sm font-bold`}>
+                      {cat.category}
                     </div>
-
-                    {/* Course List */}
-                    <ul className="space-y-2.5">
-                      {(cat.items || []).map((item, i) => (
-                        <li key={i} className="flex items-start gap-2 group cursor-pointer">
-                          <div className={`w-1.5 h-1.5 ${dot} rounded-full mt-2 shrink-0 group-hover:scale-150 transition-transform`} />
-                          <span className="text-sm text-gray-700 group-hover:text-[#1e3a8a] transition-colors leading-snug">
-                            {item}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-
-                    <a
-                      href="#admission"
-                      className={`mt-5 block w-full text-center ${accent} text-white py-2.5 rounded-xl text-sm font-semibold hover:opacity-90 hover:shadow-md transition-all`}
-                    >
-                      Enquire Now →
-                    </a>
+                    <div className="h-px flex-1 bg-current opacity-20" />
                   </div>
-                );
-              })}
-        </div>
+                  {/* Course List */}
+                  <ul className="space-y-2.5">
+                    {(cat.items || []).map((item, i) => (
+                      <li key={i} className="flex items-start gap-2 group cursor-pointer">
+                        <div className={`w-1.5 h-1.5 ${dot} rounded-full mt-2 shrink-0 group-hover:scale-150 transition-transform`} />
+                        <span className="text-sm text-gray-700 group-hover:text-[#1e3a8a] transition-colors leading-snug">
+                          {item}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                  <a
+                    href="#admission"
+                    className={`mt-5 block w-full text-center ${accent} text-white py-2.5 rounded-xl text-sm font-semibold hover:opacity-90 hover:shadow-md transition-all`}
+                  >
+                    Enquire Now →
+                  </a>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
     </section>
   );

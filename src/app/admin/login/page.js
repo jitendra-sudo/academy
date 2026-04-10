@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { apiUrl } from "@/lib/api";
 import { useRouter } from "next/navigation";
 
 export default function AdminLoginPage() {
@@ -18,7 +19,7 @@ export default function AdminLoginPage() {
     setLoading(true);
 
     try {
-      const res = await fetch("/api/auth/login", {
+      const res = await fetch(apiUrl("/api/auth/login"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username: form.username, password: form.password }),
@@ -63,15 +64,15 @@ export default function AdminLoginPage() {
         <div className="text-center mb-8">
           <div className="inline-flex items-center gap-3 mb-3">
             <div className="w-12 h-12 bg-gradient-to-br from-amber-400 to-amber-600 rounded-2xl flex items-center justify-center shadow-lg">
-                <span className="text-white font-black text-xl">M</span>
+              <span className="text-white font-black text-xl">M</span>
+            </div>
+            <div className="text-left">
+              <div className="text-white font-black text-xl leading-none">
+                MENTOR MERITS
               </div>
-              <div className="text-left">
-                <div className="text-white font-black text-xl leading-none">
-                  MENTORS MERITS
-                </div>
-                <div className="text-amber-400 font-semibold text-xs tracking-widest">
-                  ACADEMY
-                </div>
+              <div className="text-amber-400 font-semibold text-xs tracking-widest">
+                ACADEMY
+              </div>
             </div>
           </div>
           <p className="text-blue-200 text-sm">Admin Portal — Secure Login</p>
@@ -226,7 +227,7 @@ export default function AdminLoginPage() {
         </div>
 
         <p className="text-center text-blue-200/60 text-xs mt-6">
-          © 2026 Mentors Merits Academy. All rights reserved.
+          © 2026 Mentor Merits Academy. All rights reserved.
         </p>
       </div>
     </div>

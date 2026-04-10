@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import { apiUrl } from "@/lib/api";
 
 export default function AccountSettings() {
   const [currentUsername, setCurrentUsername] = useState("");
@@ -9,7 +10,7 @@ export default function AccountSettings() {
   const [msg, setMsg] = useState({ type: "", text: "" });
 
   useEffect(() => {
-    fetch("/api/auth/credentials").then(r => r.json()).then(d => {
+    fetch(apiUrl("/api/auth/credentials")).then(r => r.json()).then(d => {
       if (d.success) setCurrentUsername(d.username);
     });
   }, []);
@@ -25,7 +26,7 @@ export default function AccountSettings() {
 
     setSaving(true);
     try {
-      const res = await fetch("/api/auth/credentials", {
+      const res = await fetch(apiUrl("/api/auth/credentials"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

@@ -1,11 +1,101 @@
 [
-  { "id": 1, "category": "Classroom", "title": "UPSC Foundation Batch 2025", "desc": "Our state-of-the-art classroom with 200+ students attending the foundation lecture.", "event": "Regular Batch", "date": "Jan 2025", "bg": "from-blue-900 to-blue-700", "emoji": "🏫", "tag": "Foundation" },
-  { "id": 2, "category": "Toppers", "title": "UPSC CSE 2025 Toppers Felicitation", "desc": "Celebrating 202 selections from our academy in UPSC CSE 2025 results.", "event": "Felicitation Ceremony", "date": "Jul 2025", "bg": "from-amber-700 to-amber-500", "emoji": "🏆", "tag": "AIR 02" },
-  { "id": 3, "category": "Interviews", "title": "Civil Services Mock Interview 2025", "desc": "Panel-based mock interview session to prepare students for UPSC personality test.", "event": "Interview Programme", "date": "Mar 2025", "bg": "from-slate-800 to-slate-600", "emoji": "🎙️", "tag": "IPS Mock" },
-  { "id": 4, "category": "Study", "title": "Group Study Sessions", "desc": "Students collaborating on current affairs and answer writing in our library.", "event": "Study Circle", "date": "Feb 2025", "bg": "from-green-800 to-green-600", "emoji": "📚", "tag": "Current Affairs" },
-  { "id": 5, "category": "Events", "title": "Manasarovar Branch Inauguration 2025", "desc": "Grand inauguration of Mentors Merits Academy's new branch with dignitaries.", "event": "Inauguration Day", "date": "Jan 2025", "bg": "from-purple-900 to-purple-700", "emoji": "🎊", "tag": "New Branch" },
-  { "id": 6, "category": "Online", "title": "Live UPSC Online Classes", "desc": "Two-way live sessions connecting students across India with expert faculty.", "event": "Online Learning", "date": "Ongoing", "bg": "from-cyan-800 to-cyan-600", "emoji": "💻", "tag": "Live Class" },
-  { "id": 7, "category": "Toppers", "title": "TNPSC Toppers Felicitation 2025", "desc": "Felicitating our 47 successful candidates in TNPSC Group I Results 2024.", "event": "TNPSC Ceremony", "date": "Mar 2025", "bg": "from-rose-800 to-rose-600", "emoji": "⭐", "tag": "Group I" },
-  { "id": 8, "category": "Events", "title": "20 Years Celebration – 2024", "desc": "A milestone celebration of 20 years of excellence in civil services coaching.", "event": "Anniversary", "date": "Nov 2024", "bg": "from-indigo-900 to-indigo-700", "emoji": "🎂", "tag": "20 Years" },
-  { "id": 9, "category": "Classroom", "title": "UPSC Optional Batch – Geography", "desc": "Specialized Geography optional coaching with detailed map work and case studies.", "event": "Optional Programme", "date": "Apr 2025", "bg": "from-teal-800 to-teal-600", "emoji": "🗺️", "tag": "Geography" }
+  {
+    "id": 1,
+    "category": "Classroom",
+    "title": "UPSC Foundation Batch 2025",
+    "desc": "Our state-of-the-art classroom with 200+ students attending the foundation lecture.",
+    "event": "Regular Batch",
+    "date": "Jan 2025",
+    "bg": "from-blue-900 to-blue-700",
+    "emoji": "🏫",
+    "tag": "Foundation"
+  },
+  {
+    "id": 2,
+    "category": "Toppers",
+    "title": "UPSC CSE 2025 Toppers Felicitation",
+    "desc": "Celebrating 202 selections from our academy in UPSC CSE 2025 results.",
+    "event": "Felicitation Ceremony",
+    "date": "Jul 2025",
+    "bg": "from-amber-700 to-amber-500",
+    "emoji": "🏆",
+    "tag": "AIR 02"
+  },
+  {
+    "id": 3,
+    "category": "Interviews",
+    "title": "Civil Services Mock Interview 2025",
+    "desc": "Panel-based mock interview session to prepare students for UPSC personality test.",
+    "event": "Interview Programme",
+    "date": "Mar 2025",
+    "bg": "from-slate-800 to-slate-600",
+    "emoji": "🎙️",
+    "tag": "IPS Mock"
+  },
+  {
+    "id": 4,
+    "category": "Study",
+    "title": "Group Study Sessions",
+    "desc": "Students collaborating on current affairs and answer writing in our library.",
+    "event": "Study Circle",
+    "date": "Feb 2025",
+    "bg": "from-green-800 to-green-600",
+    "emoji": "📚",
+    "tag": "Current Affairs"
+  },
+  {
+    "id": 5,
+    "category": "Events",
+    "title": "Manasarovar Branch Inauguration 2025",
+    "desc": "Grand inauguration of Mentor Merits Academy's new branch with dignitaries.",
+    "event": "Inauguration Day",
+    "date": "Jan 2025",
+    "bg": "from-purple-900 to-purple-700",
+    "emoji": "🎊",
+    "tag": "New Branch"
+  },
+  {
+    "id": 6,
+    "category": "Online",
+    "title": "Live UPSC Online Classes",
+    "desc": "Two-way live sessions connecting students across India with expert faculty.",
+    "event": "Online Learning",
+    "date": "Ongoing",
+    "bg": "from-cyan-800 to-cyan-600",
+    "emoji": "💻",
+    "tag": "Live Class"
+  },
+  {
+    "id": 7,
+    "category": "Toppers",
+    "title": "TNPSC Toppers Felicitation 2025",
+    "desc": "Felicitating our 47 successful candidates in TNPSC Group I Results 2024.",
+    "event": "TNPSC Ceremony",
+    "date": "Mar 2025",
+    "bg": "from-rose-800 to-rose-600",
+    "emoji": "⭐",
+    "tag": "Group I"
+  },
+  {
+    "id": 8,
+    "category": "Events",
+    "title": "20 Years Celebration – 2024",
+    "desc": "A milestone celebration of 20 years of excellence in civil services coaching.",
+    "event": "Anniversary",
+    "date": "Nov 2024",
+    "bg": "from-indigo-900 to-indigo-700",
+    "emoji": "🎂",
+    "tag": "20 Years"
+  },
+  {
+    "id": 9,
+    "category": "Classroom",
+    "title": "UPSC Optional Batch – Geography",
+    "desc": "Specialized Geography optional coaching with detailed map work and case studies.",
+    "event": "Optional Programme",
+    "date": "Apr 2025",
+    "bg": "from-teal-800 to-teal-600",
+    "emoji": "🗺️",
+    "tag": "Geography"
+  }
 ]

@@ -1,13 +1,13 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { apiUrl } from "@/lib/api";
 
 function toEmbedUrl(url, type) {
   if (type === "youtube") {
     const match = url?.match(/(?:v=|youtu\.be\/|embed\/)([^&\s?]+)/);
     return match ? `https://www.youtube.com/embed/${match[1]}?rel=0&modestbranding=1&autoplay=1` : url;
   }
-
   return url;
 }
 
@@ -52,13 +52,13 @@ export default function HomepageLectures() {
   const [playing, setPlaying] = useState(null);
 
   useEffect(() => {
-    fetch("/api/lectures?isPublic=true")
+    fetch(apiUrl("/api/lectures?isPublic=true"))
       .then((r) => r.json())
       .then((d) => {
-        if (d.success) {
-          // Show featured first, then latest, max 6
-          const featured = d.data.filter((l) => l.isFeatured);
-          const rest = d.data.filter((l) => !l.isFeatured);
+        const data = d.data || d.lectures || [];
+        if (data.length) {
+          const featured = data.filter((l) => l.isFeatured);
+          const rest = data.filter((l) => !l.isFeatured);
           setLectures([...featured, ...rest].slice(0, 6));
         }
       })
@@ -103,7 +103,7 @@ export default function HomepageLectures() {
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {lectures.map((lec) => (
                 <div
-                  key={lec.id}
+                  key={lec._id || lec.id}
                   className="group bg-white rounded-2xl overflow-hidden border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer"
                   onClick={() => setPlaying(lec)}
                 >
@@ -135,7 +135,6 @@ export default function HomepageLectures() {
                       </div>
                     )}
                   </div>
-
                   {/* Info */}
                   <div className="p-4">
                     <h3 className="font-bold text-gray-900 text-sm line-clamp-2 mb-2 group-hover:text-[#1e3a8a] transition-colors">{lec.title}</h3>

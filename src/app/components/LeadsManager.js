@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
+import { apiUrl } from "@/lib/api";
 
 const LEAD_STATUS_COLORS = {
   new: "bg-blue-100 text-blue-700",
@@ -29,7 +30,7 @@ export default function LeadsManager() {
     if (sourceFilter !== "all") p.set("source", sourceFilter);
     if (search) p.set("q", search);
     try {
-      const r = await fetch("/api/leads?" + p.toString());
+      const r = await fetch(apiUrl("/api/leads?" + p.toString()));
       const d = await r.json();
       if (d.success) {
         setLeads(d.data);
@@ -43,7 +44,7 @@ export default function LeadsManager() {
   const flash = (m) => { setMsg(m); setTimeout(() => setMsg(""), 3000); };
 
   const updateStatus = async (id, status) => {
-    const r = await fetch("/api/leads", {
+    const r = await fetch(apiUrl("/api/leads"), {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id, status }),
@@ -54,7 +55,7 @@ export default function LeadsManager() {
 
   const deleteLead = async (id) => {
     if (!confirm("Delete this lead permanently?")) return;
-    await fetch("/api/leads?id=" + id, { method: "DELETE" });
+    await fetch(apiUrl("/api/leads?id=" + id), { method: "DELETE" });
     flash("🗑️ Lead deleted"); load();
   };
 

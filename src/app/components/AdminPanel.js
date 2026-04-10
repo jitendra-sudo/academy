@@ -6,6 +6,7 @@ import LeadsManager from "./LeadsManager";
 import MediaSettings from "./MediaSettings";
 import AccountSettings from "./AccountSettings";
 import LecturesManager from "./LecturesManager";
+import { apiUrl } from "@/lib/api";
 
 // ─── Sidebar menu ────────────────────────────────────────────────────────────
 const menuItems = [
@@ -34,7 +35,7 @@ function SaveBtn({ onClick, saving, saved }) {
       className={`px-5 py-2 rounded-xl font-bold text-sm transition-all flex items-center gap-2 ${saved ? "bg-green-500 text-white" : "bg-[#1e3a8a] hover:bg-[#1d4ed8] text-white"} disabled:opacity-60`}
     >
       {saving ? (
-        <><svg className="w-3 h-3 animate-spin" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>Saving...</>
+        <><svg className="w-3 h-3 animate-spin" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg>Saving...</>
       ) : saved ? "✅ Saved!" : "Save Changes"}
     </button>
   );
@@ -46,7 +47,7 @@ function Field({ label, id, value, onChange, type = "text", placeholder = "", hi
     <div>
       <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1" htmlFor={id}>{label}</label>
       <input id={id} type={type} value={value || ""} onChange={onChange} placeholder={placeholder}
-        className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1e3a8a] focus:border-transparent"/>
+        className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1e3a8a] focus:border-transparent" />
       {hint && <p className="text-xs text-gray-400 mt-1">{hint}</p>}
     </div>
   );
@@ -58,7 +59,7 @@ function TextareaField({ label, id, value, onChange, rows = 3, placeholder = "" 
     <div>
       <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1" htmlFor={id}>{label}</label>
       <textarea id={id} rows={rows} value={value || ""} onChange={onChange} placeholder={placeholder}
-        className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1e3a8a] resize-none"/>
+        className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1e3a8a] resize-none" />
     </div>
   );
 }
@@ -69,7 +70,7 @@ function SectionCard({ title, icon, children, onSave, saving, saved }) {
     <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
       <div className="p-5 border-b border-gray-100 flex items-center justify-between">
         <h2 className="font-black text-gray-900 flex items-center gap-2">{icon} {title}</h2>
-        {onSave && <SaveBtn onClick={onSave} saving={saving} saved={saved}/>}
+        {onSave && <SaveBtn onClick={onSave} saving={saving} saved={saved} />}
       </div>
       <div className="p-5">{children}</div>
     </div>
@@ -122,7 +123,7 @@ function SiteSettings({ settings, onSettingsChange }) {
   const save = async () => {
     setSaving(true);
     try {
-      const res = await fetch("/api/settings", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ section: "site", data: form }) });
+      const res = await fetch(apiUrl("/api/settings"), { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ section: "site", data: form }) });
       const d = await res.json();
       if (d.success) { onSettingsChange(d.data); setSaved(true); setTimeout(() => setSaved(false), 3000); }
     } finally { setSaving(false); }
@@ -134,17 +135,17 @@ function SiteSettings({ settings, onSettingsChange }) {
     <div className="space-y-5">
       <SectionCard title="Site Identity" icon="🏛️" onSave={save} saving={saving} saved={saved}>
         <div className="grid md:grid-cols-2 gap-4">
-          <Field label="Academy Name" id="site-name" placeholder="Mentors Merits Academy" {...f("name")}/>
-          <Field label="Logo Letter" id="site-logo" placeholder="M" hint="Single letter shown in the logo circle" {...f("logoLetter")}/>
-          <Field label="Tagline (below name)" id="site-tagline" placeholder="ACADEMY" {...f("tagline")}/>
-          <Field label="Hero Tagline" id="site-hero-tagline" placeholder="Best UPSC Coaching in India" {...f("heroTagline")}/>
-          <Field label="Founded Year" id="site-founded" placeholder="2004" {...f("foundedYear")}/>
-          <Field label="Experience (e.g. 20+)" id="site-experience" placeholder="20+" {...f("experience")}/>
+          <Field label="Academy Name" id="site-name" placeholder="Mentor Merits Academy" {...f("name")} />
+          <Field label="Logo Letter" id="site-logo" placeholder="M" hint="Single letter shown in the logo circle" {...f("logoLetter")} />
+          <Field label="Tagline (below name)" id="site-tagline" placeholder="ACADEMY" {...f("tagline")} />
+          <Field label="Hero Tagline" id="site-hero-tagline" placeholder="Best UPSC Coaching in India" {...f("heroTagline")} />
+          <Field label="Founded Year" id="site-founded" placeholder="2004" {...f("foundedYear")} />
+          <Field label="Experience (e.g. 20+)" id="site-experience" placeholder="20+" {...f("experience")} />
         </div>
         <div className="grid md:grid-cols-1 gap-4 mt-4">
-          <TextareaField label="Site Description (About Us)" id="site-desc" rows={4} placeholder="About the academy..." value={form.description || ""} onChange={(e) => setForm({ ...form, description: e.target.value })}/>
-          <TextareaField label="Meta Description (SEO)" id="site-meta" rows={2} placeholder="Short description for search engines..." value={form.metaDescription || ""} onChange={(e) => setForm({ ...form, metaDescription: e.target.value })}/>
-          <Field label="Meta Keywords (SEO)" id="site-keywords" placeholder="UPSC coaching, IAS, TNPSC..." {...f("metaKeywords")}/>
+          <TextareaField label="Site Description (About Us)" id="site-desc" rows={4} placeholder="About the academy..." value={form.description || ""} onChange={(e) => setForm({ ...form, description: e.target.value })} />
+          <TextareaField label="Meta Description (SEO)" id="site-meta" rows={2} placeholder="Short description for search engines..." value={form.metaDescription || ""} onChange={(e) => setForm({ ...form, metaDescription: e.target.value })} />
+          <Field label="Meta Keywords (SEO)" id="site-keywords" placeholder="UPSC coaching, IAS, TNPSC..." {...f("metaKeywords")} />
         </div>
         {/* Live Preview */}
         <div className="mt-5 p-4 bg-gray-50 rounded-xl border border-gray-200">
@@ -179,15 +180,17 @@ function ContactSettings({ settings, onSettingsChange }) {
 
   // Load .env defaults for badge display & reset
   useEffect(() => {
-    fetch("/api/contact-numbers")
+    fetch(apiUrl("/api/settings/contact-numbers"))
       .then((r) => r.json())
-      .then((d) => { if (d.success) setEnvDefaults(d.envDefaults); });
+      .then((d) => { if (d.success) setEnvDefaults(d.envDefaults || d.data || {}); })
+      .catch(() => { });
   }, []);
+
 
   const save = async () => {
     setSaving(true);
     try {
-      const res = await fetch("/api/settings", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ section: "contact", data: form }) });
+      const res = await fetch(apiUrl("/api/settings"), { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ section: "contact", data: form }) });
       const d = await res.json();
       if (d.success) { onSettingsChange(d.data); setSaved(true); setTimeout(() => setSaved(false), 3000); }
     } finally { setSaving(false); }
@@ -199,15 +202,15 @@ function ContactSettings({ settings, onSettingsChange }) {
     setResetting(true);
     const updated = {
       ...form,
-      upscPhone:   envDefaults.upscPhone   || form.upscPhone,
-      upscPhone2:  envDefaults.upscPhone2  || form.upscPhone2,
-      tnpscPhone:  envDefaults.tnpscPhone  || form.tnpscPhone,
+      upscPhone: envDefaults.upscPhone || form.upscPhone,
+      upscPhone2: envDefaults.upscPhone2 || form.upscPhone2,
+      tnpscPhone: envDefaults.tnpscPhone || form.tnpscPhone,
       tnpscPhone2: envDefaults.tnpscPhone2 || form.tnpscPhone2,
-      whatsapp:    envDefaults.whatsapp    || form.whatsapp,
+      whatsapp: envDefaults.whatsapp || form.whatsapp,
     };
     setForm(updated);
     try {
-      const res = await fetch("/api/settings", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ section: "contact", data: updated }) });
+      const res = await fetch(apiUrl("/api/settings"), { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ section: "contact", data: updated }) });
       const d = await res.json();
       if (d.success) { onSettingsChange(d.data); setSaved(true); setTimeout(() => setSaved(false), 3000); }
     } finally { setResetting(false); }
@@ -221,7 +224,7 @@ function ContactSettings({ settings, onSettingsChange }) {
     if (!isEnvValue) return null;
     return (
       <span className="inline-flex items-center gap-1 text-[10px] font-bold bg-emerald-50 text-emerald-600 border border-emerald-200 rounded-full px-2 py-0.5 ml-1">
-        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block"/>
+        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block" />
         .env
       </span>
     );
@@ -246,7 +249,7 @@ function ContactSettings({ settings, onSettingsChange }) {
             Default values come from your <code className="bg-blue-100 px-1 rounded">.env</code> file.
             Changes saved here override the env defaults permanently.
             <span className="inline-flex items-center gap-1 ml-1 bg-emerald-50 text-emerald-600 border border-emerald-200 rounded-full px-1.5 py-0.5 text-[10px] font-bold">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block"/> .env
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block" /> .env
             </span>
             {" "}badge means the field is using the env value.
           </p>
@@ -271,22 +274,22 @@ function ContactSettings({ settings, onSettingsChange }) {
             <div>
               <LabelWithBadge label="UPSC Phone 1" fieldKey="upscPhone" />
               <input id="c-upsc-phone" type="text" {...f("upscPhone")} placeholder={envDefaults.upscPhone || "+91..."}
-                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1e3a8a] focus:border-transparent"/>
+                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1e3a8a] focus:border-transparent" />
             </div>
             <div>
               <LabelWithBadge label="UPSC Phone 2" fieldKey="upscPhone2" />
               <input id="c-upsc-phone2" type="text" {...f("upscPhone2")} placeholder={envDefaults.upscPhone2 || "+91..."}
-                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1e3a8a] focus:border-transparent"/>
+                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1e3a8a] focus:border-transparent" />
             </div>
             <div>
               <LabelWithBadge label="TNPSC Phone 1" fieldKey="tnpscPhone" />
               <input id="c-tnpsc-phone" type="text" {...f("tnpscPhone")} placeholder={envDefaults.tnpscPhone || "+91..."}
-                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1e3a8a] focus:border-transparent"/>
+                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1e3a8a] focus:border-transparent" />
             </div>
             <div>
               <LabelWithBadge label="TNPSC Phone 2" fieldKey="tnpscPhone2" />
               <input id="c-tnpsc-phone2" type="text" {...f("tnpscPhone2")} placeholder={envDefaults.tnpscPhone2 || "+91..."}
-                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1e3a8a] focus:border-transparent"/>
+                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1e3a8a] focus:border-transparent" />
             </div>
           </div>
         </div>
@@ -310,12 +313,12 @@ function ContactSettings({ settings, onSettingsChange }) {
 
         {/* Other contact fields */}
         <div className="grid md:grid-cols-2 gap-4">
-          <Field label="Primary Email" id="c-email" type="email" {...f("email")}/>
-          <Field label="Enquiry Email" id="c-enquiry-email" type="email" {...f("enquiryEmail")}/>
-          <Field label="Address Line 1" id="c-addr1" {...f("address")}/>
-          <Field label="Address Line 2" id="c-addr2" {...f("addressLine2")}/>
-          <Field label="Working Hours" id="c-hours" placeholder="Mon – Sat: 9AM – 7PM" {...f("workingHours")}/>
-          <Field label="Working Hours 2" id="c-hours2" placeholder="Sunday: 10AM – 2PM" {...f("workingHours2")}/>
+          <Field label="Primary Email" id="c-email" type="email" {...f("email")} />
+          <Field label="Enquiry Email" id="c-enquiry-email" type="email" {...f("enquiryEmail")} />
+          <Field label="Address Line 1" id="c-addr1" {...f("address")} />
+          <Field label="Address Line 2" id="c-addr2" {...f("addressLine2")} />
+          <Field label="Working Hours" id="c-hours" placeholder="Mon – Sat: 9AM – 7PM" {...f("workingHours")} />
+          <Field label="Working Hours 2" id="c-hours2" placeholder="Sunday: 10AM – 2PM" {...f("workingHours2")} />
         </div>
       </SectionCard>
     </div>
@@ -335,7 +338,7 @@ function SocialSettings({ settings, onSettingsChange }) {
   const save = async () => {
     setSaving(true);
     try {
-      const res = await fetch("/api/settings", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ section: "social", data: form }) });
+      const res = await fetch(apiUrl("/api/settings"), { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ section: "social", data: form }) });
       const d = await res.json();
       if (d.success) { onSettingsChange(d.data); setSaved(true); setTimeout(() => setSaved(false), 3000); }
     } finally { setSaving(false); }
@@ -347,7 +350,7 @@ function SocialSettings({ settings, onSettingsChange }) {
     <SectionCard title="Social Media Links" icon="🔗" onSave={save} saving={saving} saved={saved}>
       <div className="grid md:grid-cols-2 gap-4">
         {["facebook", "twitter", "youtube", "instagram", "linkedin"].map((s) => (
-          <Field key={s} label={s.charAt(0).toUpperCase() + s.slice(1)} id={`social-${s}`} placeholder={`https://${s}.com/...`} {...f(s)}/>
+          <Field key={s} label={s.charAt(0).toUpperCase() + s.slice(1)} id={`social-${s}`} placeholder={`https://${s}.com/...`} {...f(s)} />
         ))}
       </div>
     </SectionCard>
@@ -367,7 +370,7 @@ function StatsSettings({ settings, onSettingsChange }) {
   const save = async () => {
     setSaving(true);
     try {
-      const res = await fetch("/api/settings", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ section: "stats", data: form }) });
+      const res = await fetch(apiUrl("/api/settings"), { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ section: "stats", data: form }) });
       const d = await res.json();
       if (d.success) { onSettingsChange(d.data); setSaved(true); setTimeout(() => setSaved(false), 3000); }
     } finally { setSaving(false); }
@@ -389,7 +392,7 @@ function StatsSettings({ settings, onSettingsChange }) {
       <p className="text-sm text-gray-500 mb-4">These numbers appear in the hero section, footer, and throughout the site.</p>
       <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
         {fields.map((f) => (
-          <Field key={f.key} label={f.label} id={`stat-${f.key}`} value={form[f.key] || ""} onChange={(e) => setForm({ ...form, [f.key]: e.target.value })}/>
+          <Field key={f.key} label={f.label} id={`stat-${f.key}`} value={form[f.key] || ""} onChange={(e) => setForm({ ...form, [f.key]: e.target.value })} />
         ))}
       </div>
     </SectionCard>
@@ -408,7 +411,7 @@ function CoursesManager() {
 
   const load = useCallback(async () => {
     setLoading(true);
-    const r = await fetch("/api/courses"); const d = await r.json();
+    const r = await fetch(apiUrl("/api/courses")); const d = await r.json();
     if (d.success) setCourses(d.data);
     setLoading(false);
   }, []);
@@ -418,7 +421,7 @@ function CoursesManager() {
   const flash = (m) => { setMsg(m); setTimeout(() => setMsg(""), 3000); };
 
   const saveEdit = async () => {
-    const res = await fetch("/api/courses", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(editing) });
+    const res = await fetch(apiUrl("/api/courses"), { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(editing) });
     const d = await res.json();
     if (d.success) { flash("✅ Course updated!"); load(); }
     setEditing(null);
@@ -426,7 +429,7 @@ function CoursesManager() {
 
   const deleteCourse = async (id) => {
     if (!confirm("Delete this course category?")) return;
-    await fetch(`/api/courses?id=${id}`, { method: "DELETE" });
+    await fetch(apiUrl(`/api/courses?id=${id}`), { method: "DELETE" });
     flash("🗑️ Deleted"); load();
   };
 
@@ -449,7 +452,7 @@ function CoursesManager() {
           <h3 className="font-black text-gray-900 mb-4">✏️ Edit: {editing.category}</h3>
           <div className="mb-4">
             <label className="text-xs font-semibold text-gray-500 uppercase mb-1 block">Category Name</label>
-            <input className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[#1e3a8a] focus:outline-none" value={editing.category} onChange={(e) => setEditing({ ...editing, category: e.target.value })}/>
+            <input className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[#1e3a8a] focus:outline-none" value={editing.category} onChange={(e) => setEditing({ ...editing, category: e.target.value })} />
           </div>
           <div className="mb-4">
             <label className="text-xs font-semibold text-gray-500 uppercase mb-2 block">Course Items</label>
@@ -462,7 +465,7 @@ function CoursesManager() {
               ))}
             </div>
             <div className="flex gap-2">
-              <input className="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[#1e3a8a] focus:outline-none" placeholder="Add new course item..." value={newItem} onChange={(e) => setNewItem(e.target.value)} onKeyDown={(e) => e.key === "Enter" && addItem()}/>
+              <input className="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[#1e3a8a] focus:outline-none" placeholder="Add new course item..." value={newItem} onChange={(e) => setNewItem(e.target.value)} onKeyDown={(e) => e.key === "Enter" && addItem()} />
               <button onClick={addItem} className="bg-[#1e3a8a] text-white px-3 py-2 rounded-lg text-sm font-bold">Add</button>
             </div>
           </div>
@@ -484,7 +487,7 @@ function CoursesManager() {
             <ul className="space-y-1">
               {cat.items.slice(0, 4).map((item, i) => (
                 <li key={i} className="text-sm text-gray-600 flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-gray-400 shrink-0"/>
+                  <span className="w-1.5 h-1.5 rounded-full bg-gray-400 shrink-0" />
                   {item}
                 </li>
               ))}
@@ -507,7 +510,7 @@ function AchieversManager() {
   const [msg, setMsg] = useState("");
 
   const load = useCallback(async () => {
-    const r = await fetch("/api/achievers"); const d = await r.json();
+    const r = await fetch(apiUrl("/api/achievers")); const d = await r.json();
     if (d.success) setList(d.data);
   }, []);
 
@@ -517,14 +520,14 @@ function AchieversManager() {
   const save = async () => {
     const method = editing ? "PUT" : "POST";
     const body = editing ? { ...form, id: editing.id } : form;
-    const r = await fetch("/api/achievers", { method, headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+    const r = await fetch(apiUrl("/api/achievers"), { method, headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
     const d = await r.json();
     if (d.success) { flash(editing ? "✅ Updated!" : "✅ Added!"); load(); setForm({ name: "", rank: "", course: "", year: "", exam: "UPSC CSE" }); setEditing(null); }
   };
 
   const del = async (id) => {
     if (!confirm("Delete this achiever?")) return;
-    await fetch(`/api/achievers?id=${id}`, { method: "DELETE" });
+    await fetch(apiUrl(`/api/achievers?id=${id}`), { method: "DELETE" });
     flash("🗑️ Deleted"); load();
   };
 
@@ -540,12 +543,12 @@ function AchieversManager() {
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
         <h3 className="font-black text-gray-900 mb-4">{editing ? "✏️ Edit Achiever" : "➕ Add Achiever / Topper"}</h3>
         <div className="grid md:grid-cols-2 gap-4 mb-4">
-          <Field label="Full Name" id="ach-name" placeholder="ISHITA KISHORE" {...f("name")}/>
-          <Field label="Rank" id="ach-rank" placeholder="AIR 01" {...f("rank")}/>
-          <Field label="Exam" id="ach-exam" placeholder="UPSC CSE" {...f("exam")}/>
-          <Field label="Year" id="ach-year" placeholder="2025" {...f("year")}/>
+          <Field label="Full Name" id="ach-name" placeholder="ISHITA KISHORE" {...f("name")} />
+          <Field label="Rank" id="ach-rank" placeholder="AIR 01" {...f("rank")} />
+          <Field label="Exam" id="ach-exam" placeholder="UPSC CSE" {...f("exam")} />
+          <Field label="Year" id="ach-year" placeholder="2025" {...f("year")} />
           <div className="md:col-span-2">
-            <Field label="Course / Batch" id="ach-course" placeholder="Foundation Batch 2025" {...f("course")}/>
+            <Field label="Course / Batch" id="ach-course" placeholder="Foundation Batch 2025" {...f("course")} />
           </div>
         </div>
         <div className="flex gap-3">
@@ -595,7 +598,7 @@ function GalleryManager() {
   const [msg, setMsg] = useState("");
 
   const load = useCallback(async () => {
-    const r = await fetch("/api/gallery"); const d = await r.json();
+    const r = await fetch(apiUrl("/api/gallery")); const d = await r.json();
     if (d.success) setList(d.data);
   }, []);
 
@@ -605,14 +608,14 @@ function GalleryManager() {
   const save = async () => {
     const method = editing ? "PUT" : "POST";
     const body = editing ? { ...form, id: editing.id } : form;
-    const r = await fetch("/api/gallery", { method, headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+    const r = await fetch(apiUrl("/api/gallery"), { method, headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
     const d = await r.json();
     if (d.success) { flash(editing ? "✅ Updated!" : "✅ Added!"); load(); setForm({ category: "Classroom", title: "", desc: "", event: "", date: "", emoji: "📸", tag: "", bg: "from-blue-900 to-blue-700" }); setEditing(null); }
   };
 
   const del = async (id) => {
     if (!confirm("Delete this gallery item?")) return;
-    await fetch(`/api/gallery?id=${id}`, { method: "DELETE" });
+    await fetch(apiUrl(`/api/gallery?id=${id}`), { method: "DELETE" });
     flash("🗑️ Deleted"); load();
   };
 
@@ -642,12 +645,12 @@ function GalleryManager() {
               ))}
             </div>
           </div>
-          <Field label="Title" id="gal-title" placeholder="Event title..." {...f("title")}/>
-          <Field label="Tag" id="gal-tag" placeholder="AIR 02, New Branch..." {...f("tag")}/>
-          <Field label="Event Name" id="gal-event" placeholder="Felicitation Ceremony" {...f("event")}/>
-          <Field label="Date" id="gal-date" placeholder="Jan 2025" {...f("date")}/>
+          <Field label="Title" id="gal-title" placeholder="Event title..." {...f("title")} />
+          <Field label="Tag" id="gal-tag" placeholder="AIR 02, New Branch..." {...f("tag")} />
+          <Field label="Event Name" id="gal-event" placeholder="Felicitation Ceremony" {...f("event")} />
+          <Field label="Date" id="gal-date" placeholder="Jan 2025" {...f("date")} />
           <div className="md:col-span-2">
-            <TextareaField label="Description" id="gal-desc" rows={2} placeholder="Brief description..." value={form.desc} onChange={(e) => setForm({ ...form, desc: e.target.value })}/>
+            <TextareaField label="Description" id="gal-desc" rows={2} placeholder="Brief description..." value={form.desc} onChange={(e) => setForm({ ...form, desc: e.target.value })} />
           </div>
         </div>
         <div className="flex gap-3">
@@ -697,8 +700,7 @@ function AdmissionsList() {
     const params = new URLSearchParams();
     if (filter !== "all") params.set("status", filter);
     if (search) params.set("q", search);
-    const r = await fetch(`/api/admissions?${params}`);
-    const d = await r.json();
+    const r = await fetch(apiUrl(`/api/admissions?${params}`)); const d = await r.json();
     if (d.success) setList(d.data);
   }, [filter, search]);
 
@@ -708,7 +710,7 @@ function AdmissionsList() {
     <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
       <div className="p-5 border-b border-gray-100">
         <div className="flex flex-col sm:flex-row gap-3">
-          <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search name, course, city..." className="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[#1e3a8a] focus:outline-none"/>
+          <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search name, course, city..." className="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[#1e3a8a] focus:outline-none" />
           <select value={filter} onChange={(e) => setFilter(e.target.value)} className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[#1e3a8a] focus:outline-none bg-white">
             <option value="all">All Statuses</option>
             <option value="Confirmed">Confirmed</option>
@@ -752,17 +754,17 @@ function Sidebar({ active, setActive, sidebarOpen, setSidebarOpen, onLogout, sit
   const groups = [...new Set(menuItems.map((m) => m.group))];
   return (
     <>
-      {sidebarOpen && <div className="fixed inset-0 bg-black/50 z-20 lg:hidden" onClick={() => setSidebarOpen(false)}/>}
+      {sidebarOpen && <div className="fixed inset-0 bg-black/50 z-20 lg:hidden" onClick={() => setSidebarOpen(false)} />}
       <aside className={`fixed top-0 left-0 h-full w-64 bg-gradient-to-b from-[#0f172a] to-[#1e3a8a] z-30 flex flex-col transform transition-transform duration-300 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0 lg:static`}>
         <div className="p-5 border-b border-white/10">
           <Link href="/" className="flex items-center gap-2">
             <img
               src="/logo.jpg"
-              alt="Mentors Merits Academy"
+              alt="Mentor Merits Academy"
               className="w-10 h-10 object-contain rounded-full shrink-0 bg-white/10"
             />
             <div className="min-w-0">
-              <div className="text-white font-black text-xs leading-tight truncate">{siteName || "MENTORS MERITS"}</div>
+              <div className="text-white font-black text-xs leading-tight truncate">{siteName || "MENTOR MERITS"}</div>
               <div className="text-amber-400 text-xs">Admin CMS</div>
             </div>
           </Link>
@@ -787,7 +789,7 @@ function Sidebar({ active, setActive, sidebarOpen, setSidebarOpen, onLogout, sit
         <div className="p-4 border-t border-white/10 space-y-2">
           <Link href="/" className="flex items-center gap-2 text-blue-200 hover:text-white text-sm transition-colors">← View Website</Link>
           <button onClick={onLogout} className="flex items-center gap-2 text-red-300 hover:text-red-200 text-sm w-full transition-colors">
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
             Logout
           </button>
         </div>
@@ -814,7 +816,7 @@ export function AdminDashboard() {
 
   useEffect(() => {
     if (!authChecked) return;
-    fetch("/api/settings").then((r) => r.json()).then((d) => { if (d.success) setSettings(d.data); });
+    fetch(apiUrl("/api/settings")).then((r) => r.json()).then((d) => { if (d.success) setSettings(d.data); });
   }, [authChecked]);
 
   const handleLogout = () => {
@@ -827,8 +829,8 @@ export function AdminDashboard() {
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="flex flex-col items-center gap-3">
         <svg className="w-8 h-8 animate-spin text-[#1e3a8a]" fill="none" viewBox="0 0 24 24">
-          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
-          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
         </svg>
         <span className="text-gray-500 text-sm">Checking authentication...</span>
       </div>
@@ -836,23 +838,23 @@ export function AdminDashboard() {
   );
 
   const currentMenu = menuItems.find((m) => m.id === section);
-  const siteName = settings?.site?.name?.toUpperCase() || "MENTORS MERITS";
+  const siteName = settings?.site?.name?.toUpperCase() || "MENTOR MERITS";
 
   const renderSection = () => {
     switch (section) {
-      case "dashboard": return <Dashboard setSection={setSection}/>;
-      case "site-settings": return <SiteSettings settings={settings} onSettingsChange={setSettings}/>;
-      case "contact-settings": return <ContactSettings settings={settings} onSettingsChange={setSettings}/>;
-      case "social-settings": return <SocialSettings settings={settings} onSettingsChange={setSettings}/>;
-      case "stats-settings": return <StatsSettings settings={settings} onSettingsChange={setSettings}/>;
-      case "courses": return <CoursesManager/>;
-      case "achievers": return <AchieversManager/>;
-      case "gallery": return <GalleryManager/>;
-      case "lectures": return <LecturesManager/>;
-      case "media-settings": return <MediaSettings settings={settings} onSettingsChange={setSettings}/>;
-      case "leads": return <LeadsManager/>;
-      case "admissions": return <AdmissionsList/>;
-      case "settings": return <AccountSettings/>;
+      case "dashboard": return <Dashboard setSection={setSection} />;
+      case "site-settings": return <SiteSettings settings={settings} onSettingsChange={setSettings} />;
+      case "contact-settings": return <ContactSettings settings={settings} onSettingsChange={setSettings} />;
+      case "social-settings": return <SocialSettings settings={settings} onSettingsChange={setSettings} />;
+      case "stats-settings": return <StatsSettings settings={settings} onSettingsChange={setSettings} />;
+      case "courses": return <CoursesManager />;
+      case "achievers": return <AchieversManager />;
+      case "gallery": return <GalleryManager />;
+      case "lectures": return <LecturesManager />;
+      case "media-settings": return <MediaSettings settings={settings} onSettingsChange={setSettings} />;
+      case "leads": return <LeadsManager />;
+      case "admissions": return <AdmissionsList />;
+      case "settings": return <AccountSettings />;
       default: return (
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-10 text-center">
           <div className="text-5xl mb-3">{currentMenu?.icon}</div>
@@ -866,14 +868,14 @@ export function AdminDashboard() {
 
   return (
     <div className="flex h-screen bg-gray-50 overflow-hidden">
-      <Sidebar active={section} setActive={setSection} sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} onLogout={handleLogout} siteName={siteName}/>
+      <Sidebar active={section} setActive={setSection} sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} onLogout={handleLogout} siteName={siteName} />
 
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Header */}
         <header className="bg-white border-b border-gray-200 px-4 lg:px-6 py-3 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-3">
             <button className="lg:hidden p-2 rounded-lg hover:bg-gray-100" onClick={() => setSidebarOpen(true)} id="admin-sidebar-toggle" aria-label="Open sidebar">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16"/></svg>
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" /></svg>
             </button>
             <div>
               <h1 className="font-black text-gray-900 text-base">{currentMenu?.icon} {currentMenu?.label}</h1>
@@ -893,7 +895,7 @@ export function AdminDashboard() {
               </div>
             </div>
             <button id="admin-logout-header-btn" onClick={handleLogout} title="Logout" className="p-2 rounded-lg hover:bg-red-50 text-gray-500 hover:text-red-600 transition-colors" aria-label="Logout">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
             </button>
           </div>
         </header>

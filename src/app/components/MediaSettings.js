@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import { apiUrl } from "@/lib/api";
 import ImageUploader from "./ImageUploader";
 
 // SectionCard wrapper
@@ -29,13 +30,13 @@ export default function MediaSettings({ settings, onSettingsChange }) {
   useEffect(() => {
     if (settings?.images) setImages({ ...settings.images });
     // Check R2 config status
-    fetch("/api/upload").then(r => r.json()).then(d => setR2Status(d));
+    fetch(apiUrl("/api/upload")).then(r => r.json()).then(d => setR2Status(d));
   }, [settings]);
 
   const saveImages = async () => {
     setSaving(true);
     try {
-      const res = await fetch("/api/settings", {
+      const res = await fetch(apiUrl("/api/settings"), {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ section: "images", data: images }),
@@ -67,7 +68,7 @@ export default function MediaSettings({ settings, onSettingsChange }) {
                     <div>R2_ACCOUNT_ID=<span className="text-amber-800">your-account-id</span></div>
                     <div>R2_ACCESS_KEY_ID=<span className="text-amber-800">your-access-key</span></div>
                     <div>R2_SECRET_ACCESS_KEY=<span className="text-amber-800">your-secret-key</span></div>
-                    <div>R2_BUCKET_NAME=<span className="text-amber-800">mentors-merits-assets</span></div>
+                    <div>R2_BUCKET_NAME=<span className="text-amber-800">mentor-merits-assets</span></div>
                     <div>NEXT_PUBLIC_R2_PUBLIC_URL=<span className="text-amber-800">https://your-bucket-url</span></div>
                   </div>
                   <p>Get these from: <a href="https://dash.cloudflare.com" target="_blank" rel="noreferrer" className="font-semibold underline">Cloudflare Dashboard → R2 → API Tokens</a></p>
@@ -102,13 +103,13 @@ export default function MediaSettings({ settings, onSettingsChange }) {
         <div className="mt-4 pt-4 border-t border-gray-100 grid md:grid-cols-2 gap-4">
           <div>
             <label className="text-xs font-semibold text-gray-500 uppercase block mb-1">Logo URL (manual)</label>
-            <input value={images.logoUrl || ""} onChange={e => setImages(prev => ({...prev, logoUrl: e.target.value}))}
-              placeholder="https://..." className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[#1e3a8a] focus:outline-none"/>
+            <input value={images.logoUrl || ""} onChange={e => setImages(prev => ({ ...prev, logoUrl: e.target.value }))}
+              placeholder="https://..." className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[#1e3a8a] focus:outline-none" />
           </div>
           <div>
             <label className="text-xs font-semibold text-gray-500 uppercase block mb-1">Favicon URL (manual)</label>
-            <input value={images.faviconUrl || ""} onChange={e => setImages(prev => ({...prev, faviconUrl: e.target.value}))}
-              placeholder="https://..." className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[#1e3a8a] focus:outline-none"/>
+            <input value={images.faviconUrl || ""} onChange={e => setImages(prev => ({ ...prev, faviconUrl: e.target.value }))}
+              placeholder="https://..." className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[#1e3a8a] focus:outline-none" />
           </div>
         </div>
       </SectionCard>
@@ -135,11 +136,11 @@ export default function MediaSettings({ settings, onSettingsChange }) {
         </div>
         <div className="mt-4 pt-4 border-t border-gray-100">
           <div className="grid md:grid-cols-2 gap-4">
-            {[["heroBannerUrl","Hero Banner 1 URL"],["heroBanner2Url","Hero Banner 2 URL"]].map(([key,label]) => (
+            {[["heroBannerUrl", "Hero Banner 1 URL"], ["heroBanner2Url", "Hero Banner 2 URL"]].map(([key, label]) => (
               <div key={key}>
                 <label className="text-xs font-semibold text-gray-500 uppercase block mb-1">{label}</label>
-                <input value={images[key] || ""} onChange={e => setImages(prev => ({...prev, [key]: e.target.value}))}
-                  placeholder="https://..." className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[#1e3a8a] focus:outline-none"/>
+                <input value={images[key] || ""} onChange={e => setImages(prev => ({ ...prev, [key]: e.target.value }))}
+                  placeholder="https://..." className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[#1e3a8a] focus:outline-none" />
               </div>
             ))}
           </div>
@@ -173,11 +174,11 @@ export default function MediaSettings({ settings, onSettingsChange }) {
           />
         </div>
         <div className="mt-4 pt-4 border-t border-gray-100 grid md:grid-cols-2 gap-4">
-          {[["aboutImageUrl","About Image URL"],["ogImageUrl","OG Image URL"]].map(([key,label]) => (
+          {[["aboutImageUrl", "About Image URL"], ["ogImageUrl", "OG Image URL"]].map(([key, label]) => (
             <div key={key}>
               <label className="text-xs font-semibold text-gray-500 uppercase block mb-1">{label}</label>
-              <input value={images[key] || ""} onChange={e => setImages(prev => ({...prev, [key]: e.target.value}))}
-                placeholder="https://..." className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[#1e3a8a] focus:outline-none"/>
+              <input value={images[key] || ""} onChange={e => setImages(prev => ({ ...prev, [key]: e.target.value }))}
+                placeholder="https://..." className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[#1e3a8a] focus:outline-none" />
             </div>
           ))}
         </div>

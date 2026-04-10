@@ -20,7 +20,7 @@ export function getR2Client() {
   return _client;
 }
 
-export const R2_BUCKET = process.env.R2_BUCKET_NAME || "mentors-merits-assets";
+export const R2_BUCKET = process.env.R2_BUCKET_NAME || "mentor-merits-assets";
 export const R2_PUBLIC_URL = process.env.NEXT_PUBLIC_R2_PUBLIC_URL || "";
 
 // Build the public URL for an uploaded file

@@ -1,5 +1,6 @@
 "use client";
 import { useState, useRef } from "react";
+import { apiUrl } from "@/lib/api";
 
 // Reusable drag-and-drop image uploader that uploads to R2 via /api/upload
 // Props:
@@ -34,7 +35,7 @@ export default function ImageUploader({ label, currentUrl, folder = "general", o
       form.append("file", file);
       form.append("folder", folder);
 
-      const res = await fetch("/api/upload", { method: "POST", body: form });
+      const res = await fetch(apiUrl("/api/upload"), { method: "POST", body: form });
       const data = await res.json();
 
       if (data.success) {

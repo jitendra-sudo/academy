@@ -7,9 +7,9 @@ const inter = Inter({
 });
 
 export const metadata = {
-  title: "Mentors Merits Academy | Best UPSC Coaching in India",
+  title: "Mentor Merits Academy | Best UPSC Coaching in India",
   description:
-    "Join Mentors Merits Academy, India's premier UPSC coaching institute. Expert mentorship, structured courses, and top success rates in UPSC and TNPSC.",
+    "Join Mentor Merits Academy, India's premier UPSC coaching institute. Expert mentorship, structured courses, and top success rates in UPSC and TNPSC.",
   keywords:
     "IAS coaching, UPSC coaching, TNPSC coaching, best IAS academy, civil services",
 };

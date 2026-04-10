@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect, useCallback, useRef } from "react";
+import { apiUrl } from "@/lib/api";
 
 const COURSES = [
   "UPSC CSE", "UPSC IFS", "UPSC EPFO", "TNPSC Group I",
@@ -77,7 +78,7 @@ function VideoUploader({ onUploaded, uploadProgress, setUploadProgress }) {
       // Use XMLHttpRequest for progress tracking
       await new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
-        xhr.open("POST", "/api/upload");
+        xhr.open("POST", apiUrl("/api/upload"));
 
         xhr.upload.onprogress = (e) => {
           if (e.lengthComputable) {
@@ -195,7 +196,7 @@ export default function LecturesManager() {
     if (filter.course !== "all") p.set("course", filter.course);
     if (filter.subject !== "all") p.set("subject", filter.subject);
     if (filter.q) p.set("q", filter.q);
-    const r = await fetch("/api/lectures?" + p.toString());
+    const r = await fetch(apiUrl("/api/lectures?" + p.toString()));
     const d = await r.json();
     if (d.success) setLectures(d.data);
   }, [filter]);
@@ -226,7 +227,7 @@ export default function LecturesManager() {
     try {
       const method = editing ? "PUT" : "POST";
       const body = editing ? { ...form, id: editing.id } : form;
-      const r = await fetch("/api/lectures", {
+      const r = await fetch(apiUrl("/api/lectures"), {
         method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
@@ -254,13 +255,13 @@ export default function LecturesManager() {
 
   const deleteLec = async (id) => {
     if (!confirm("Delete this lecture?")) return;
-    const r = await fetch("/api/lectures?id=" + id, { method: "DELETE" });
+    const r = await fetch(apiUrl("/api/lectures?id=" + id), { method: "DELETE" });
     const d = await r.json();
     if (d.success) { flash("🗑️ Deleted"); load(); }
   };
 
   const togglePublic = async (lec) => {
-    await fetch("/api/lectures", {
+    await fetch(apiUrl("/api/lectures"), {
       method: "PATCH", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id: lec.id, isPublic: !lec.isPublic }),
     });

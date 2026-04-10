@@ -1,11 +1,11 @@
 {
   "site": {
-    "name": "Mentors Merits Academy",
+    "name": "Mentor Merits Academy",
     "logoLetter": "M",
     "tagline": "ACADEMY",
     "heroTagline": "Best UPSC Coaching in India",
-    "description": "Mentors Merits Academy is the top coaching institute for UPSC in India, providing excellent coaching for civil services aspirants with expert faculty, comprehensive study material and a systematic approach.",
-    "metaDescription": "Join Mentors Merits Academy, India's premier UPSC coaching institute. Expert mentorship, structured courses, and top success rates in UPSC and TNPSC.",
+    "description": "Mentor Merits Academy is the top coaching institute for UPSC in India, providing excellent coaching for civil services aspirants with expert faculty, comprehensive study material and a systematic approach.",
+    "metaDescription": "Join Mentor Merits Academy, India's premier UPSC coaching institute. Expert mentorship, structured courses, and top success rates in UPSC and TNPSC.",
     "metaKeywords": "UPSC coaching, IAS coaching, TNPSC coaching, best UPSC academy, civil services",
     "foundedYear": "2004",
     "experience": "20+"
@@ -23,8 +23,8 @@
     "upscPhone2": "044-66024500",
     "tnpscPhone": "7667766266",
     "tnpscPhone2": "044-43533445",
-    "email": "admissions@mentorsmerits.in",
-    "enquiryEmail": "enquiry@mentorsmerits.in",
+    "email": "admissions@mentormerits.in",
+    "enquiryEmail": "enquiry@mentormerits.in",
     "whatsapp": "+919003190030",
     "address": "Anna Nagar, Chennai",
     "addressLine2": "Tamil Nadu – 600040",
@@ -49,16 +49,76 @@
     "years": "20+"
   },
   "branches": [
-    { "id": 1, "city": "Anna Nagar, Chennai", "type": "Main Campus", "phone": "9003190030", "color": "bg-blue-600" },
-    { "id": 2, "city": "Adyar, Chennai", "type": "Branch", "phone": "044-43533445", "color": "bg-indigo-600" },
-    { "id": 3, "city": "Delhi", "type": "Branch", "phone": "011-40545454", "color": "bg-red-600" },
-    { "id": 4, "city": "Bengaluru", "type": "Branch", "phone": "080-41236969", "color": "bg-orange-600" },
-    { "id": 5, "city": "Hyderabad", "type": "Branch", "phone": "040-46000123", "color": "bg-teal-600" },
-    { "id": 6, "city": "Thiruvananthapuram", "type": "Branch", "phone": "0471-4011234", "color": "bg-green-600" },
-    { "id": 7, "city": "Trichy", "type": "Branch", "phone": "0431-4011234", "color": "bg-purple-600" },
-    { "id": 8, "city": "Salem", "type": "Branch", "phone": "0427-4011234", "color": "bg-pink-600" },
-    { "id": 9, "city": "Madurai", "type": "Branch", "phone": "0452-4011234", "color": "bg-yellow-600" },
-    { "id": 10, "city": "Coimbatore", "type": "Branch", "phone": "0422-4011234", "color": "bg-cyan-600" }
+    {
+      "id": 1,
+      "city": "Anna Nagar, Chennai",
+      "type": "Main Campus",
+      "phone": "9003190030",
+      "color": "bg-blue-600"
+    },
+    {
+      "id": 2,
+      "city": "Adyar, Chennai",
+      "type": "Branch",
+      "phone": "044-43533445",
+      "color": "bg-indigo-600"
+    },
+    {
+      "id": 3,
+      "city": "Delhi",
+      "type": "Branch",
+      "phone": "011-40545454",
+      "color": "bg-red-600"
+    },
+    {
+      "id": 4,
+      "city": "Bengaluru",
+      "type": "Branch",
+      "phone": "080-41236969",
+      "color": "bg-orange-600"
+    },
+    {
+      "id": 5,
+      "city": "Hyderabad",
+      "type": "Branch",
+      "phone": "040-46000123",
+      "color": "bg-teal-600"
+    },
+    {
+      "id": 6,
+      "city": "Thiruvananthapuram",
+      "type": "Branch",
+      "phone": "0471-4011234",
+      "color": "bg-green-600"
+    },
+    {
+      "id": 7,
+      "city": "Trichy",
+      "type": "Branch",
+      "phone": "0431-4011234",
+      "color": "bg-purple-600"
+    },
+    {
+      "id": 8,
+      "city": "Salem",
+      "type": "Branch",
+      "phone": "0427-4011234",
+      "color": "bg-pink-600"
+    },
+    {
+      "id": 9,
+      "city": "Madurai",
+      "type": "Branch",
+      "phone": "0452-4011234",
+      "color": "bg-yellow-600"
+    },
+    {
+      "id": 10,
+      "city": "Coimbatore",
+      "type": "Branch",
+      "phone": "0422-4011234",
+      "color": "bg-cyan-600"
+    }
   ],
   "govtPartners": [
     "Ministry of Social Justice and Empowerment",

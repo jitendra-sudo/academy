@@ -1,28 +1,50 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { apiUrl } from "@/lib/api";
 
 export default function Footer() {
   const [contact, setContact] = useState(null);
+  const [social, setSocial] = useState({});
   const [logoUrl, setLogoUrl] = useState("");
+
+  useEffect(() => {
+    fetch(apiUrl("/api/settings"))
+      .then((r) => r.json())
+      .then((d) => {
+        if (d.success && d.data) {
+          if (d.data.contact) setContact(d.data.contact);
+          if (d.data.social) setSocial(d.data.social);
+          if (d.data.media?.logoUrl) setLogoUrl(d.data.media.logoUrl);
+        }
+      })
+      .catch(() => { });
+  }, []);
+
   const phone = contact?.upscPhone || "7397236970";
   const phone2 = contact?.upscPhone2 || "7397236970";
-  const email = contact?.email || "admissions@mentorsmerits.in";
+  const email = contact?.email || "admissions@mentormerits.in";
   const address = contact?.address || "109/18, 2nd floor, vanavil appartment c- sector, east main road, Anna Nagar West Extension";
   const addressLine2 = contact?.addressLine2 || "Chennai, Tamil Nadu 600101";
   const whatsappNum = contact?.whatsapp || "+917397236970";
   const waNum = whatsappNum.replace(/\D/g, "");
 
+  // Build social links from API settings
   const socialLinks = [
-    {
-      name: "youtube",
-      url: "https://youtube.com/@mentormerits?si=ZvPCPb6Ok2QRDdsb",
-    },
-    {
-      name: "instagram",
-      url: "https://www.instagram.com/mentor_merits_academy_?utm_source=qr&igsh=MTI0NHh5b2NpeTd1cA==",
-    },
-  ];
+    social.youtube && { name: "youtube", url: social.youtube },
+    social.instagram && { name: "instagram", url: social.instagram },
+    social.facebook && { name: "facebook", url: social.facebook },
+    social.twitter && { name: "twitter", url: social.twitter },
+    social.linkedin && { name: "linkedin", url: social.linkedin },
+  ].filter(Boolean);
+
+  const socialIcons = {
+    facebook: "f",
+    twitter: "𝕏",
+    youtube: "▶",
+    instagram: "📸",
+    linkedin: "in",
+  };
 
   return (
     <footer className="bg-[#0f172a] text-white">
@@ -52,51 +74,39 @@ export default function Footer() {
           <div className="flex items-center gap-2 mb-4">
             <img
               src={logoUrl || "/logo.jpg"}
-              alt="Mentors Merits Academy"
+              alt="Mentor Merits Academy"
               className="w-12 h-12 object-contain rounded-full"
             />
             <div>
-              <div className="text-white font-black text-lg leading-none">
-                MENTORS MERITS
-              </div>
-              <div className="text-amber-400 font-semibold text-xs tracking-widest">
-                ACADEMY
-              </div>
+              <div className="text-white font-black text-lg leading-none">MENTOR MERITS</div>
+              <div className="text-amber-400 font-semibold text-xs tracking-widest">ACADEMY</div>
             </div>
           </div>
           <p className="text-gray-400 text-sm leading-relaxed mb-4">
-            India&apos;s premier UPSC coaching institute with 20+ years
+            India&apos;s premier UPSC coaching institute with 2+ years
             of excellence, producing toppers and meriting success consistently.
           </p>
-          <div className="flex gap-3">
-            {socialLinks.map((item) => (
-              <a
-                key={item.name}
-                href={item.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-8 h-8 bg-gray-700 hover:bg-[#1e3a8a] rounded-full flex items-center justify-center transition-colors"
-                aria-label={item.name}
-              >
-                <span className="text-xs">
-                  {item.name === "facebook"
-                    ? "f"
-                    : item.name === "twitter"
-                      ? "𝕏"
-                      : item.name === "youtube"
-                        ? "▶"
-                        : "📸"}
-                </span>
-              </a>
-            ))}
-          </div>
+          {socialLinks.length > 0 && (
+            <div className="flex gap-3">
+              {socialLinks.map((item) => (
+                <a
+                  key={item.name}
+                  href={item.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-8 h-8 bg-gray-700 hover:bg-[#1e3a8a] rounded-full flex items-center justify-center transition-colors"
+                  aria-label={item.name}
+                >
+                  <span className="text-xs">{socialIcons[item.name] || "•"}</span>
+                </a>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* UPSC Courses */}
         <div>
-          <h3 className="text-amber-400 font-bold text-sm uppercase tracking-wider mb-4">
-            UPSC Courses
-          </h3>
+          <h3 className="text-amber-400 font-bold text-sm uppercase tracking-wider mb-4">UPSC Courses</h3>
           <ul className="space-y-2">
             {[
               "About Civil Service",
@@ -105,16 +115,10 @@ export default function Footer() {
               "Mains Test Series 2025",
               "Optional Programme 2026",
               "Interview Guidance 2026",
-              "Sadhana II Year Course",
             ].map((item) => (
               <li key={item}>
-                <a
-                  href="#courses"
-                  className="text-gray-400 hover:text-white text-sm transition-colors flex items-center gap-1 group"
-                >
-                  <span className="text-amber-400 group-hover:translate-x-1 transition-transform">
-                    ›
-                  </span>
+                <a href="#courses" className="text-gray-400 hover:text-white text-sm transition-colors flex items-center gap-1 group">
+                  <span className="text-amber-400 group-hover:translate-x-1 transition-transform">›</span>
                   {item}
                 </a>
               </li>
@@ -122,11 +126,9 @@ export default function Footer() {
           </ul>
         </div>
 
-        {/* TNPSC Courses */}
+        {/* TNPSC + Quick Links */}
         <div>
-          <h3 className="text-amber-400 font-bold text-sm uppercase tracking-wider mb-4">
-            TNPSC Courses
-          </h3>
+          <h3 className="text-amber-400 font-bold text-sm uppercase tracking-wider mb-4">TNPSC Courses</h3>
           <ul className="space-y-2">
             {[
               "Group I & II Prelims 2026",
@@ -136,21 +138,14 @@ export default function Footer() {
               "Current Affairs Programme",
             ].map((item) => (
               <li key={item}>
-                <a
-                  href="#courses"
-                  className="text-gray-400 hover:text-white text-sm transition-colors flex items-center gap-1 group"
-                >
-                  <span className="text-amber-400 group-hover:translate-x-1 transition-transform">
-                    ›
-                  </span>
+                <a href="#courses" className="text-gray-400 hover:text-white text-sm transition-colors flex items-center gap-1 group">
+                  <span className="text-amber-400 group-hover:translate-x-1 transition-transform">›</span>
                   {item}
                 </a>
               </li>
             ))}
           </ul>
-          <h3 className="text-amber-400 font-bold text-sm uppercase tracking-wider mt-6 mb-4">
-            Quick Links
-          </h3>
+          <h3 className="text-amber-400 font-bold text-sm uppercase tracking-wider mt-6 mb-4">Quick Links</h3>
           <ul className="space-y-2">
             {[
               { label: "Home", href: "/" },
@@ -161,13 +156,8 @@ export default function Footer() {
               { label: "Admin Panel", href: "/admin" },
             ].map((item) => (
               <li key={item.label}>
-                <Link
-                  href={item.href}
-                  className="text-gray-400 hover:text-white text-sm transition-colors flex items-center gap-1 group"
-                >
-                  <span className="text-amber-400 group-hover:translate-x-1 transition-transform">
-                    ›
-                  </span>
+                <Link href={item.href} className="text-gray-400 hover:text-white text-sm transition-colors flex items-center gap-1 group">
+                  <span className="text-amber-400 group-hover:translate-x-1 transition-transform">›</span>
                   {item.label}
                 </Link>
               </li>
@@ -177,22 +167,12 @@ export default function Footer() {
 
         {/* Contact */}
         <div>
-          <h3 className="text-amber-400 font-bold text-sm uppercase tracking-wider mb-4">
-            Contact Us
-          </h3>
+          <h3 className="text-amber-400 font-bold text-sm uppercase tracking-wider mb-4">Contact Us</h3>
           <div className="space-y-3">
             <div className="flex items-start gap-3">
               <div className="w-8 h-8 bg-[#1e3a8a] rounded-full flex items-center justify-center shrink-0 mt-0.5">
-                <svg
-                  className="w-4 h-4 text-white"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
-                    clipRule="evenodd"
-                  />
+                <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
                 </svg>
               </div>
               <div>
@@ -202,11 +182,7 @@ export default function Footer() {
             </div>
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 bg-[#1e3a8a] rounded-full flex items-center justify-center shrink-0">
-                <svg
-                  className="w-4 h-4 text-white"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
+                <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
                 </svg>
               </div>
@@ -217,11 +193,7 @@ export default function Footer() {
             </div>
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 bg-[#1e3a8a] rounded-full flex items-center justify-center shrink-0">
-                <svg
-                  className="w-4 h-4 text-white"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
+                <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
                   <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
                 </svg>
@@ -248,22 +220,11 @@ export default function Footer() {
       {/* Bottom Bar */}
       <div className="border-t border-gray-700">
         <div className="max-w-7xl mx-auto px-4 py-4 flex flex-col md:flex-row items-center justify-between gap-2">
-          <p className="text-gray-400 text-xs">
-            © 2026 Mentors Merits Academy. All rights reserved.
-          </p>
+          <p className="text-gray-400 text-xs">© 2026 Mentor Merits Academy. All rights reserved.</p>
           <div className="flex gap-4">
-            <a href="#" className="text-gray-400 hover:text-white text-xs">
-              Privacy Policy
-            </a>
-            <a href="#" className="text-gray-400 hover:text-white text-xs">
-              Terms & Conditions
-            </a>
-            <Link
-              href="/admin"
-              className="text-amber-400 hover:text-amber-300 text-xs font-medium"
-            >
-              Admin Panel
-            </Link>
+            <a href="#" className="text-gray-400 hover:text-white text-xs">Privacy Policy</a>
+            <a href="#" className="text-gray-400 hover:text-white text-xs">Terms &amp; Conditions</a>
+            <Link href="/admin" className="text-amber-400 hover:text-amber-300 text-xs font-medium">Admin Panel</Link>
           </div>
         </div>
       </div>
