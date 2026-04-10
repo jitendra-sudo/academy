@@ -29,40 +29,8 @@ export default function CoursesSection() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/api/courses")
+    fetch("")
       .then((r) => r.json())
-      .then((d) => {
-        if (d.success && d.data?.length > 0) {
-          setCourses(d.data);
-        } else {
-          // Fallback hardcoded data
-          setCourses([
-            {
-              id: 1, category: "UPSC",
-              items: [
-                "UPSC 2026 Admissions Open – Pre-Booking Now",
-                "All India UPSC Prelims Mock Test 2026",
-                "UPSC Chakra Current Affairs Programme 2026",
-                "UPSC Optional Programme 2026",
-                "Prelims Test Series 2026",
-                "Sadhana (II Year UPSC Foundation Course)",
-                "Civils & Forest Service Interview Guidance 2026",
-                "UPSC GS-Mains Test Series 2025 (Moksha)",
-              ],
-            },
-            {
-              id: 2, category: "TNPSC",
-              items: [
-                "TNPSC Group I & II Preliminary Course 2026",
-                "TNPSC Group I Mock Interview Programme 2026",
-                "I'M TOP TNPSC Group I Prelims Test Series 2026",
-                "I'M TOP TNPSC Group II/IIA Prelims Test Series",
-                "I'M TOP TNPSC General English Workshop 2026",
-              ],
-            },
-          ]);
-        }
-      })
       .catch(() => {
         setCourses([
           {
@@ -78,7 +46,6 @@ export default function CoursesSection() {
       .finally(() => setLoading(false));
   }, []);
 
-  // Dynamic grid: 2 cols for ≤2 courses, 3 cols otherwise
   const gridClass = courses.length <= 2
     ? "grid md:grid-cols-2 gap-6 max-w-4xl mx-auto"
     : "grid md:grid-cols-2 lg:grid-cols-3 gap-6";

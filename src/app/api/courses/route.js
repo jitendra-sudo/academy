@@ -7,16 +7,15 @@ function readCourses() {
   try { return JSON.parse(readFileSync(DATA_FILE, "utf-8")); }
   catch { return []; }
 }
+
 function writeCourses(data) {
   writeFileSync(DATA_FILE, JSON.stringify(data, null, 2), "utf-8");
 }
 
-// GET all courses
 export async function GET() {
   return Response.json({ success: true, data: readCourses() });
 }
 
-// POST — add new category
 export async function POST(request) {
   try {
     const body = await request.json();
@@ -40,7 +39,6 @@ export async function POST(request) {
   }
 }
 
-// PUT — update entire category
 export async function PUT(request) {
   try {
     const body = await request.json();
@@ -57,7 +55,6 @@ export async function PUT(request) {
   }
 }
 
-// DELETE — remove category by id
 export async function DELETE(request) {
   try {
     const { searchParams } = new URL(request.url);

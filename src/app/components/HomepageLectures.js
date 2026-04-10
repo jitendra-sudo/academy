@@ -7,14 +7,7 @@ function toEmbedUrl(url, type) {
     const match = url?.match(/(?:v=|youtu\.be\/|embed\/)([^&\s?]+)/);
     return match ? `https://www.youtube.com/embed/${match[1]}?rel=0&modestbranding=1&autoplay=1` : url;
   }
-  if (type === "vimeo") {
-    const match = url?.match(/vimeo\.com\/(\d+)/);
-    return match ? `https://player.vimeo.com/video/${match[1]}?autoplay=1` : url;
-  }
-  if (type === "drive") {
-    const match = url?.match(/\/file\/d\/([^/]+)/);
-    return match ? `https://drive.google.com/file/d/${match[1]}/preview` : url;
-  }
+
   return url;
 }
 

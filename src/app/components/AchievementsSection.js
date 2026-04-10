@@ -5,11 +5,11 @@ const features = [
   {
     icon: "🏆",
     title: "Consistently Producing Toppers",
-    desc: "Since 2004, our structured methodology has produced thousands of civil service officers.",
+    desc: "Since 2022, our structured methodology has produced thousands of civil service officers.",
   },
   {
     icon: "👨‍🏫",
-    title: "Experienced Faculty (10+ Years)",
+    title: "Experienced Faculty (2+ Years)",
     desc: "Our faculty members bring deep domain expertise and personalized mentoring to each student.",
   },
   {
@@ -51,23 +51,8 @@ export default function AchievementsSection() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/api/achievers")
+    fetch("")
       .then((r) => r.json())
-      .then((d) => {
-        if (d.success && d.data?.length > 0) {
-          setAchievers(d.data.slice(0, 6));
-        } else {
-          // Fallback to hardcoded data if API returns empty
-          setAchievers([
-            { id: 1, name: "RAJESHWARI SUVE M", rank: "AIR 02", course: "SIA Sociology Optional - Naan Mudhalvan 2025", year: "2025", exam: "UPSC CSE" },
-            { id: 2, name: "AR RAJAH MOHAIDEEN", rank: "AIR 07", course: "GS Prelims cum Mains Foundation 2025", year: "2025", exam: "UPSC CSE" },
-            { id: 3, name: "RAJKRISHNA JHA", rank: "AIR 08", course: "Civilisation 2024", year: "2024", exam: "UPSC CSE" },
-            { id: 4, name: "SHAURYA ARORA", rank: "AIR 14", course: "Civilisation 2023", year: "2023", exam: "UPSC CSE" },
-            { id: 5, name: "ISHITA KISHORE", rank: "AIR 01", course: "Civilisation 2022", year: "2022", exam: "UPSC CSE" },
-            { id: 6, name: "YAKSH CHAUDHARY", rank: "AIR 06", course: "Mainstorming 2021", year: "2021", exam: "UPSC CSE" },
-          ]);
-        }
-      })
       .catch(() => {
         setAchievers([
           { id: 1, name: "RAJESHWARI SUVE M", rank: "AIR 02", course: "SIA Sociology Optional - Naan Mudhalvan 2025", year: "2025", exam: "UPSC CSE" },

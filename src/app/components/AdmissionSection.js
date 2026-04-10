@@ -2,8 +2,8 @@
 import { useState, useEffect } from "react";
 
 const branches = [
-  { city: "Anna Nagar, Chennai", type: "Main Campus", phone: "9003190030", color: "bg-blue-600" },
-  { city: "Adyar, Chennai", type: "Branch", phone: "044-43533445", color: "bg-indigo-600" },
+  { city: "Anna Nagar, Chennai", type: "Main Campus", phone: "7397236970", color: "bg-blue-600" },
+  { city: "Adyar, Chennai", type: "Branch", phone: "7397236970", color: "bg-indigo-600" },
   { city: "Delhi", type: "Branch", phone: "011-40545454", color: "bg-red-600" },
   { city: "Bengaluru", type: "Branch", phone: "080-41236969", color: "bg-orange-600" },
   { city: "Hyderabad", type: "Branch", phone: "040-46000123", color: "bg-teal-600" },
@@ -23,48 +23,18 @@ export default function AdmissionSection() {
   const [error, setError] = useState("");
   const [contact, setContact] = useState(null);
 
-  // Fetch CMS contact settings
-  useEffect(() => {
-    fetch("/api/settings")
-      .then((r) => r.json())
-      .then((d) => { if (d.success && d.data?.contact) setContact(d.data.contact); })
-      .catch(() => {});
-  }, []);
-
-  // Resolved values (fallback to hardcoded defaults)
-  const upscPhone = contact?.upscPhone || "9003190030";
-  const upscPhone2 = contact?.upscPhone2 || "044-66024500";
-  const tnpscPhone = contact?.tnpscPhone || "7667766266";
-  const tnpscPhone2 = contact?.tnpscPhone2 || "044-43533445";
+  
+  const upscPhone = contact?.upscPhone || "7397236970";
+  const upscPhone2 = contact?.upscPhone2 || "7397236970";
+  const tnpscPhone = contact?.tnpscPhone || "7397236970";
+  const tnpscPhone2 = contact?.tnpscPhone2 || "7397236970";
   const admissionEmail = contact?.email || "admissions@mentorsmerits.in";
-  const workingHours = contact?.workingHours || "Mon-Sat: 9AM – 7PM";
 
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
-    try {
-      const res = await fetch("/api/leads", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, source: "admission" }),
-      });
-      const data = await res.json();
-      if (data.success) {
-        setSubmitted(true);
-        setForm({ name: "", email: "", phone: "", course: "", city: "", message: "" });
-        setTimeout(() => setSubmitted(false), 5000);
-      } else {
-        setError(data.error || "Submission failed. Please try again.");
-      }
-    } catch {
-      setError("Network error. Please check your connection.");
-    } finally {
-      setLoading(false);
-    }
+  
   };
 
   return (
@@ -91,10 +61,10 @@ export default function AdmissionSection() {
               </p>
               <div className="grid grid-cols-2 gap-4 mb-8">
                 {[
-                  { n: "2900+", l: "Selections" },
-                  { n: "20+", l: "Years" },
-                  { n: "10+", l: "Branches" },
-                  { n: "50,000+", l: "Aspirants" },
+                  { n: "10+", l: "Selections" },
+                  { n: "2+", l: "Years" },
+                  { n: "1+", l: "Branches" },
+                  { n: "5,000+", l: "Aspirants" },
                 ].map((s) => (
                   <div key={s.l} className="bg-blue-50 rounded-xl p-4 text-center">
                     <div className="text-2xl font-black text-[#1e3a8a]">{s.n}</div>
@@ -123,17 +93,6 @@ export default function AdmissionSection() {
                   Explore Online →
                 </a>
               </div>
-              <div className="bg-amber-50 border border-amber-100 rounded-2xl p-6">
-                <div className="text-3xl mb-3">🌍</div>
-                <h3 className="font-bold text-gray-900 mb-2">Branches Across India</h3>
-                <p className="text-gray-600 text-sm mb-3">
-                  With branches in Chennai, Delhi, Bengaluru, Hyderabad, Thiruvananthapuram, Trichy, Salem,
-                  Madurai, Namakkal and Coimbatore — we're the academy of choice for civil service aspirants.
-                </p>
-                <a href="#branches" className="text-[#1e3a8a] font-semibold text-sm hover:underline">
-                  Find Nearest Branch →
-                </a>
-              </div>
             </div>
           </div>
         </div>
@@ -160,7 +119,6 @@ export default function AdmissionSection() {
                   { icon: "📞", text: `UPSC: ${upscPhone} | ${upscPhone2}` },
                   { icon: "📞", text: `TNPSC: ${tnpscPhone} | ${tnpscPhone2}` },
                   { icon: "📧", text: admissionEmail },
-                  { icon: "🕐", text: workingHours },
                 ].map((c) => (
                   <div key={c.text} className="flex items-center gap-3">
                     <span className="text-xl">{c.icon}</span>

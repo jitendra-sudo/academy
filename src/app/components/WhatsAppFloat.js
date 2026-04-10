@@ -2,18 +2,7 @@
 import { useState, useEffect } from "react";
 
 export default function WhatsAppFloat() {
-  const [waNum, setWaNum] = useState("919876543210");
-
-  useEffect(() => {
-    fetch("/api/settings")
-      .then((r) => r.json())
-      .then((d) => {
-        const wa = d?.data?.contact?.whatsapp;
-        if (wa) setWaNum(wa.replace(/\D/g, ""));
-      })
-      .catch(() => { });
-  }, []);
-
+  const [waNum, setWaNum] = useState("917397236970");
   return (
     <a
       href={`https://wa.me/${waNum}?text=Hi,%20I%20am%20looking%20for%20admissions`}

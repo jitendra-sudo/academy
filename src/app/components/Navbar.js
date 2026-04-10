@@ -54,7 +54,6 @@ const navItems = [
   { label: "Contact", href: "#contact", isContactModal: true },
 ];
 
-// contactInfo is now built dynamically from settings
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -74,20 +73,7 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Fetch contact + logo settings from CMS
-  useEffect(() => {
-    fetch("/api/settings")
-      .then((r) => r.json())
-      .then((d) => {
-        if (d.success) {
-          if (d.data?.contact) setContact(d.data.contact);
-          if (d.data?.images?.logoUrl) setLogoUrl(d.data.images.logoUrl);
-        }
-      })
-      .catch(() => { });
-  }, []);
 
-  // Lock body scroll when modal open
   useEffect(() => {
     document.body.style.overflow = contactModal ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
@@ -136,24 +122,21 @@ export default function Navbar() {
     }
   };
 
-  // Build dynamic contactInfo array from fetched settings
-  const upscPhone = contact?.upscPhone || "9876543210";
-  const upscPhone2 = contact?.upscPhone2 || "9876543210";
-  const tnpscPhone = contact?.tnpscPhone || "7667766266";
-  const tnpscPhone2 = contact?.tnpscPhone2 || "9876543210";
-  const whatsappNum = contact?.whatsapp || "+919876543210";
+  const upscPhone = contact?.upscPhone || "7397236970";
+  const upscPhone2 = contact?.upscPhone2 || "7397236970";
+  const tnpscPhone = contact?.tnpscPhone || "7397236970";
+  const tnpscPhone2 = contact?.tnpscPhone2 || "7397236970";
+  const whatsappNum = contact?.whatsapp || "+917397236970";
   const email = contact?.email || "admissions@mentorsmerits.in";
   const enquiryEmail = contact?.enquiryEmail || "enquiry@mentorsmerits.in";
-  const address = contact?.address || "Anna Nagar, Chennai";
+  const address = contact?.address || "109/18, 2nd floor, vanavil appartment c- sector, east main road, +917397236970, Anna Nagar West Extension, Chennai";
   const addressLine2 = contact?.addressLine2 || "Tamil Nadu – 600040";
-  const workingHours = contact?.workingHours || "Mon – Sat: 9AM – 7PM";
-  const workingHours2 = contact?.workingHours2 || "Sunday: 10AM – 2PM";
+
 
   const contactInfo = [
     { icon: "📞", label: "UPSC Admissions", value: upscPhone, sub: upscPhone2 },
     { icon: "📞", label: "TNPSC Admissions", value: tnpscPhone, sub: tnpscPhone2 },
     { icon: "📧", label: "Email", value: email, sub: enquiryEmail },
-    { icon: "🕐", label: "Working Hours", value: workingHours, sub: workingHours2 },
     { icon: "📍", label: "Head Office", value: address, sub: addressLine2 },
   ];
 
@@ -259,9 +242,7 @@ export default function Navbar() {
                     <div className="absolute top-full left-0 bg-white shadow-xl rounded-lg border border-gray-100 min-w-56 py-2 z-50 dropdown-menu">
                       {item.dropdown.map((sub) =>
                         sub.isLink ? (
-                          <Link
-                            key={sub.label}
-                            href={sub.href}
+                          <Link key={sub.label} href={sub.href}
                             className="block px-4 py-2 text-sm text-gray-600 hover:text-[#1e3a8a] hover:bg-blue-50 transition-colors"
                           >
                             {sub.label}

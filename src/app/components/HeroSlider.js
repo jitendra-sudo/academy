@@ -13,16 +13,6 @@ const slides = [
     bg: "from-[#0f172a] via-[#1e3a8a] to-[#1d4ed8]",
   },
   {
-    id: 2,
-    title: "202 Selections in UPSC CSE 2025",
-    subtitle: "Results That Speak",
-    desc: "Our students consistently rank among India's top civil service officers",
-    badge: "🎯 Top Results 2025",
-    cta: "View Achievers",
-    cta2: "Our Courses",
-    bg: "from-[#0f172a] via-[#064e3b] to-[#059669]",
-  },
-  {
     id: 3,
     title: "TNPSC Group I & II Admissions",
     subtitle: "2026 Batch Starting Soon",
@@ -127,9 +117,8 @@ export default function HeroSlider() {
             {/* Quick stats */}
             <div className="flex gap-8 mt-10 pt-8 border-t border-white/20">
               {[
-                { n: "20+", l: "Years" },
-                { n: "2900+", l: "Selections" },
-                { n: "10+", l: "Branches" },
+                { n: "2+", l: "Years" },
+                { n: "1+", l: "Branches" },
               ].map((s) => (
                 <div key={s.l}>
                   <div className="text-2xl font-black text-amber-400">
@@ -147,13 +136,13 @@ export default function HeroSlider() {
               {
                 icon: "🏆",
                 title: "UPSC CSE 2025",
-                value: "202",
+                value: "10",
                 sub: "Selections from 958 total",
               },
               {
                 icon: "⭐",
                 title: "UPSC IFS 2024",
-                value: "78",
+                value: "7",
                 sub: "Out of 143 selections",
               },
               {
@@ -165,7 +154,7 @@ export default function HeroSlider() {
               {
                 icon: "🌟",
                 title: "Top 100",
-                value: "19",
+                value: "1",
                 sub: "Candidates in top 100",
               },
             ].map((card) => (

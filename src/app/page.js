@@ -18,7 +18,6 @@ export default function HomePage() {
       <AdmissionSection />
       <Footer />
 
-      {/* WhatsApp Float Button */}
       <WhatsAppFloat />
     </main>
   );
