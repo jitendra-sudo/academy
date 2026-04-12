@@ -2,12 +2,11 @@
 import { useState, useEffect } from "react";
 import { getBanners } from "@/lib/api";
 
-// ── Default hardcoded slides (fallback when no API banners are available) ──
 const DEFAULT_SLIDES = [
   {
     id: 1,
-    title: "India's #1 Civil Services Coaching",
-    subtitle: "UPSC 2026 Admissions Open",
+    title: "TAMIL NADU'S #1 Civil Services Coaching",
+    subtitle: "UPSC,BANKING,RRB,NEET 2026 Admissions Open",
     desc: "Join 2,900+ successful IAS, IPS & IFS officers trained by our expert faculty",
     badge: "🏆 Ranked #1 in India",
     cta: "Book Admission Now",
@@ -17,22 +16,8 @@ const DEFAULT_SLIDES = [
     imageUrl: null,
     bg: "from-[#0f172a] via-[#1e3a8a] to-[#1d4ed8]",
   },
-  {
-    id: 2,
-    title: "TNPSC Group I & II Admissions",
-    subtitle: "2026 Batch Starting Soon",
-    desc: "Comprehensive preparation with 47 selections out of 90 vacancies in 2024",
-    badge: "📚 TNPSC Specialist",
-    cta: "Enrol Now",
-    cta2: "Course Details",
-    ctaLink: "#admission",
-    cta2Link: "#about",
-    imageUrl: null,
-    bg: "from-[#0f172a] via-[#4c1d95] to-[#7c3aed]",
-  },
 ];
 
-// ── Map API banner response → internal slide shape ─────────────────────────
 function bannerToSlide(banner, idx) {
   const BG_POOL = [
     "from-[#0f172a] via-[#1e3a8a] to-[#1d4ed8]",
@@ -61,7 +46,6 @@ export default function HeroSlider() {
   const [animating, setAnimating] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  // ── Fetch published home banners from API ────────────────────────────────
   useEffect(() => {
     let cancelled = false;
     getBanners("home")
@@ -69,14 +53,11 @@ export default function HeroSlider() {
         if (cancelled) return;
         const apiBanners = res.data?.banners || res.data || [];
         if (Array.isArray(apiBanners) && apiBanners.length > 0) {
-          // Sort by 'order' field if present
           const sorted = [...apiBanners].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
           setSlides(sorted.map(bannerToSlide));
         }
-        // else keep DEFAULT_SLIDES
       })
       .catch(() => {
-        /* silently fall back to defaults */
       })
       .finally(() => {
         if (!cancelled) setLoading(false);
@@ -86,11 +67,9 @@ export default function HeroSlider() {
     };
   }, []);
 
-  // ── Auto-advance slider ───────────────────────────────────────────────────
   useEffect(() => {
     const timer = setInterval(handleNext, 5000);
     return () => clearInterval(timer);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [current, slides.length]);
 
   const handleNext = () => {
@@ -114,18 +93,15 @@ export default function HeroSlider() {
       className={`relative min-h-[85vh] flex items-center bg-gradient-to-br ${slide.bg} transition-all duration-700 overflow-hidden`}
       id="hero"
     >
-      {/* ── Background image (API banners with imageUrl) ── */}
       {slide.imageUrl && (
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{ backgroundImage: `url(${slide.imageUrl})` }}
         >
-          {/* dark overlay so text stays readable */}
           <div className="absolute inset-0 bg-black/55" />
         </div>
       )}
 
-      {/* ── Animated background blobs ── */}
       {!slide.imageUrl && (
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute top-20 left-10 w-72 h-72 bg-white/5 rounded-full blur-3xl animate-float" />
@@ -137,7 +113,6 @@ export default function HeroSlider() {
             className="absolute top-1/2 left-1/2 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl animate-float"
             style={{ animationDelay: "3s" }}
           />
-          {/* Grid pattern */}
           <div
             className="absolute inset-0 opacity-5"
             style={{
@@ -151,9 +126,8 @@ export default function HeroSlider() {
 
       {/* ── Slide content ── */}
       <div
-        className={`relative max-w-7xl mx-auto px-4 py-20 w-full transition-all duration-500 ${
-          animating ? "opacity-0 translate-y-4" : "opacity-100 translate-y-0"
-        }`}
+        className={`relative max-w-7xl mx-auto px-4 py-20 w-full transition-all duration-500 ${animating ? "opacity-0 translate-y-4" : "opacity-100 translate-y-0"
+          }`}
       >
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left Content */}
@@ -271,9 +245,8 @@ export default function HeroSlider() {
               <button
                 key={i}
                 onClick={() => setCurrent(i)}
-                className={`h-2 rounded-full transition-all ${
-                  i === current ? "w-6 bg-amber-400" : "w-2 bg-white/40"
-                }`}
+                className={`h-2 rounded-full transition-all ${i === current ? "w-6 bg-amber-400" : "w-2 bg-white/40"
+                  }`}
                 aria-label={`Slide ${i + 1}`}
               />
             ))}

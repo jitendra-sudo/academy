@@ -78,8 +78,12 @@ export default function Footer() {
               className="w-12 h-12 object-contain rounded-full"
             />
             <div>
-              <div className="text-white font-black text-lg leading-none">MENTOR MERITS</div>
-              <div className="text-amber-400 font-semibold text-xs tracking-widest">ACADEMY</div>
+              <div className="text-white font-black text-lg leading-none">
+                MENTOR MERITS
+              </div>
+              <div className="text-amber-400 font-semibold text-xs tracking-widest">
+                ACADEMY
+              </div>
             </div>
           </div>
           <p className="text-gray-400 text-sm leading-relaxed mb-4">
@@ -187,8 +191,8 @@ export default function Footer() {
                 </svg>
               </div>
               <div>
-                <p className="text-gray-300 text-sm">{phone}</p>
-                <p className="text-gray-400 text-xs">{phone2}</p>
+                <p className="text-gray-300 text-sm">7397236970 </p>
+                <p className="text-gray-400 text-xs">7397236970 </p>
               </div>
             </div>
             <div className="flex items-center gap-3">
@@ -198,7 +202,7 @@ export default function Footer() {
                   <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
                 </svg>
               </div>
-              <p className="text-gray-300 text-sm">{email}</p>
+              <p className="text-gray-300 text-sm">mentormerits@gmail.com</p>
             </div>
 
             {/* WhatsApp CTA */}
@@ -220,7 +224,9 @@ export default function Footer() {
       {/* Bottom Bar */}
       <div className="border-t border-gray-700">
         <div className="max-w-7xl mx-auto px-4 py-4 flex flex-col md:flex-row items-center justify-between gap-2">
-          <p className="text-gray-400 text-xs">© 2026 Mentor Merits Academy. All rights reserved.</p>
+          <p className="text-gray-400 text-xs">
+            © 2026 Mentor Merits Academy. All rights reserved.
+          </p>
           <div className="flex gap-4">
             <a href="#" className="text-gray-400 hover:text-white text-xs">Privacy Policy</a>
             <a href="#" className="text-gray-400 hover:text-white text-xs">Terms &amp; Conditions</a>

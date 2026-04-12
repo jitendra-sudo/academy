@@ -20,10 +20,10 @@ const navItems = [
     dropdown: [
       { label: "About Civil Service", href: "#upsc" },
       { label: "UPSC 2026 Admissions Open", href: "#courses" },
-      { label: "Prelims Test Series 2026", href: "#courses" },
-      { label: "Mains Test Series 2025", href: "#courses" },
-      { label: "Optional Programme 2026", href: "#courses" },
-      { label: "Interview Guidance 2026", href: "#courses" },
+      { label: "Prelims Test Series 2027", href: "#courses" },
+      { label: "Mains Test Series 2027", href: "#courses" },
+      { label: "Optional Programme 2027", href: "#courses" },
+      { label: "Interview Guidance 2027", href: "#courses" },
     ],
   },
   {
@@ -37,9 +37,12 @@ const navItems = [
   },
 
   {
-    label: "Lectures",
-    href: "/lectures",
-    isLink: true,
+    label: "Learning Corner",
+    href: "#learning",
+    dropdown: [
+      { label: "Study Materials", href: "#resources" },
+      { label: "Mentoring Support", href: "#mentoring" },
+    ],
   },
   {
     label: "Gallery",
@@ -47,20 +50,21 @@ const navItems = [
     isLink: true,
     dropdown: [
       { label: "UPSC Classroom Sessions", href: "/gallery", isLink: true },
-      { label: "Toppers Felicitation", href: "/gallery", isLink: true },
-      { label: "Mock Interviews", href: "/gallery", isLink: true },
-      { label: "Events & Celebrations", href: "/gallery", isLink: true },
     ],
   },
   { label: "Contact", href: "#contact", isContactModal: true },
 ];
 
+const contactInfo = [
+  { icon: "📞", label: "UPSC Admissions", value: "9003190030", sub: "044-66024500" },
+  { icon: "📞", label: "TNPSC Admissions", value: "7667766266", sub: "044-43533445" },
+  { icon: "📧", label: "Email", value: "mentormerits@gmail.com", sub: "mentormerits@gmail.com" },
+];
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
-  const [mobileExpanded, setMobileExpanded] = useState(null);
   const [contactModal, setContactModal] = useState(false);
   const [leadForm, setLeadForm] = useState({ name: "", phone: "", course: "" });
   const [leadStatus, setLeadStatus] = useState(""); // ""|"loading"|"success"|"error"
@@ -157,38 +161,7 @@ export default function Navbar() {
 
   return (
     <>
-      {/* Top Bar */}
-      <div className="bg-[#1e3a8a] text-white text-xs py-2 hidden md:block">
-        <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
-          <div className="flex gap-6 items-center">
-            <span className="flex items-center gap-1">
-              <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
-                <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
-              </svg>
-              {email}
-            </span>
-            <span className="flex items-center gap-1">
-              <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
-              </svg>
-              UPSC: {upscPhone} | TNPSC: {tnpscPhone}
-            </span>
-          </div>
-          <div className="flex gap-4 items-center">
-            <Link href="/gallery" className="hover:text-amber-400 transition-colors">📸 Gallery</Link>
-            <button onClick={() => setContactModal(true)} className="hover:text-amber-400 transition-colors">📞 Contact</button>
-            <Link
-              href="/admin"
-              className="bg-amber-500 hover:bg-amber-600 text-white px-3 py-1 rounded text-xs font-semibold transition-colors"
-            >
-              Admin Panel
-            </Link>
-          </div>
-        </div>
-      </div>
 
-      {/* Main Navbar */}
       <nav
         className={`sticky top-0 z-50 transition-all duration-300 ${isScrolled
           ? "bg-white shadow-lg border-b border-gray-100"
