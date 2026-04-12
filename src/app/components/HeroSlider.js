@@ -51,11 +51,10 @@ export default function HeroSlider() {
     getBanners("home")
       .then((res) => {
         if (cancelled) return;
-        // API shape: { success: true, total: N, data: [...] }
-        const apiBanners = res.data?.data || [];
+        const apiBanners = res.data?.banners || res.data || [];
         if (Array.isArray(apiBanners) && apiBanners.length > 0) {
           const sorted = [...apiBanners].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
-          setSlides(sorted.map(bannerToSlide));
+          setSlides([...DEFAULT_SLIDES, ...sorted.map(bannerToSlide)]);
         }
       })
       .catch(() => {
