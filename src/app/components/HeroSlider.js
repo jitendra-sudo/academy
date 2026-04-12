@@ -51,7 +51,7 @@ export default function HeroSlider() {
     getBanners("home")
       .then((res) => {
         if (cancelled) return;
-        const apiBanners = res.data?.banners || res.data || [];
+        const apiBanners = res.data?.data || res.data || [];
         if (Array.isArray(apiBanners) && apiBanners.length > 0) {
           const sorted = [...apiBanners].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
           setSlides([...DEFAULT_SLIDES, ...sorted.map(bannerToSlide)]);
