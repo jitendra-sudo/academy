@@ -51,7 +51,8 @@ export default function HeroSlider() {
     getBanners("home")
       .then((res) => {
         if (cancelled) return;
-        const apiBanners = res.data?.banners || res.data || [];
+        // API shape: { success: true, total: N, data: [...] }
+        const apiBanners = res.data?.data || [];
         if (Array.isArray(apiBanners) && apiBanners.length > 0) {
           const sorted = [...apiBanners].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
           setSlides(sorted.map(bannerToSlide));
@@ -90,7 +91,7 @@ export default function HeroSlider() {
 
   return (
     <section
-      className={`relative min-h-[85vh]  flex items-center bg-gradient-to-br ${slide.bg} transition-all duration-700 overflow-hidden`}
+      className={`relative min-h-[85vh] flex items-center bg-gradient-to-br ${slide.bg} transition-all duration-700 overflow-hidden`}
       id="hero"
     >
       {slide.imageUrl && (
@@ -104,7 +105,7 @@ export default function HeroSlider() {
 
       {!slide.imageUrl && (
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-10 left-10 w-72 h-72 bg-white/5 rounded-full blur-3xl animate-float" />
+          <div className="absolute top-20 left-10 w-72 h-72 bg-white/5 rounded-full blur-3xl animate-float" />
           <div
             className="absolute bottom-20 right-20 w-96 h-96 bg-amber-400/10 rounded-full blur-3xl animate-float"
             style={{ animationDelay: "1.5s" }}
@@ -126,7 +127,7 @@ export default function HeroSlider() {
 
       {/* ── Slide content ── */}
       <div
-        className={`relative max-w-7xl mx-auto px-4 py-10 w-full transition-all duration-500 ${animating ? "opacity-0 translate-y-4" : "opacity-100 translate-y-0"
+        className={`relative max-w-7xl mx-auto px-4 py-20 w-full transition-all duration-500 ${animating ? "opacity-0 translate-y-4" : "opacity-100 translate-y-0"
           }`}
       >
         <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -172,7 +173,8 @@ export default function HeroSlider() {
             {slide.desc && (
               <div className="flex gap-8 mt-10 pt-8 border-t border-white/20">
                 {[
-                  { n: "10+", l: "Years" },
+                  { n: "2+", l: "Years" },
+                  { n: "1+", l: "Branches" },
                 ].map((s) => (
                   <div key={s.l}>
                     <div className="text-2xl font-black text-amber-400">{s.n}</div>

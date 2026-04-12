@@ -82,7 +82,7 @@ export default function BannersManager() {
       const method = isEdit ? "PUT" : "POST";
       const url = isEdit
         ? apiUrl(`/api/banners/${editing._id || editing.id}`)
-        : apiUrl("/api/banners/upload");
+        : apiUrl("/api/banners");
       const headers = {
         "Content-Type": "application/json",
         Authorization: `Bearer ${sessionStorage.getItem("admin_token")}`,
@@ -369,9 +369,8 @@ export default function BannersManager() {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
                     <span className="font-bold text-gray-900 text-sm truncate">{banner.title}</span>
-                    <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${
-                      (banner.isPublished || banner.active) ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-500"
-                    }`}>
+                    <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${(banner.isPublished || banner.active) ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-500"
+                      }`}>
                       {(banner.isPublished || banner.active) ? "Active" : "Inactive"}
                     </span>
                   </div>
