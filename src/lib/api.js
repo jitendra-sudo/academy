@@ -1,10 +1,6 @@
-/**
- * Axios instance pre-configured for the academy backend.
- * Base URL is controlled via NEXT_PUBLIC_API_URL in .env.local
- */
 import axios from "axios";
 
-export const API_BASE ="http://localhost:5000";
+export const API_BASE = "http://localhost:5000";
 
 const api = axios.create({
   baseURL: API_BASE,

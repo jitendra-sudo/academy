@@ -802,7 +802,7 @@ function Sidebar({ active, setActive, sidebarOpen, setSidebarOpen, onLogout, sit
           </Link>
         </div>
 
-        <nav className="flex-1 p-3 overflow-y-auto space-y-4">
+        <nav className="flex-1 p-3 overflow-y-auto space-y-4 no-scrollbar">
           {groups.map((group) => (
             <div key={group}>
               <div className="text-blue-300/60 text-xs font-semibold uppercase tracking-wider px-3 mb-1">{group}</div>
@@ -898,10 +898,10 @@ export function AdminDashboard() {
   };
 
   return (
-    <div className="flex h-screen bg-gray-50 overflow-hidden">
+    <div className="flex h-screen bg-gray-50 overflow-hidden no-scrollbar">
       <Sidebar active={section} setActive={setSection} sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} onLogout={handleLogout} siteName={siteName} />
 
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <div className="flex-1 flex flex-col overflow-hidden no-scrollbar">
         {/* Header */}
         <header className="bg-white border-b border-gray-200 px-4 lg:px-6 py-3 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-3">
@@ -932,7 +932,7 @@ export function AdminDashboard() {
         </header>
 
         {/* Content */}
-        <main className="flex-1 overflow-y-auto p-4 lg:p-6">
+        <main className="flex-1 overflow-y-auto p-4 lg:p-6 no-scrollbar">
           {renderSection()}
         </main>
       </div>

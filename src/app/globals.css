@@ -138,3 +138,13 @@ body {
   transition: all 0.2s ease;
   transform-origin: top;
 }
+
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none; 
+  scrollbar-width: none;    
+}
