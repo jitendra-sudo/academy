@@ -4,7 +4,7 @@
  */
 import axios from "axios";
 
-export const API_BASE = process.env.NEXT_PUBLIC_API_URL || "https://academy-backend-lwwx.onrender.com";
+export const API_BASE ="https://academy-backend-zxwe.onrender.com";
 
 const api = axios.create({
   baseURL: API_BASE,
@@ -12,7 +12,6 @@ const api = axios.create({
   headers: { "Content-Type": "application/json" },
 });
 
-// ── Response interceptor (global error logging) ────────────────────────────
 api.interceptors.response.use(
   (response) => response,
   (error) => {
@@ -23,15 +22,22 @@ api.interceptors.response.use(
 
 export default api;
 
-// ── Convenience helpers ────────────────────────────────────────────────────
-
-/** Resolve a full URL from a path, e.g. apiUrl("/api/courses") */
 export const apiUrl = (path) => `${API_BASE}${path}`;
-
-/** GET /api/banners?position=<pos> – returns published banners only */
-export const getBanners = (position = "home") =>
+// ─── Banners ─────────────────────────────────────────────────────────────────
+export const getBanners = (position = "") =>
   api.get(`/api/banners${position ? `?position=${position}` : ""}`);
 
-/** POST to any endpoint (authenticated – attach token manually if needed) */
+export const getAllBanners = () => api.get("/api/banners");
+
+export const createBanner = (data, token) =>
+  api.post("/api/banners", data, { headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" } });
+
+export const updateBanner = (id, data, token) =>
+  api.put(`/api/banners/${id}`, data, { headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" } });
+
+export const deleteBanner = (id, token) =>
+  api.delete(`/api/banners/${id}`, { headers: { Authorization: `Bearer ${token}` } });
+
+// ─── Generic ──────────────────────────────────────────────────────────────────
 export const postData = (url, data, token) =>
   api.post(url, data, token ? { headers: { Authorization: `Bearer ${token}` } } : {});

@@ -7,6 +7,7 @@ import MediaSettings from "./MediaSettings";
 import AccountSettings from "./AccountSettings";
 import LecturesManager from "./LecturesManager";
 import { apiUrl } from "@/lib/api";
+import BannersManager from "./BannersManager";
 
 // ─── Sidebar menu ────────────────────────────────────────────────────────────
 const menuItems = [
@@ -16,6 +17,7 @@ const menuItems = [
   { id: "social-settings", label: "Social Links", icon: "🔗", group: "Content" },
   { id: "stats-settings", label: "Stats & Numbers", icon: "📈", group: "Content" },
   { id: "media-settings", label: "Images & Media", icon: "🖼️", group: "Content" },
+  { id: "banners", label: "Banners", icon: "🎨", group: "Content" },
   { id: "courses", label: "Courses", icon: "📚", group: "Content" },
   { id: "achievers", label: "Achievers", icon: "🏆", group: "Content" },
   { id: "gallery", label: "Gallery", icon: "📸", group: "Content" },
@@ -84,7 +86,7 @@ function Dashboard({ setSection }) {
   const quickLinks = [
     { label: "Edit Site Name", section: "site-settings", icon: "🏛️", color: "bg-blue-500" },
     { label: "Edit Contact Info", section: "contact-settings", icon: "📞", color: "bg-green-500" },
-    { label: "Images & Banners", section: "media-settings", icon: "🖼️", color: "bg-indigo-500" },
+    { label: "Hero Banners", section: "banners", icon: "🎨", color: "bg-indigo-500" },
     { label: "Manage Courses", section: "courses", icon: "📚", color: "bg-purple-500" },
     { label: "Manage Lectures", section: "lectures", icon: "🎬", color: "bg-rose-500" },
     { label: "Manage Gallery", section: "gallery", icon: "📸", color: "bg-pink-500" },
@@ -828,9 +830,7 @@ function Sidebar({ active, setActive, sidebarOpen, setSidebarOpen, onLogout, sit
   );
 }
 
-// ═══════════════════════════════════════════════════════
-// MAIN ADMIN DASHBOARD
-// ═══════════════════════════════════════════════════════
+
 export function AdminDashboard() {
   const router = useRouter();
   const [section, setSection] = useState("dashboard");
@@ -882,6 +882,7 @@ export function AdminDashboard() {
       case "gallery": return <GalleryManager />;
       case "lectures": return <LecturesManager />;
       case "media-settings": return <MediaSettings settings={settings} onSettingsChange={setSettings} />;
+      case "banners": return <BannersManager />;
       case "leads": return <LeadsManager />;
       case "admissions": return <AdmissionsList />;
       case "settings": return <AccountSettings />;
