@@ -2,15 +2,6 @@
 import { useState, useRef } from "react";
 import { apiUrl } from "@/lib/api";
 
-// Reusable drag-and-drop image uploader that uploads to R2 via /api/upload
-// Props:
-//   label        - field label
-//   currentUrl   - current image URL to preview
-//   folder       - R2 subfolder (logo|banner|gallery|general)
-//   onUploaded   - callback(url) when upload succeeds
-//   hint         - optional helper text
-//   aspectHint   - optional aspect ratio hint e.g. "16:9 recommended"
-
 export default function ImageUploader({ label, currentUrl, folder = "general", onUploaded, hint, aspectHint }) {
   const [dragging, setDragging] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -25,7 +16,6 @@ export default function ImageUploader({ label, currentUrl, folder = "general", o
     setSuccess("");
     setUploading(true);
 
-    // Local preview immediately
     const reader = new FileReader();
     reader.onload = (e) => setPreview(e.target.result);
     reader.readAsDataURL(file);
@@ -46,8 +36,7 @@ export default function ImageUploader({ label, currentUrl, folder = "general", o
         setTimeout(() => setSuccess(""), 4000);
       } else if (data.setupRequired) {
         setError("R2 not configured yet. See setup instructions below.");
-        // Still keep local preview and pass blob URL as fallback
-        onUploaded?.(""); // clear
+        onUploaded?.(""); 
       } else {
         setError(data.error || "Upload failed.");
       }
@@ -62,7 +51,6 @@ export default function ImageUploader({ label, currentUrl, folder = "general", o
     if (!file) return;
     const allowed = ["image/jpeg", "image/png", "image/webp", "image/gif", "image/svg+xml"];
     if (!allowed.includes(file.type)) { setError("Please upload a JPEG, PNG, WebP, GIF, or SVG file."); return; }
-    if (file.size > 5 * 1024 * 1024) { setError("File must be under 5MB."); return; }
     upload(file);
   };
 

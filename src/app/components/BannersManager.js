@@ -33,10 +33,11 @@ export default function BannersManager() {
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const url = filterPos === "all"
-        ? apiUrl("/api/banners")
-        : apiUrl(`/api/banners?position=${filterPos}`);
-      const r = await fetch(url);
+      // Pass ?all=true so the admin sees both published and unpublished banners
+      const base = filterPos === "all"
+        ? apiUrl("/api/banners?all=true")
+        : apiUrl(`/api/banners?all=true&position=${filterPos}`);
+      const r = await fetch(base);
       const d = await r.json();
       if (d.success) setBanners(d.data || []);
     } catch {
@@ -62,7 +63,8 @@ export default function BannersManager() {
       link: banner.link || "",
       linkLabel: banner.linkLabel || "",
       order: banner.order ?? 0,
-      active: banner.active !== false,
+      // DB stores `isPublished`; frontend form uses `active`
+      active: banner.isPublished !== false && banner.active !== false,
     });
     setEditing(banner);
   };
@@ -80,7 +82,7 @@ export default function BannersManager() {
       const method = isEdit ? "PUT" : "POST";
       const url = isEdit
         ? apiUrl(`/api/banners/${editing._id || editing.id}`)
-        : apiUrl("/api/banners");
+        : apiUrl("/api/banners/upload");
       const headers = {
         "Content-Type": "application/json",
         Authorization: `Bearer ${sessionStorage.getItem("admin_token")}`,
@@ -367,8 +369,10 @@ export default function BannersManager() {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
                     <span className="font-bold text-gray-900 text-sm truncate">{banner.title}</span>
-                    <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${banner.active !== false ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-500"}`}>
-                      {banner.active !== false ? "Active" : "Inactive"}
+                    <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${
+                      (banner.isPublished || banner.active) ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-500"
+                    }`}>
+                      {(banner.isPublished || banner.active) ? "Active" : "Inactive"}
                     </span>
                   </div>
                   {banner.subtitle && <div className="text-xs text-gray-500 truncate mt-0.5">{banner.subtitle}</div>}

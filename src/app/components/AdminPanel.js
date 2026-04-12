@@ -603,7 +603,7 @@ function AchieversManager() {
               </div>
               <div className="flex gap-2 shrink-0">
                 <button onClick={() => startEdit(a)} className="text-[#1e3a8a] text-xs font-bold hover:underline">Edit</button>
-                <button onClick={() => del(a.id)} className="text-red-500 text-xs font-bold hover:underline">Delete</button>
+                <button onClick={() => del(a._id || a.id)} className="text-red-500 text-xs font-bold hover:underline">Delete</button>
               </div>
             </div>
           ))}
@@ -707,7 +707,7 @@ function GalleryManager() {
               </div>
               <div className="flex gap-2 shrink-0">
                 <button onClick={() => startEdit(g)} className="text-[#1e3a8a] text-xs font-bold hover:underline">Edit</button>
-                <button onClick={() => del(g.id)} className="text-red-500 text-xs font-bold hover:underline">Delete</button>
+                <button onClick={() => del(g._id || g.id)} className="text-red-500 text-xs font-bold hover:underline">Delete</button>
               </div>
             </div>
           ))}
