@@ -90,7 +90,7 @@ export default function HeroSlider() {
 
   return (
     <section
-      className={`relative min-h-[85vh] flex items-center bg-gradient-to-br ${slide.bg} transition-all duration-700 overflow-hidden`}
+      className={`relative min-h-[500px] md:min-h-[600px] lg:min-h-[85vh] flex items-center bg-gradient-to-br ${slide.bg} transition-all duration-700 overflow-hidden`}
       id="hero"
     >
       {slide.imageUrl && (
@@ -126,7 +126,7 @@ export default function HeroSlider() {
 
       {/* ── Slide content ── */}
       <div
-        className={`relative max-w-7xl mx-auto px-4 py-20 w-full transition-all duration-500 ${animating ? "opacity-0 translate-y-4" : "opacity-100 translate-y-0"
+        className={`relative max-w-7xl mx-auto px-4 py-12 md:py-20 w-full transition-all duration-500 ${animating ? "opacity-0 translate-y-4" : "opacity-100 translate-y-0"
           }`}
       >
         <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -144,7 +144,7 @@ export default function HeroSlider() {
                 {slide.subtitle}
               </p>
             )}
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-tight mb-6">
+            <h1 className="text-3xl md:text-5xl lg:text-6xl font-black text-white leading-tight mb-6">
               {slide.title}
             </h1>
             {slide.desc && (
