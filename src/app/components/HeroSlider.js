@@ -172,8 +172,7 @@ export default function HeroSlider() {
             {slide.desc && (
               <div className="flex gap-8 mt-10 pt-8 border-t border-white/20">
                 {[
-                  { n: "2+", l: "Years" },
-                  { n: "1+", l: "Branches" },
+                  { n: "10+", l: "Years" },
                 ].map((s) => (
                   <div key={s.l}>
                     <div className="text-2xl font-black text-amber-400">{s.n}</div>

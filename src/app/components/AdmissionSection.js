@@ -99,7 +99,7 @@ export default function AdmissionSection() {
               <div className="grid grid-cols-2 gap-4 mb-8">
                 {[
                   { n: "10+", l: "Selections" },
-                  { n: "2+", l: "Years" },
+                  { n: "10+", l: "Years" },
                   { n: "1+", l: "Branches" },
                   { n: "5,000+", l: "Aspirants" },
                 ].map((s) => (

@@ -55,7 +55,7 @@ export default function Footer() {
             { number: "29+", label: "IAS/IPS/IFS Selections" },
             { number: "10", label: "UPSC CSE 2025 Selections" },
             { number: "7", label: "TNPSC Group I Selections" },
-            { number: "2+", label: "Years of Excellence" },
+            { number: "10+", label: "Years of Excellence" },
           ].map((stat) => (
             <div key={stat.label} className="group">
               <div className="text-3xl md:text-4xl font-black text-amber-400 group-hover:scale-110 transition-transform">
@@ -87,7 +87,7 @@ export default function Footer() {
             </div>
           </div>
           <p className="text-gray-400 text-sm leading-relaxed mb-4">
-            India&apos;s premier UPSC coaching institute with 2+ years
+            India&apos;s premier UPSC coaching institute with 10+ years
             of excellence, producing toppers and meriting success consistently.
           </p>
           {socialLinks.length > 0 && (

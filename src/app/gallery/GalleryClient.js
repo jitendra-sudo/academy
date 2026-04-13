@@ -11,7 +11,7 @@ const highlights = [
   { icon: "🏆", value: "202", label: "UPSC CSE 2025 Selections" },
   { icon: "⭐", value: "47", label: "TNPSC Group I 2024" },
   { icon: "📸", value: "500+", label: "Events Captured" },
-  { icon: "🎓", value: "2+", label: "Years of Journey" },
+  { icon: "🎓", value: "10+", label: "Years of Journey" },
 ];
 
 // Skeleton card

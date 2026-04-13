@@ -11,7 +11,7 @@ const features = [
   },
   {
     icon: "👨‍🏫",
-    title: "Experienced Faculty (2+ Years)",
+    title: "Experienced Faculty (10+ Years)",
     desc: "Our faculty members bring deep domain expertise and personalized mentoring to each student.",
   },
   {
