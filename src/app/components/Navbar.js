@@ -71,6 +71,7 @@ export default function Navbar() {
   const [leadError, setLeadError] = useState("");
   const [contact, setContact] = useState(null);
   const [logoUrl, setLogoUrl] = useState("");
+  const [mobileExpanded, setMobileExpanded] = useState(null);
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
@@ -298,7 +299,7 @@ export default function Navbar() {
                     {item.label}
                     {item.dropdown && (
                       <svg
-                        className={`w-4 h-4 transition-transform ${mobileExpanded === item.label ? "rotate-180" : ""}`}
+                        className={`w-4 h-4 transition-transform ${mobileExpanded === item?.label ? "rotate-180" : ""}`}
                         fill="none" stroke="currentColor" viewBox="0 0 24 24"
                       >
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
