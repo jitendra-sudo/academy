@@ -175,7 +175,7 @@ export default function LeadsManager() {
                   <td className="px-4 py-3">
                     <select
                       value={lead.status}
-                      onChange={(e) => updateStatus(lead.id, e.target.value)}
+                      onChange={(e) => updateStatus(lead._id, e.target.value)}
                       className={"text-xs font-semibold px-2 py-1 rounded-full border-0 cursor-pointer outline-none " + (LEAD_STATUS_COLORS[lead.status] || "bg-gray-100 text-gray-600")}
                     >
                       <option value="new">New</option>

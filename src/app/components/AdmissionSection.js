@@ -88,9 +88,8 @@ export default function AdmissionSection() {
                 <span className="gradient-text">Civil Services Academy</span>
               </h2>
               <p className="text-gray-600 leading-relaxed mb-4">
-                Mentor Merits Academy is the top coaching institute for UPSC in India, providing excellent coaching
-                for civil services aspirants with expert faculty, comprehensive study material and a systematic approach.
-              </p>
+                Consistently Producing Merit Since 2023:
+                At Mentor Merits Academy, we build success through structured mentoring and strategic preparation. Since 2023, we have shaped disciplined, confident aspirants ready for UPSC. Our first batch steps into the 2026 Prelims with clarity and determination. </p>
               <p className="text-gray-600 leading-relaxed mb-6">
                 Our courses are designed to the minutest detail, the syllabus coverage is extensive and the
                 mentoring is personalized to provide the best preparation. We also focus on character development,
@@ -98,9 +97,7 @@ export default function AdmissionSection() {
               </p>
               <div className="grid grid-cols-2 gap-4 mb-8">
                 {[
-                  { n: "10+", l: "Selections" },
                   { n: "10+", l: "Years" },
-                  { n: "1+", l: "Branches" },
                   { n: "5,000+", l: "Aspirants" },
                 ].map((s) => (
                   <div key={s.l} className="bg-blue-50 rounded-xl p-4 text-center">
@@ -153,8 +150,7 @@ export default function AdmissionSection() {
               </p>
               <div className="space-y-4">
                 {[
-                  { icon: "📞", text: `UPSC: ${upscPhone} | ${upscPhone2}` },
-                  { icon: "📞", text: `TNPSC: ${tnpscPhone} | ${tnpscPhone2}` },
+                  { icon: "📞", text: ` ${upscPhone}` },
                   { icon: "📧", text: admissionEmail },
                 ].map((c) => (
                   <div key={c.text} className="flex items-center gap-3">

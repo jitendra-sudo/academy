@@ -8,6 +8,7 @@ import AccountSettings from "./AccountSettings";
 import LecturesManager from "./LecturesManager";
 import { apiUrl } from "@/lib/api";
 import BannersManager from "./BannersManager";
+import AnnouncementsManager from "./AnnouncementsManager";
 
 // ─── Sidebar menu ────────────────────────────────────────────────────────────
 const menuItems = [
@@ -18,6 +19,7 @@ const menuItems = [
   { id: "stats-settings", label: "Stats & Numbers", icon: "📈", group: "Content" },
   { id: "media-settings", label: "Images & Media", icon: "🖼️", group: "Content" },
   { id: "banners", label: "Banners", icon: "🎨", group: "Content" },
+  { id: "announcements", label: "Announcements", icon: "📢", group: "Content" },
   { id: "courses", label: "Courses", icon: "📚", group: "Content" },
   { id: "achievers", label: "Achievers", icon: "🏆", group: "Content" },
   { id: "gallery", label: "Gallery", icon: "📸", group: "Content" },
@@ -86,6 +88,7 @@ function Dashboard({ setSection }) {
   const quickLinks = [
     { label: "Edit Site Name", section: "site-settings", icon: "🏛️", color: "bg-blue-500" },
     { label: "Edit Contact Info", section: "contact-settings", icon: "📞", color: "bg-green-500" },
+    { label: "Announcements", section: "announcements", icon: "📢", color: "bg-amber-500" },
     { label: "Hero Banners", section: "banners", icon: "🎨", color: "bg-indigo-500" },
     { label: "Manage Courses", section: "courses", icon: "📚", color: "bg-purple-500" },
     { label: "Manage Lectures", section: "lectures", icon: "🎬", color: "bg-rose-500" },
@@ -592,7 +595,7 @@ function AchieversManager() {
         <div className="p-4 border-b border-gray-100"><h3 className="font-black text-gray-900">All Achievers ({list.length})</h3></div>
         <div className="divide-y divide-gray-50">
           {list.map((a) => (
-            <div key={a.id} className="flex items-center gap-4 px-5 py-3 hover:bg-gray-50">
+            <div key={a._id || a.id} className="flex items-center gap-4 px-5 py-3 hover:bg-gray-50">
               <div className="w-10 h-10 bg-gradient-to-br from-amber-400 to-amber-600 rounded-xl flex items-center justify-center text-white font-black text-sm shrink-0">
                 {a.rank?.split(" ")[1] || "#"}
               </div>
@@ -699,7 +702,7 @@ function GalleryManager() {
         </div>
         <div className="divide-y divide-gray-50">
           {list.map((g) => (
-            <div key={g.id} className="flex items-center gap-4 px-5 py-3 hover:bg-gray-50">
+            <div key={g._id || g.id} className="flex items-center gap-4 px-5 py-3 hover:bg-gray-50">
               <div className="w-10 h-10 bg-gradient-to-br from-blue-900 to-blue-700 rounded-xl flex items-center justify-center text-xl shrink-0">{g.emoji}</div>
               <div className="flex-1 min-w-0">
                 <div className="font-bold text-gray-900 text-sm truncate">{g.title}</div>
@@ -720,64 +723,98 @@ function GalleryManager() {
 // ═══════════════════════════════════════════════════════
 // ADMISSIONS LIST
 // ═══════════════════════════════════════════════════════
-const STATUS_COLORS = { Confirmed: "bg-green-100 text-green-700", Pending: "bg-amber-100 text-amber-700", "Under Review": "bg-blue-100 text-blue-700" };
+const ADMISSION_STATUS_COLORS = { 
+  converted: "bg-green-100 text-green-700", 
+  Confirmed: "bg-green-100 text-green-700", 
+  Pending: "bg-amber-100 text-amber-700" 
+};
 
 function AdmissionsList() {
   const [list, setList] = useState([]);
-  const [filter, setFilter] = useState("all");
   const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const load = useCallback(async () => {
+    setLoading(true);
     const params = new URLSearchParams();
-    if (filter !== "all") params.set("status", filter);
     if (search) params.set("q", search);
-    const headers = { Authorization: `Bearer ${sessionStorage.getItem("admin_token")}` };
-    const r = await fetch(apiUrl(`/api/admissions?${params}`), { headers }); const d = await r.json();
-    if (d.success) setList(d.data);
-  }, [filter, search]);
+    try {
+      const headers = { Authorization: `Bearer ${sessionStorage.getItem("admin_token")}` };
+      const r = await fetch(apiUrl(`/api/admissions?${params}`), { headers });
+      const d = await r.json();
+      if (d.success) setList(d.data);
+    } finally {
+      setLoading(false);
+    }
+  }, [search]);
 
   useEffect(() => { load(); }, [load]);
+
+  const fmtDate = (iso) =>
+    iso ? new Date(iso).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }) : "-";
 
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
       <div className="p-5 border-b border-gray-100">
-        <div className="flex flex-col sm:flex-row gap-3">
-          <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search name, course, city..." className="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[#1e3a8a] focus:outline-none" />
-          <select value={filter} onChange={(e) => setFilter(e.target.value)} className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[#1e3a8a] focus:outline-none bg-white">
-            <option value="all">All Statuses</option>
-            <option value="Confirmed">Confirmed</option>
-            <option value="Pending">Pending</option>
-            <option value="Under Review">Under Review</option>
-          </select>
+        <div className="flex flex-col sm:flex-row gap-3 items-center justify-between">
+          <div className="relative flex-1 w-full max-w-md">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">🔍</span>
+            <input 
+              value={search} 
+              onChange={(e) => setSearch(e.target.value)} 
+              placeholder="Search admitted students..." 
+              className="w-full border border-gray-200 rounded-xl pl-9 pr-3 py-2 text-sm focus:ring-2 focus:ring-[#1e3a8a] focus:outline-none" 
+            />
+          </div>
+          <div className="text-xs font-bold text-gray-400 bg-gray-50 px-3 py-1.5 rounded-lg border border-gray-100">
+            SHOWING CONVERTED LEADS
+          </div>
         </div>
       </div>
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
-          <thead className="bg-gray-50">
+          <thead className="bg-gray-50/50">
             <tr>
               {["Student", "Phone", "Course", "City", "Status", "Date"].map((h) => (
-                <th key={h} className="text-left px-5 py-3 text-xs text-gray-500 font-semibold">{h}</th>
+                <th key={h} className="text-left px-5 py-4 text-[10px] text-gray-400 font-bold uppercase tracking-wider">{h}</th>
               ))}
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-50">
             {list.map((a) => (
-              <tr key={a.id} className="hover:bg-gray-50 transition-colors">
-                <td className="px-5 py-3"><div className="font-semibold text-gray-900">{a.name}</div><div className="text-gray-400 text-xs">{a.id}</div></td>
-                <td className="px-5 py-3 text-gray-600">{a.phone}</td>
-                <td className="px-5 py-3 text-gray-600 max-w-40 truncate">{a.course}</td>
-                <td className="px-5 py-3 text-gray-500">{a.city}</td>
-                <td className="px-5 py-3"><span className={`px-2 py-1 rounded-full text-xs font-semibold ${STATUS_COLORS[a.status] || "bg-gray-100 text-gray-600"}`}>{a.status}</span></td>
-                <td className="px-5 py-3 text-gray-400 text-xs">{a.createdAt}</td>
+              <tr key={a._id || a.id} className="hover:bg-blue-50/30 transition-colors">
+                <td className="px-5 py-4">
+                  <div className="font-bold text-gray-900">{a.name}</div>
+                  <div className="text-[10px] text-gray-400 font-mono uppercase">{ (a._id || a.id).slice(-6) }</div>
+                </td>
+                <td className="px-5 py-4">
+                  <a href={`tel:${a.phone}`} className="text-[#1e3a8a] font-semibold hover:underline">{a.phone}</a>
+                </td>
+                <td className="px-5 py-4 text-gray-600 font-medium max-w-48 truncate">{a.course}</td>
+                <td className="px-5 py-4 text-gray-500">{a.city}</td>
+                <td className="px-5 py-4">
+                  <span className={`px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-tight ${ADMISSION_STATUS_COLORS[a.status] || "bg-gray-100 text-gray-600"}`}>
+                    {a.status === 'converted' ? 'Confirmed' : a.status}
+                  </span>
+                </td>
+                <td className="px-5 py-4 text-gray-400 text-xs font-medium">{fmtDate(a.updatedAt || a.createdAt)}</td>
               </tr>
             ))}
           </tbody>
         </table>
-        {list.length === 0 && <div className="text-center py-12 text-gray-400">No admissions found.</div>}
+        {loading && <div className="text-center py-12 text-gray-400 animate-pulse">Loading admissions...</div>}
+        {!loading && list.length === 0 && (
+          <div className="text-center py-16">
+            <div className="text-4xl mb-4">📝</div>
+            <p className="font-bold text-gray-900 mb-1">No confirmed admissions</p>
+            <p className="text-sm text-gray-500">Change a lead&apos;s status to &quot;Converted&quot; to see them here.</p>
+          </div>
+        )}
       </div>
     </div>
   );
 }
+
 
 // ═══════════════════════════════════════════════════════
 // SIDEBAR
@@ -883,6 +920,7 @@ export function AdminDashboard() {
       case "lectures": return <LecturesManager />;
       case "media-settings": return <MediaSettings settings={settings} onSettingsChange={setSettings} />;
       case "banners": return <BannersManager />;
+      case "announcements": return <AnnouncementsManager />;
       case "leads": return <LeadsManager />;
       case "admissions": return <AdmissionsList />;
       case "settings": return <AccountSettings />;

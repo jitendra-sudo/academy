@@ -157,7 +157,6 @@ export default function Footer() {
               { label: "Free Lectures", href: "/lectures" },
               { label: "Gallery", href: "/gallery" },
               { label: "Admission 2026", href: "#admission" },
-              { label: "Admin Panel", href: "/admin" },
             ].map((item) => (
               <li key={item.label}>
                 <Link href={item.href} className="text-gray-400 hover:text-white text-sm transition-colors flex items-center gap-1 group">

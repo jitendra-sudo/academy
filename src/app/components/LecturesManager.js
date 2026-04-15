@@ -480,7 +480,7 @@ export default function LecturesManager() {
           {view === "grid" && (
             <div className="p-4 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {lectures.map((lec) => (
-                <div key={lec.id} className="border border-gray-100 rounded-2xl overflow-hidden hover:shadow-md transition-shadow group">
+                <div key={lec._id || lec.id} className="border border-gray-100 rounded-2xl overflow-hidden hover:shadow-md transition-shadow group">
                   {/* Thumbnail */}
                   <div className="relative aspect-video bg-gradient-to-br from-[#0f172a] to-[#1e3a8a] cursor-pointer"
                     onClick={() => setPreview(lec)}>
@@ -522,7 +522,7 @@ export default function LecturesManager() {
                       <button onClick={() => togglePublic(lec)} className={`flex-1 text-xs font-bold py-1 ${lec.isPublic ? "text-amber-600" : "text-green-600"}`}>
                         {lec.isPublic ? "Unpublish" : "Publish"}
                       </button>
-                      <button onClick={() => deleteLec(lec.id)} className="flex-1 text-xs text-red-500 font-bold hover:underline py-1">Delete</button>
+                      <button onClick={() => deleteLec(lec._id || lec.id)} className="flex-1 text-xs text-red-500 font-bold hover:underline py-1">Delete</button>
                     </div>
                   </div>
                 </div>
@@ -551,7 +551,7 @@ export default function LecturesManager() {
                 </thead>
                 <tbody className="divide-y divide-gray-50">
                   {lectures.map((lec) => (
-                    <tr key={lec.id} className="hover:bg-gray-50 transition-colors">
+                    <tr key={lec._id || lec.id} className="hover:bg-gray-50 transition-colors">
                       <td className="px-4 py-3">
                         <div className="w-20 h-12 rounded-lg overflow-hidden bg-gray-100 cursor-pointer" onClick={() => setPreview(lec)}>
                           {lec.thumbnailUrl
@@ -584,7 +584,7 @@ export default function LecturesManager() {
                         <div className="flex gap-2 items-center">
                           <button onClick={() => setPreview(lec)} className="text-blue-500 text-xs font-bold hover:underline" title="Preview">▶️</button>
                           <button onClick={() => startEdit(lec)} className="text-[#1e3a8a] text-xs font-bold hover:underline">Edit</button>
-                          <button onClick={() => deleteLec(lec.id)} className="text-red-500 text-xs font-bold hover:underline">🗑️</button>
+                          <button onClick={() => deleteLec(lec._id || lec.id)} className="text-red-500 text-xs font-bold hover:underline">🗑️</button>
                         </div>
                       </td>
                     </tr>

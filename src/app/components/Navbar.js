@@ -72,6 +72,7 @@ export default function Navbar() {
   const [contact, setContact] = useState(null);
   const [logoUrl, setLogoUrl] = useState("");
   const [mobileExpanded, setMobileExpanded] = useState(null);
+  const [announcements, setAnnouncements] = useState([]);
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
@@ -91,7 +92,6 @@ export default function Navbar() {
     setLeadStatus("");
     setLeadError("");
   };
-
   // Fetch contact info from API
   useEffect(() => {
     fetch(apiUrl("/api/settings"))
@@ -101,6 +101,10 @@ export default function Navbar() {
         if (d.success && d.data?.media?.logoUrl) setLogoUrl(d.data.media.logoUrl);
       })
       .catch(() => { });
+
+    fetch(apiUrl("/api/announcements"))
+      .then((r) => r.json())
+      .then((d) => { if (d.success) setAnnouncements(d.data || []); });
   }, []);
 
   const submitLead = async (e) => {
@@ -162,6 +166,38 @@ export default function Navbar() {
 
   return (
     <>
+      {/* Announcement Bar */}
+      {announcements.length > 0 && (
+        <div className="bg-[#1e3a8a] text-white py-1.5 px-4 overflow-hidden relative z-[60]">
+          <div className="mx-auto flex items-center justify-center gap-4 w-full">
+            <div className="flex items-center gap-2 overflow-hidden  min-w-7xl max-w-7xl ">
+               {announcements.map((ann, idx) => (
+                 <div key={ann._id || idx} className="whitespace-nowrap flex items-center gap-2 animate-marquee">
+                   <span className="text-[10px] sm:text-xs font-bold bg-amber-500 text-white px-1.5 py-0.5 rounded-full uppercase shrink-0">News</span>
+                   {ann.link ? (
+                     <a href={ann.link} className="text-[11px] sm:text-sm font-semibold hover:underline">
+                       {ann.text}
+                     </a>
+                   ) : (
+                     <span className="text-[11px] sm:text-sm font-semibold">{ann.text}</span>
+                   )}
+                   {idx < announcements.length - 1 && <span className="mx-4 text-white/30">|</span>}
+                 </div>
+               ))}
+            </div>
+          </div>
+          {/* Add custom style for marquee if needed, or just keep it static if multiple items are too long */}
+          <style jsx>{`
+            .animate-marquee {
+              animation: marquee 20s linear infinite;
+            }
+            @keyframes marquee {
+              0% { transform: translateX(0); }
+              100% { transform: translateX(-50%); }
+            }
+          `}</style>
+        </div>
+      )}
 
       <nav
         className={`sticky top-0 z-50 transition-all duration-300 ${isScrolled

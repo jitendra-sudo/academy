@@ -15,24 +15,9 @@ const features = [
     desc: "Our faculty members bring deep domain expertise and personalized mentoring to each student.",
   },
   {
-    icon: "📊",
-    title: "AI-Based Test Series",
-    desc: "100+ Prelims and 20+ Mains tests powered by intelligent analytics to track performance.",
-  },
-  {
     icon: "🤝",
     title: "3-Month Interview Programme",
     desc: "Comprehensive interview coaching with mock interviews and personality development.",
-  },
-  {
-    icon: "🌐",
-    title: "Online Classes – First in India",
-    desc: "Two-way live communication allowing students from all over India to learn remotely.",
-  },
-  {
-    icon: "🧭",
-    title: "360° Mentorship Programme",
-    desc: "Ongoing support and expert guidance for strategy, opinions, and analytical skills.",
   },
 ];
 
@@ -59,7 +44,6 @@ export default function AchievementsSection() {
       .then((d) => {
         if (d.success && d.data?.length) {
           setAchievers(d.data);
-          // Build dynamic ticker from achievers
           const items = d.data
             .slice(0, 8)
             .map((a) => `🏆 ${a.name} – ${a.rank} (${a.exam || "UPSC"} ${a.year || ""})`)
@@ -94,7 +78,7 @@ export default function AchievementsSection() {
               <span className="gradient-text">India&apos;s Best?</span>
             </h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
-              Mentor Merits Academy stands as the best academy for TNPSC and UPSC coaching,
+              Mentor Merits Academy stands as the best academy,
               offering a holistic, structured, and result-oriented approach.
             </p>
           </div>
