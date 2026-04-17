@@ -8,7 +8,8 @@
     "date": "Jan 2025",
     "bg": "from-blue-900 to-blue-700",
     "emoji": "🏫",
-    "tag": "Foundation"
+    "tag": "Foundation",
+    "imageUrl": "/classroom/classroom_students.jpg"
   },
   {
     "id": 2,
@@ -96,6 +97,7 @@
     "date": "Apr 2025",
     "bg": "from-teal-800 to-teal-600",
     "emoji": "🗺️",
-    "tag": "Geography"
+    "tag": "Geography",
+    "imageUrl": "/classroom/classroom_mentorship.jpg"
   }
 ]

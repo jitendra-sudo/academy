@@ -1,6 +1,17 @@
-"use client";
 import { useState, useEffect } from "react";
 import { apiUrl } from "@/lib/api";
+import { 
+  User, 
+  Key, 
+  ShieldCheck, 
+  Eye, 
+  EyeOff, 
+  Save, 
+  Loader2, 
+  Lock,
+  CheckCircle2,
+  AlertTriangle
+} from "lucide-react";
 
 export default function AccountSettings() {
   const [currentUsername, setCurrentUsername] = useState("");
@@ -73,7 +84,9 @@ export default function AccountSettings() {
     <div className="space-y-5 max-w-xl">
       {/* Current info */}
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
-        <h2 className="font-black text-gray-900 mb-4 flex items-center gap-2">👤 Current Account</h2>
+        <h2 className="font-black text-gray-900 mb-4 flex items-center gap-2">
+          <User size={18} className="text-[#1e3a8a]" /> Current Account
+        </h2>
         <div className="flex items-center gap-3 bg-gray-50 rounded-xl px-4 py-3">
           <div className="w-10 h-10 bg-[#1e3a8a] rounded-full flex items-center justify-center text-white font-black">
             {(currentUsername[0] || "A").toUpperCase()}
@@ -88,13 +101,15 @@ export default function AccountSettings() {
       {/* Change credentials */}
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
         <div className="p-5 border-b border-gray-100">
-          <h2 className="font-black text-gray-900 flex items-center gap-2">🔑 Change Username / Password</h2>
+          <h2 className="font-black text-gray-900 flex items-center gap-2">
+            <Key size={18} className="text-[#1e3a8a]" /> Change Username / Password
+          </h2>
           <p className="text-gray-500 text-xs mt-1">You must enter your current password to make any changes.</p>
         </div>
         <div className="p-5">
           {msg.text && (
-            <div className={`mb-4 px-4 py-3 rounded-xl text-sm font-medium ${msg.type === "success" ? "bg-green-50 border border-green-200 text-green-700" : "bg-red-50 border border-red-200 text-red-700"}`}>
-              {msg.type === "success" ? "✅" : "⚠️"} {msg.text}
+            <div className={`mb-4 px-4 py-3 rounded-xl text-sm font-medium flex items-center gap-2 ${msg.type === "success" ? "bg-green-50 border border-green-200 text-green-700" : "bg-red-50 border border-red-200 text-red-700"}`}>
+              {msg.type === "success" ? <CheckCircle2 size={16} /> : <AlertTriangle size={16} />} {msg.text}
             </div>
           )}
 
@@ -128,10 +143,10 @@ export default function AccountSettings() {
             </div>
 
             <button type="submit" disabled={saving}
-              className="w-full bg-[#1e3a8a] hover:bg-[#1d4ed8] text-white py-3 rounded-xl font-bold text-sm transition-all disabled:opacity-60 flex items-center justify-center gap-2">
+              className="w-full bg-[#1e3a8a] shadow-lg shadow-blue-900/10 hover:bg-[#1d4ed8] text-white py-3 rounded-xl font-bold text-sm transition-all disabled:opacity-60 flex items-center justify-center gap-2">
               {saving
-                ? <><svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>Updating...</>
-                : "Update Credentials"}
+                ? <><Loader2 size={16} className="animate-spin" /> Updating...</>
+                : <><Save size={16} /> Update Credentials</>}
             </button>
           </form>
         </div>
@@ -139,7 +154,9 @@ export default function AccountSettings() {
 
       {/* Security note */}
       <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4">
-        <h3 className="font-bold text-amber-800 text-sm mb-1">🔒 Security Tips</h3>
+        <h3 className="font-bold text-amber-800 text-sm mb-1 flex items-center gap-2">
+          <ShieldCheck size={16} /> Security Tips
+        </h3>
         <ul className="text-amber-700 text-xs space-y-1 list-disc pl-4">
           <li>Use a password with at least 12 characters, including numbers and symbols</li>
           <li>Never share your admin credentials with anyone</li>

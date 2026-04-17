@@ -1,6 +1,15 @@
 "use client";
 import { useState, useEffect } from "react";
 import { apiUrl } from "@/lib/api";
+import { 
+  FileText, 
+  Phone, 
+  Mail, 
+  CheckCircle2, 
+  AlertCircle, 
+  Loader2,
+  ArrowRight
+} from "lucide-react";
 
 export default function AdmissionSection() {
   const [form, setForm] = useState({
@@ -28,6 +37,13 @@ export default function AdmissionSection() {
       .then((r) => r.json())
       .then((d) => { if (d.success && d.data?.length) setCourses(d.data); })
       .catch(() => { });
+
+    // Listen for plan selection from MentorshipPricing
+    const handleSelectPlan = (e) => {
+      setForm((prev) => ({ ...prev, course: e.detail }));
+    };
+    window.addEventListener("selectPlan", handleSelectPlan);
+    return () => window.removeEventListener("selectPlan", handleSelectPlan);
   }, []);
 
   const upscPhone = contact?.upscPhone || "7397236970";
@@ -68,6 +84,9 @@ export default function AdmissionSection() {
   const courseOptions = courses.length > 0
     ? courses.flatMap((cat) => (cat.items || []).map((item) => ({ label: item, cat: cat.category })))
     : [
+      { label: "Essential Mentorship", cat: "Mentorship" },
+      { label: "Premium Mentorship", cat: "Mentorship" },
+      { label: "Platinum Mentorship", cat: "Mentorship" },
       { label: "UPSC Foundation Course", cat: "UPSC" },
       { label: "UPSC Prelims Test Series", cat: "UPSC" },
       { label: "TNPSC Group I & II", cat: "TNPSC" },
@@ -75,62 +94,6 @@ export default function AdmissionSection() {
 
   return (
     <>
-      {/* About Section */}
-      <section className="py-20 bg-white" id="about">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <div className="inline-flex items-center gap-2 bg-[#1e3a8a]/10 text-[#1e3a8a] px-4 py-1.5 rounded-full text-sm font-semibold mb-4">
-                🎓 About Us
-              </div>
-              <h2 className="text-3xl md:text-4xl font-black text-gray-900 mb-6">
-                India&apos;s Most Trusted{" "}
-                <span className="gradient-text">Civil Services Academy</span>
-              </h2>
-              <p className="text-gray-600 leading-relaxed mb-4">
-                Consistently Producing Merit Since 2023:
-                At Mentor Merits Academy, we build success through structured mentoring and strategic preparation. Since 2023, we have shaped disciplined, confident aspirants ready for UPSC. Our first batch steps into the 2026 Prelims with clarity and determination. </p>
-              <p className="text-gray-600 leading-relaxed mb-6">
-                Our courses are designed to the minutest detail, the syllabus coverage is extensive and the
-                mentoring is personalized to provide the best preparation. We also focus on character development,
-                ethics, and personality development for future civil servants.
-              </p>
-              <div className="grid grid-cols-2 gap-4 mb-8">
-                {[
-                  { n: "10+", l: "Years" },
-                  { n: "5,000+", l: "Aspirants" },
-                ].map((s) => (
-                  <div key={s.l} className="bg-blue-50 rounded-xl p-4 text-center">
-                    <div className="text-2xl font-black text-[#1e3a8a]">{s.n}</div>
-                    <div className="text-gray-600 text-sm">{s.l}</div>
-                  </div>
-                ))}
-              </div>
-              <a
-                href="#admission"
-                className="inline-flex items-center gap-2 bg-[#1e3a8a] text-white px-6 py-3 rounded-xl font-bold hover:bg-[#1d4ed8] transition-colors shadow-md"
-              >
-                Enquire Now →
-              </a>
-            </div>
-
-            {/* Online Classes Feature */}
-            <div className="space-y-4">
-              <div className="bg-gradient-to-br from-[#1e3a8a] to-[#2563eb] rounded-2xl p-6 text-white">
-                <div className="text-3xl mb-3">💻</div>
-                <h3 className="font-black text-xl mb-2">Looking for Online Classes?</h3>
-                <p className="text-blue-100 text-sm leading-relaxed mb-4">
-                  Learn from anywhere, anytime. Missed your classes? Worry not — we got you covered with our
-                  recorded sessions and two-way live communication system.
-                </p>
-                <a href="#admission" className="inline-block bg-amber-500 hover:bg-amber-600 text-white px-5 py-2.5 rounded-lg text-sm font-bold transition-colors">
-                  Explore Online →
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* Admission Form */}
       <section className="py-20 bg-gradient-to-br from-[#0f172a] via-[#1e3a8a] to-[#1d4ed8]" id="admission">
@@ -139,7 +102,7 @@ export default function AdmissionSection() {
             {/* Left info */}
             <div className="text-white">
               <div className="inline-flex items-center gap-2 bg-white/10 text-amber-400 px-4 py-1.5 rounded-full text-sm font-semibold mb-4">
-                📝 Admission 2026
+                <FileText size={16} /> Admission 2026
               </div>
               <h2 className="text-3xl md:text-4xl font-black mb-4">
                 Begin Your Civil Services Journey Today
@@ -150,12 +113,12 @@ export default function AdmissionSection() {
               </p>
               <div className="space-y-4">
                 {[
-                  { icon: "📞", text: ` ${upscPhone}` },
-                  { icon: "📧", text: admissionEmail },
+                  { icon: <Phone size={18} className="text-amber-400" />, text: ` ${upscPhone}` },
+                  { icon: <Mail size={18} className="text-amber-400" />, text: admissionEmail },
                 ].map((c) => (
-                  <div key={c.text} className="flex items-center gap-3">
-                    <span className="text-xl">{c.icon}</span>
-                    <span className="text-blue-100">{c.text}</span>
+                  <div key={c.text} className="flex items-center gap-4 p-3 bg-white/5 rounded-2xl border border-white/10 hover:bg-white/10 transition-colors">
+                    <div className="w-10 h-10 bg-[#1e3a8a] rounded-xl flex items-center justify-center shadow-lg">{c.icon}</div>
+                    <span className="text-blue-100 font-bold">{c.text}</span>
                   </div>
                 ))}
               </div>
@@ -165,13 +128,15 @@ export default function AdmissionSection() {
             <div className="bg-white rounded-2xl p-8 shadow-2xl">
               <h3 className="text-xl font-black text-gray-900 mb-6">Admission Consultation</h3>
               {submitted && (
-                <div className="mb-4 bg-green-50 border border-green-200 text-green-700 rounded-lg p-3 text-sm font-medium">
-                  ✅ Thank you! Your enquiry {submittedId ? `(ID: ${submittedId})` : ""} has been received. We&apos;ll contact you within 24 hours.
+                <div className="mb-4 bg-green-50 border border-green-200 text-green-700 rounded-lg p-3 text-sm font-medium flex items-start gap-2">
+                  <CheckCircle2 size={16} className="shrink-0 mt-0.5" />
+                  <span>Thank you! Your enquiry {submittedId ? `(ID: ${submittedId})` : ""} has been received. We&apos;ll contact you within 24 hours.</span>
                 </div>
               )}
               {error && (
-                <div className="mb-4 bg-red-50 border border-red-200 text-red-700 rounded-lg p-3 text-sm font-medium">
-                  ⚠️ {error}
+                <div className="mb-4 bg-red-50 border border-red-200 text-red-700 rounded-lg p-3 text-sm font-medium flex items-start gap-2">
+                  <AlertCircle size={16} className="shrink-0 mt-0.5" />
+                  <span>{error}</span>
                 </div>
               )}
               <form onSubmit={handleSubmit} className="space-y-4">
@@ -240,13 +205,14 @@ export default function AdmissionSection() {
                 >
                   {loading ? (
                     <>
-                      <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                      </svg>
+                      <Loader2 className="w-4 h-4 animate-spin" />
                       Submitting...
                     </>
-                  ) : "Submit Enquiry →"}
+                  ) : (
+                    <>
+                      Submit Enquiry <ArrowRight size={18} />
+                    </>
+                  )}
                 </button>
               </form>
             </div>

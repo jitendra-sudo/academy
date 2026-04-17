@@ -9,25 +9,55 @@ import LecturesManager from "./LecturesManager";
 import { apiUrl } from "@/lib/api";
 import BannersManager from "./BannersManager";
 import AnnouncementsManager from "./AnnouncementsManager";
+import { 
+  LayoutDashboard, 
+  Settings, 
+  Phone, 
+  Share2, 
+  BarChart3, 
+  Image, 
+  Paintbrush, 
+  Megaphone, 
+  BookOpen, 
+  Trophy, 
+  Camera, 
+  Video, 
+  Target, 
+  FileText, 
+  Settings2, 
+  LogOut,
+  ChevronRight,
+  Plus,
+  Save,
+  CheckCircle2,
+  Trash2,
+  Loader2,
+  Search,
+  Building2,
+  Mail,
+  Clock,
+  ExternalLink,
+  MessageCircle
+} from "lucide-react";
 
 // ─── Sidebar menu ────────────────────────────────────────────────────────────
 const menuItems = [
-  { id: "dashboard", label: "Dashboard", icon: "📊", group: "Main" },
-  { id: "site-settings", label: "Site Settings", icon: "🏛️", group: "Content" },
-  { id: "contact-settings", label: "Contact Info", icon: "📞", group: "Content" },
-  { id: "social-settings", label: "Social Links", icon: "🔗", group: "Content" },
-  { id: "stats-settings", label: "Stats & Numbers", icon: "📈", group: "Content" },
-  { id: "media-settings", label: "Images & Media", icon: "🖼️", group: "Content" },
-  { id: "banners", label: "Banners", icon: "🎨", group: "Content" },
-  { id: "announcements", label: "Announcements", icon: "📢", group: "Content" },
-  { id: "courses", label: "Courses", icon: "📚", group: "Content" },
-  { id: "achievers", label: "Achievers", icon: "🏆", group: "Content" },
-  { id: "gallery", label: "Gallery", icon: "📸", group: "Content" },
-  { id: "lectures", label: "Lectures", icon: "🎬", group: "Content" },
-  { id: "leads", label: "Leads", icon: "🎯", group: "Operations" },
-  { id: "admissions", label: "Admissions", icon: "📝", group: "Operations" },
-  { id: "reports", label: "Reports", icon: "📊", group: "Operations" },
-  { id: "settings", label: "Account", icon: "⚙️", group: "System" },
+  { id: "dashboard", label: "Dashboard", icon: <LayoutDashboard size={18} />, group: "Main" },
+  { id: "site-settings", label: "Site Settings", icon: <Building2 size={18} />, group: "Content" },
+  { id: "contact-settings", label: "Contact Info", icon: <Phone size={18} />, group: "Content" },
+  { id: "social-settings", label: "Social Links", icon: <Share2 size={18} />, group: "Content" },
+  { id: "stats-settings", label: "Stats & Numbers", icon: <BarChart3 size={18} />, group: "Content" },
+  { id: "media-settings", label: "Images & Media", icon: <Image size={18} />, group: "Content" },
+  { id: "banners", label: "Banners", icon: <Paintbrush size={18} />, group: "Content" },
+  { id: "announcements", label: "Announcements", icon: <Megaphone size={18} />, group: "Content" },
+  { id: "courses", label: "Courses", icon: <BookOpen size={18} />, group: "Content" },
+  { id: "achievers", label: "Achievers", icon: <Trophy size={18} />, group: "Content" },
+  { id: "gallery", label: "Gallery", icon: <Camera size={18} />, group: "Content" },
+  { id: "lectures", label: "Lectures", icon: <Video size={18} />, group: "Content" },
+  { id: "leads", label: "Leads", icon: <Target size={18} />, group: "Operations" },
+  { id: "admissions", label: "Admissions", icon: <FileText size={18} />, group: "Operations" },
+  { id: "reports", label: "Reports", icon: <BarChart3 size={18} />, group: "Operations" },
+  { id: "settings", label: "Account", icon: <Settings2 size={18} />, group: "System" },
 ];
 
 // ─── Re-usable save button ────────────────────────────────────────────────────
@@ -39,8 +69,12 @@ function SaveBtn({ onClick, saving, saved }) {
       className={`px-5 py-2 rounded-xl font-bold text-sm transition-all flex items-center gap-2 ${saved ? "bg-green-500 text-white" : "bg-[#1e3a8a] hover:bg-[#1d4ed8] text-white"} disabled:opacity-60`}
     >
       {saving ? (
-        <><svg className="w-3 h-3 animate-spin" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg>Saving...</>
-      ) : saved ? "✅ Saved!" : "Save Changes"}
+        <><Loader2 className="w-4 h-4 animate-spin" />Saving...</>
+      ) : saved ? (
+        <><CheckCircle2 className="w-4 h-4" /> Saved!</>
+      ) : (
+        <><Save className="w-4 h-4" /> Save Changes</>
+      )}
     </button>
   );
 }
@@ -86,15 +120,15 @@ function SectionCard({ title, icon, children, onSave, saving, saved }) {
 // ═══════════════════════════════════════════════════════
 function Dashboard({ setSection }) {
   const quickLinks = [
-    { label: "Edit Site Name", section: "site-settings", icon: "🏛️", color: "bg-blue-500" },
-    { label: "Edit Contact Info", section: "contact-settings", icon: "📞", color: "bg-green-500" },
-    { label: "Announcements", section: "announcements", icon: "📢", color: "bg-amber-500" },
-    { label: "Hero Banners", section: "banners", icon: "🎨", color: "bg-indigo-500" },
-    { label: "Manage Courses", section: "courses", icon: "📚", color: "bg-purple-500" },
-    { label: "Manage Lectures", section: "lectures", icon: "🎬", color: "bg-rose-500" },
-    { label: "Manage Gallery", section: "gallery", icon: "📸", color: "bg-pink-500" },
-    { label: "View Leads", section: "leads", icon: "🎯", color: "bg-cyan-500" },
-    { label: "Account Settings", section: "settings", icon: "⚙️", color: "bg-slate-500" },
+    { label: "Edit Site Name", section: "site-settings", icon: <Building2 size={24} />, color: "bg-blue-500" },
+    { label: "Edit Contact Info", section: "contact-settings", icon: <Phone size={24} />, color: "bg-green-500" },
+    { label: "Announcements", section: "announcements", icon: <Megaphone size={24} />, color: "bg-amber-500" },
+    { label: "Hero Banners", section: "banners", icon: <Paintbrush size={24} />, color: "bg-indigo-500" },
+    { label: "Manage Courses", section: "courses", icon: <BookOpen size={24} />, color: "bg-purple-500" },
+    { label: "Manage Lectures", section: "lectures", icon: <Video size={24} />, color: "bg-rose-500" },
+    { label: "Manage Gallery", section: "gallery", icon: <Camera size={24} />, color: "bg-pink-500" },
+    { label: "View Leads", section: "leads", icon: <Target size={24} />, color: "bg-cyan-500" },
+    { label: "Account Settings", section: "settings", icon: <Settings2 size={24} />, color: "bg-slate-500" },
   ];
   return (
     <div className="space-y-6">
@@ -139,7 +173,7 @@ function SiteSettings({ settings, onSettingsChange }) {
 
   return (
     <div className="space-y-5">
-      <SectionCard title="Site Identity" icon="🏛️" onSave={save} saving={saving} saved={saved}>
+      <SectionCard title="Site Identity" icon={<Building2 size={18} />} onSave={save} saving={saving} saved={saved}>
         <div className="grid md:grid-cols-2 gap-4">
           <Field label="Academy Name" id="site-name" placeholder="Mentor Merits Academy" {...f("name")} />
           <Field label="Logo Letter" id="site-logo" placeholder="M" hint="Single letter shown in the logo circle" {...f("logoLetter")} />
@@ -250,7 +284,7 @@ function ContactSettings({ settings, onSettingsChange }) {
     <div className="space-y-5">
       {/* Info banner */}
       <div className="bg-blue-50 border border-blue-200 rounded-xl px-4 py-3 flex items-start gap-3">
-        <span className="text-xl mt-0.5">📋</span>
+        <ClipboardList className="text-[#1e3a8a] mt-0.5" size={20} />
         <div>
           <p className="text-sm font-semibold text-blue-800">Phone & WhatsApp numbers are managed here</p>
           <p className="text-xs text-blue-600 mt-0.5">
@@ -264,18 +298,19 @@ function ContactSettings({ settings, onSettingsChange }) {
         </div>
       </div>
 
-      <SectionCard title="Contact Information" icon="📞" onSave={save} saving={saving} saved={saved}>
+      <SectionCard title="Contact Information" icon={<Phone size={18} />} onSave={save} saving={saving} saved={saved}>
         {/* Phone Numbers */}
         <div className="mb-5">
           <div className="flex items-center justify-between mb-3">
-            <h3 className="text-sm font-bold text-gray-700 flex items-center gap-2">📱 Phone Numbers</h3>
+            <h3 className="text-sm font-bold text-gray-700 flex items-center gap-2"><Smartphone size={16} /> Phone Numbers</h3>
             <button
               onClick={resetToEnv}
               disabled={resetting || !Object.keys(envDefaults).length}
               title="Reset phone & WhatsApp to .env defaults"
               className="text-xs text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 px-3 py-1.5 rounded-lg font-semibold transition-all disabled:opacity-40 flex items-center gap-1.5"
             >
-              {resetting ? "Resetting..." : "↺ Reset to .env Defaults"}
+              {resetting ? <Loader2 size={12} className="animate-spin" /> : <RotateCcw size={12} />}
+              {resetting ? "Resetting..." : "Reset to .env Defaults"}
             </button>
           </div>
           <div className="grid md:grid-cols-2 gap-4">
@@ -305,7 +340,7 @@ function ContactSettings({ settings, onSettingsChange }) {
         {/* WhatsApp */}
         <div className="mb-5 p-4 bg-emerald-50 border border-emerald-200 rounded-xl">
           <div className="flex items-center gap-2 mb-3">
-            <span className="text-lg">💬</span>
+            <MessageCircle className="text-emerald-600" size={18} />
             <h3 className="text-sm font-bold text-emerald-800">WhatsApp Number</h3>
             <EnvBadge fieldKey="whatsapp" />
           </div>
@@ -356,7 +391,7 @@ function SocialSettings({ settings, onSettingsChange }) {
   const f = (key) => ({ value: form[key] || "", onChange: (e) => setForm({ ...form, [key]: e.target.value }) });
 
   return (
-    <SectionCard title="Social Media Links" icon="🔗" onSave={save} saving={saving} saved={saved}>
+    <SectionCard title="Social Media Links" icon={<Share2 size={18} />} onSave={save} saving={saving} saved={saved}>
       <div className="grid md:grid-cols-2 gap-4">
         {["facebook", "twitter", "youtube", "instagram", "linkedin"].map((s) => (
           <Field key={s} label={s.charAt(0).toUpperCase() + s.slice(1)} id={`social-${s}`} placeholder={`https://${s}.com/...`} {...f(s)} />
@@ -398,7 +433,7 @@ function StatsSettings({ settings, onSettingsChange }) {
   ];
 
   return (
-    <SectionCard title="Stats & Numbers" icon="📈" onSave={save} saving={saving} saved={saved}>
+    <SectionCard title="Stats & Numbers" icon={<BarChart3 size={18} />} onSave={save} saving={saving} saved={saved}>
       <p className="text-sm text-gray-500 mb-4">These numbers appear in the hero section, footer, and throughout the site.</p>
       <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
         {fields.map((f) => (
@@ -463,14 +498,16 @@ function CoursesManager() {
       {msg && <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-2 rounded-lg text-sm font-medium">{msg}</div>}
 
       {!editing && (
-        <button onClick={() => setEditing({ category: "", items: [] })} className="bg-[#1e3a8a] text-white px-5 py-2 rounded-xl font-bold text-sm w-full hover:bg-[#1d4ed8]">
-          ➕ Add New Course Category
+        <button onClick={() => setEditing({ category: "", items: [] })} className="bg-[#1e3a8a] text-white px-5 py-2 rounded-xl font-bold text-sm w-full hover:bg-[#1d4ed8] flex items-center justify-center gap-2">
+          <Plus size={16} /> Add New Course Category
         </button>
       )}
 
       {editing ? (
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
-          <h3 className="font-black text-gray-900 mb-4">{editing._id || editing.id ? `✏️ Edit: ${editing.category}` : "➕ Add Course Category"}</h3>
+          <h3 className="font-black text-gray-900 mb-4 flex items-center gap-2">
+            {editing._id || editing.id ? <><Edit size={18} className="text-[#1e3a8a]" /> Edit: {editing.category}</> : <><Plus size={18} className="text-[#1e3a8a]" /> Add Course Category</>}
+          </h3>
           <div className="mb-4">
             <label className="text-xs font-semibold text-gray-500 uppercase mb-1 block">Category Name</label>
             <input className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[#1e3a8a] focus:outline-none" value={editing.category} onChange={(e) => setEditing({ ...editing, category: e.target.value })} />
@@ -481,19 +518,27 @@ function CoursesManager() {
               {editing.items.map((item, i) => (
                 <div key={i} className="flex items-center gap-2 bg-gray-50 rounded-lg px-3 py-2">
                   <span className="flex-1 text-sm text-gray-700">{item}</span>
-                  <button onClick={() => removeItem(i)} className="text-red-400 hover:text-red-600 text-xs font-bold">✕</button>
+                  <button onClick={() => removeItem(i)} className="text-red-400 hover:text-red-600">
+                    <Trash2 size={14} />
+                  </button>
                 </div>
               ))}
             </div>
             <div className="flex gap-2">
               <input className="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[#1e3a8a] focus:outline-none" placeholder="Add new course item..." value={newItem} onChange={(e) => setNewItem(e.target.value)} onKeyDown={(e) => e.key === "Enter" && addItem()} />
-              <button onClick={addItem} className="bg-[#1e3a8a] text-white px-3 py-2 rounded-lg text-sm font-bold">Add</button>
+              <button onClick={addItem} className="bg-[#1e3a8a] text-white px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-1">
+                <Plus size={14} /> Add
+              </button>
             </div>
           </div>
-          <div className="flex gap-3">
-            <button onClick={saveEdit} className="bg-[#1e3a8a] text-white px-5 py-2 rounded-xl font-bold text-sm hover:bg-[#1d4ed8]">Save</button>
-            <button onClick={() => setEditing(null)} className="bg-gray-100 text-gray-700 px-5 py-2 rounded-xl font-bold text-sm">Cancel</button>
-          </div>
+            <div className="flex gap-3">
+              <button onClick={saveEdit} className="bg-[#1e3a8a] text-white px-6 py-2.5 rounded-xl font-bold text-sm hover:bg-[#1d4ed8] flex items-center gap-2 shadow-lg">
+                <Save size={16} /> Save
+              </button>
+              <button onClick={() => setEditing(null)} className="bg-gray-100 text-gray-700 px-6 py-2.5 rounded-xl font-bold text-sm hover:bg-gray-200">
+                Cancel
+              </button>
+            </div>
         </div>
       ) : courses.length === 0 ? (
         <div className="bg-gray-50 border border-gray-200 rounded-2xl py-12 text-center text-gray-500">
@@ -507,9 +552,9 @@ function CoursesManager() {
           <div key={cat.id || cat._id} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
             <div className="flex items-center justify-between mb-3">
               <div className={`${cat.accent || "bg-gray-700"} text-white px-3 py-1 rounded-lg text-sm font-bold`}>{cat.category}</div>
-              <div className="flex gap-2">
-                <button onClick={() => setEditing({ ...cat })} className="text-[#1e3a8a] text-sm font-semibold hover:underline">✏️ Edit</button>
-                <button onClick={() => deleteCourse(cat.id || cat._id)} className="text-red-500 text-sm font-semibold hover:underline">🗑️ Delete</button>
+              <div className="flex gap-3">
+                <button onClick={() => setEditing({ ...cat })} className="text-[#1e3a8a] hover:opacity-75 transition-opacity" title="Edit"><Edit size={16} /></button>
+                <button onClick={() => deleteCourse(cat.id || cat._id)} className="text-red-500 hover:opacity-75 transition-opacity" title="Delete"><Trash2 size={16} /></button>
               </div>
             </div>
             <ul className="space-y-1">
@@ -572,7 +617,9 @@ function AchieversManager() {
 
       {/* Form */}
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
-        <h3 className="font-black text-gray-900 mb-4">{editing ? "✏️ Edit Achiever" : "➕ Add Achiever / Topper"}</h3>
+        <h3 className="font-black text-gray-900 mb-4 flex items-center gap-2">
+           {editing ? <><Edit size={18} className="text-[#1e3a8a]" /> Edit Achiever</> : <><Plus size={18} className="text-[#1e3a8a]" /> Add Achiever / Topper</>}
+        </h3>
         <div className="grid md:grid-cols-2 gap-4 mb-4">
           <Field label="Full Name" id="ach-name" placeholder="ISHITA KISHORE" {...f("name")} />
           <Field label="Rank" id="ach-rank" placeholder="AIR 01" {...f("rank")} />
@@ -583,10 +630,10 @@ function AchieversManager() {
           </div>
         </div>
         <div className="flex gap-3">
-          <button onClick={save} className="bg-[#1e3a8a] text-white px-5 py-2 rounded-xl font-bold text-sm hover:bg-[#1d4ed8]">
-            {editing ? "Update" : "Add Achiever"}
+          <button onClick={save} className="bg-[#1e3a8a] text-white px-6 py-2.5 rounded-xl font-bold text-sm hover:bg-[#1d4ed8] shadow-lg flex items-center gap-2">
+            <Save size={16} /> {editing ? "Update" : "Add Achiever"}
           </button>
-          {editing && <button onClick={() => { setEditing(null); setForm({ name: "", rank: "", course: "", year: "", exam: "UPSC CSE" }); }} className="bg-gray-100 text-gray-700 px-5 py-2 rounded-xl font-bold text-sm">Cancel</button>}
+          {editing && <button onClick={() => { setEditing(null); setForm({ name: "", rank: "", course: "", year: "", exam: "UPSC CSE" }); }} className="bg-gray-100 text-gray-700 px-6 py-2.5 rounded-xl font-bold text-sm hover:bg-gray-200">Cancel</button>}
         </div>
       </div>
 
@@ -604,9 +651,9 @@ function AchieversManager() {
                 <div className="text-amber-600 text-xs font-semibold">{a.rank} · {a.exam} {a.year}</div>
                 <div className="text-gray-500 text-xs truncate">{a.course}</div>
               </div>
-              <div className="flex gap-2 shrink-0">
-                <button onClick={() => startEdit(a)} className="text-[#1e3a8a] text-xs font-bold hover:underline">Edit</button>
-                <button onClick={() => del(a._id || a.id)} className="text-red-500 text-xs font-bold hover:underline">Delete</button>
+              <div className="flex gap-3 shrink-0">
+                <button onClick={() => startEdit(a)} className="text-[#1e3a8a] hover:opacity-75 transition-opacity" title="Edit"><Edit size={16} /></button>
+                <button onClick={() => del(a._id || a.id)} className="text-red-500 hover:opacity-75 transition-opacity" title="Delete"><Trash2 size={16} /></button>
               </div>
             </div>
           ))}
@@ -663,7 +710,9 @@ function GalleryManager() {
 
       {/* Form */}
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
-        <h3 className="font-black text-gray-900 mb-4">{editing ? "✏️ Edit Gallery Item" : "➕ Add Gallery Item"}</h3>
+        <h3 className="font-black text-gray-900 mb-4 flex items-center gap-2">
+            {editing ? <><Edit size={18} className="text-[#1e3a8a]" /> Edit Gallery Item</> : <><Plus size={18} className="text-[#1e3a8a]" /> Add Gallery Item</>}
+        </h3>
         <div className="grid md:grid-cols-2 gap-4 mb-4">
           <div>
             <label className="text-xs font-semibold text-gray-500 uppercase mb-1 block">Category</label>
@@ -688,10 +737,10 @@ function GalleryManager() {
           </div>
         </div>
         <div className="flex gap-3">
-          <button onClick={save} className="bg-[#1e3a8a] text-white px-5 py-2 rounded-xl font-bold text-sm hover:bg-[#1d4ed8]">
-            {editing ? "Update" : "Add Item"}
+          <button onClick={save} className="bg-[#1e3a8a] text-white px-6 py-2.5 rounded-xl font-bold text-sm hover:bg-[#1d4ed8] shadow-lg flex items-center gap-2">
+            <Save size={16} /> {editing ? "Update" : "Add Item"}
           </button>
-          {editing && <button onClick={() => { setEditing(null); setForm({ category: "Classroom", title: "", desc: "", event: "", date: "", emoji: "📸", tag: "", bg: "from-blue-900 to-blue-700" }); }} className="bg-gray-100 text-gray-700 px-5 py-2 rounded-xl font-bold text-sm">Cancel</button>}
+          {editing && <button onClick={() => { setEditing(null); setForm({ category: "Classroom", title: "", desc: "", event: "", date: "", emoji: "📸", tag: "", bg: "from-blue-900 to-blue-700" }); }} className="bg-gray-100 text-gray-700 px-6 py-2.5 rounded-xl font-bold text-sm hover:bg-gray-200">Cancel</button>}
         </div>
       </div>
 
@@ -708,9 +757,9 @@ function GalleryManager() {
                 <div className="font-bold text-gray-900 text-sm truncate">{g.title}</div>
                 <div className="text-xs text-gray-500">{g.category} · {g.event} · {g.date}</div>
               </div>
-              <div className="flex gap-2 shrink-0">
-                <button onClick={() => startEdit(g)} className="text-[#1e3a8a] text-xs font-bold hover:underline">Edit</button>
-                <button onClick={() => del(g._id || g.id)} className="text-red-500 text-xs font-bold hover:underline">Delete</button>
+              <div className="flex gap-3 shrink-0">
+                <button onClick={() => startEdit(g)} className="text-[#1e3a8a] hover:opacity-75 transition-opacity" title="Edit"><Edit size={16} /></button>
+                <button onClick={() => del(g._id || g.id)} className="text-red-500 hover:opacity-75 transition-opacity" title="Delete"><Trash2 size={16} /></button>
               </div>
             </div>
           ))}
@@ -758,7 +807,7 @@ function AdmissionsList() {
       <div className="p-5 border-b border-gray-100">
         <div className="flex flex-col sm:flex-row gap-3 items-center justify-between">
           <div className="relative flex-1 w-full max-w-md">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">🔍</span>
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"><Search size={16} /></span>
             <input 
               value={search} 
               onChange={(e) => setSearch(e.target.value)} 
@@ -805,7 +854,9 @@ function AdmissionsList() {
         {loading && <div className="text-center py-12 text-gray-400 animate-pulse">Loading admissions...</div>}
         {!loading && list.length === 0 && (
           <div className="text-center py-16">
-            <div className="text-4xl mb-4">📝</div>
+            <div className="flex justify-center mb-4 text-gray-200">
+              <FileText size={48} strokeWidth={1} />
+            </div>
             <p className="font-bold text-gray-900 mb-1">No confirmed admissions</p>
             <p className="text-sm text-gray-500">Change a lead&apos;s status to &quot;Converted&quot; to see them here.</p>
           </div>
@@ -856,10 +907,11 @@ function Sidebar({ active, setActive, sidebarOpen, setSidebarOpen, onLogout, sit
         </nav>
 
         <div className="p-4 border-t border-white/10 space-y-2">
-          <Link href="/" className="flex items-center gap-2 text-blue-200 hover:text-white text-sm transition-colors">← View Website</Link>
+          <Link href="/" className="flex items-center gap-2 text-blue-200 hover:text-white text-sm transition-colors">
+            <ExternalLink size={14} /> View Website
+          </Link>
           <button onClick={onLogout} className="flex items-center gap-2 text-red-300 hover:text-red-200 text-sm w-full transition-colors">
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
-            Logout
+            <LogOut size={14} /> Logout
           </button>
         </div>
       </aside>
@@ -964,7 +1016,7 @@ export function AdminDashboard() {
               </div>
             </div>
             <button id="admin-logout-header-btn" onClick={handleLogout} title="Logout" className="p-2 rounded-lg hover:bg-red-50 text-gray-500 hover:text-red-600 transition-colors" aria-label="Logout">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
+              <LogOut size={18} />
             </button>
           </div>
         </header>

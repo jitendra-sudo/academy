@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
 import { apiUrl } from "@/lib/api";
+import { Target, UserPlus, Phone, CheckCircle2, Search, Trash2, MessageCircle, RefreshCw, AlertCircle } from "lucide-react";
 
 const LEAD_STATUS_COLORS = {
   new: "bg-blue-100 text-blue-700",
@@ -52,14 +53,14 @@ export default function LeadsManager() {
       body: JSON.stringify({ status }),
     });
     const d = await r.json();
-    if (d.success) { flash("✅ Status updated!"); load(); }
+    if (d.success) { flash("Status updated!"); load(); }
   };
 
   const deleteLead = async (id) => {
     if (!confirm("Delete this lead permanently?")) return;
     const headers = { Authorization: `Bearer ${sessionStorage.getItem("admin_token")}` };
     await fetch(apiUrl(`/api/leads/${id}`), { method: "DELETE", headers });
-    flash("🗑️ Lead deleted"); load();
+    flash("Lead deleted"); load();
   };
 
   const fmt = (iso) =>
@@ -68,10 +69,10 @@ export default function LeadsManager() {
       : "-";
 
   const statCards = [
-    { l: "Total Leads", v: totals.total, c: "from-blue-500 to-blue-600", i: "🎯" },
-    { l: "New", v: totals.new, c: "from-indigo-500 to-indigo-600", i: "🆕" },
-    { l: "Contacted", v: totals.contacted, c: "from-amber-500 to-amber-600", i: "📞" },
-    { l: "Converted", v: totals.converted, c: "from-green-500 to-green-600", i: "✅" },
+    { l: "Total Leads", v: totals.total, c: "from-blue-500 to-blue-600", i: <Target size={20} className="text-white" /> },
+    { l: "New", v: totals.new, c: "from-indigo-500 to-indigo-600", i: <UserPlus size={20} className="text-white" /> },
+    { l: "Contacted", v: totals.contacted, c: "from-amber-500 to-amber-600", i: <Phone size={20} className="text-white" /> },
+    { l: "Converted", v: totals.converted, c: "from-green-500 to-green-600", i: <CheckCircle2 size={20} className="text-white" /> },
   ];
 
   return (
@@ -102,22 +103,25 @@ export default function LeadsManager() {
         {/* Filters */}
         <div className="p-4 border-b border-gray-100">
           <div className="flex flex-wrap gap-2 items-center">
-            <input
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search name, phone, email, course..."
-              className="flex-1 min-w-48 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[#1e3a8a] focus:outline-none"
-            />
+            <div className="relative flex-1 min-w-48">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
+              <input
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search leads..."
+                className="w-full border border-gray-200 rounded-lg pl-9 pr-3 py-2 text-sm focus:ring-2 focus:ring-[#1e3a8a] focus:outline-none"
+              />
+            </div>
             <select
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
               className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[#1e3a8a] focus:outline-none bg-white"
             >
               <option value="all">All Statuses</option>
-              <option value="new">🆕 New</option>
-              <option value="contacted">📞 Contacted</option>
-              <option value="converted">✅ Converted</option>
-              <option value="lost">❌ Lost</option>
+              <option value="new">New</option>
+              <option value="contacted">Contacted</option>
+              <option value="converted">Converted</option>
+              <option value="lost">Lost</option>
             </select>
             <select
               value={sourceFilter}
@@ -133,7 +137,7 @@ export default function LeadsManager() {
               onClick={load}
               className="bg-[#1e3a8a] text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-[#1d4ed8] transition-colors"
             >
-              Refresh
+              <RefreshCw size={16} /> Refresh
             </button>
           </div>
         </div>
@@ -188,19 +192,25 @@ export default function LeadsManager() {
                     {fmt(lead.createdAt)}
                   </td>
                   <td className="px-4 py-3">
-                    <div className="flex items-center gap-2">
-                      <a href={"tel:" + lead.phone} title="Call" className="text-green-600 hover:scale-125 transition-transform text-base">📞</a>
+                    <div className="flex items-center gap-3">
+                      <a href={"tel:" + lead.phone} title="Call" className="text-[#1e3a8a] hover:opacity-75 transition-opacity">
+                        <Phone size={16} />
+                      </a>
                       <a
                         href={"https://wa.me/" + (lead.phone || "").replace(/\D/g, "")}
                         target="_blank" rel="noreferrer"
                         title="WhatsApp"
-                        className="text-green-500 hover:scale-125 transition-transform text-base"
-                      >💬</a>
+                        className="text-green-600 hover:opacity-75 transition-opacity"
+                      >
+                        <MessageCircle size={16} />
+                      </a>
                       <button
                         onClick={() => deleteLead(lead.id)}
                         title="Delete"
-                        className="text-red-500 hover:scale-125 transition-transform text-base"
-                      >🗑️</button>
+                        className="text-red-500 hover:opacity-75 transition-opacity"
+                      >
+                        <Trash2 size={16} />
+                      </button>
                     </div>
                   </td>
                 </tr>
@@ -210,7 +220,9 @@ export default function LeadsManager() {
 
           {leads.length === 0 && (
             <div className="text-center py-16">
-              <div className="text-5xl mb-3">🎯</div>
+              <div className="flex justify-center mb-4 text-gray-200">
+                <Target size={48} />
+              </div>
               <p className="text-gray-500 font-semibold mb-1">No leads yet</p>
               <p className="text-gray-400 text-sm">
                 Leads from the admission form and contact modal will appear here automatically.

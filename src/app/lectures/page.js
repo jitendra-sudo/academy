@@ -3,6 +3,18 @@ import { useState, useEffect, useCallback } from "react";
 import Navbar from "../components/Navbar";
 import Link from "next/link";
 import { apiUrl } from "@/lib/api";
+import { 
+  Play, 
+  Clock, 
+  Search, 
+  Video, 
+  ArrowRight, 
+  User, 
+  X, 
+  Star, 
+  Search as SearchIcon,
+  PlayCircle
+} from "lucide-react";
 
 // Helper: convert any video URL to embed URL
 function toEmbedUrl(url, type) {
@@ -40,7 +52,7 @@ function SkeletonCard() {
 function LectureCard({ lecture, onPlay }) {
   return (
     <div
-      className="group bg-white rounded-2xl overflow-hidden border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer"
+      className="group bg-white rounded-[2rem] overflow-hidden border border-gray-100 hover:shadow-2xl hoverShadow-blue transition-all duration-500 cursor-pointer"
       onClick={() => onPlay(lecture)}
     >
       <div className="relative aspect-video bg-gradient-to-br from-[#0f172a] to-[#1e3a8a] overflow-hidden">
@@ -48,52 +60,49 @@ function LectureCard({ lecture, onPlay }) {
           <img
             src={lecture.thumbnailUrl}
             alt={lecture.title}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-5xl">🎬</div>
+          <div className="w-full h-full flex items-center justify-center text-white/20">
+            <Video size={48} />
+          </div>
         )}
-        <div className="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          <div className="w-14 h-14 bg-white/95 rounded-full flex items-center justify-center text-[#1e3a8a] shadow-2xl">
-            <svg className="w-6 h-6 ml-1" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M8 5v14l11-7z" />
-            </svg>
+        <div className="absolute inset-0 bg-[#1e3a8a]/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <div className="w-14 h-14 bg-white text-[#1e3a8a] rounded-full flex items-center justify-center shadow-2xl group-hover:scale-110 transition-transform duration-300">
+            <Play size={24} fill="currentColor" className="ml-1" />
           </div>
         </div>
-        <div className="absolute top-3 left-3 flex flex-wrap gap-1.5">
-          <span className="bg-[#1e3a8a]/90 backdrop-blur text-white text-xs font-bold px-2.5 py-1 rounded-full">
+        <div className="absolute top-4 left-4 flex flex-wrap gap-2">
+          <span className="bg-[#1e3a8a]/90 backdrop-blur-md text-white text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-lg shadow-lg">
             {lecture.course}
           </span>
           {lecture.isFeatured && (
-            <span className="bg-amber-500/90 backdrop-blur text-white text-xs font-bold px-2.5 py-1 rounded-full">
-              ⭐ Featured
+            <span className="bg-amber-500/90 backdrop-blur-md text-white text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-lg shadow-lg flex items-center gap-1">
+              <Star size={10} fill="currentColor" /> Featured
             </span>
           )}
         </div>
-        <div className="absolute bottom-3 right-3 flex gap-1.5">
+        <div className="absolute bottom-4 right-4 flex gap-2">
           {lecture.duration && (
-            <span className="bg-black/70 backdrop-blur text-white text-xs font-mono px-2 py-0.5 rounded-full">
-              ⏱ {lecture.duration}
+            <span className="bg-black/60 backdrop-blur-md text-white text-[10px] font-bold px-2.5 py-1 rounded-full flex items-center gap-1.5 border border-white/10">
+              <Clock size={10} /> {lecture.duration}
             </span>
           )}
-          <span className="bg-black/70 backdrop-blur text-white text-xs px-2 py-0.5 rounded-full capitalize">
-            {lecture.videoType === "upload" ? "☁️ HD" : lecture.videoType === "youtube" ? "▶️ YT" : lecture.videoType === "drive" ? "📁" : "🎬"}
-          </span>
         </div>
       </div>
-      <div className="p-4">
-        <h3 className="font-bold text-gray-900 text-sm leading-snug line-clamp-2 mb-2 group-hover:text-[#1e3a8a] transition-colors">
+      <div className="p-6">
+        <h3 className="font-bold text-gray-900 text-sm leading-snug line-clamp-2 mb-3 group-hover:text-[#1e3a8a] transition-colors duration-300">
           {lecture.title}
         </h3>
-        <div className="flex items-center gap-2 text-xs text-gray-500 mb-2">
-          <span className="bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full font-medium">{lecture.subject}</span>
+        <div className="flex items-center gap-2 mb-4">
+          <span className="bg-blue-50 text-[#1e3a8a] text-[10px] px-2.5 py-1 rounded-full font-black uppercase tracking-wider">{lecture.subject}</span>
         </div>
         {lecture.instructor && (
-          <div className="flex items-center gap-1.5 text-xs text-gray-400">
-            <div className="w-5 h-5 bg-gradient-to-br from-[#1e3a8a] to-blue-400 rounded-full flex items-center justify-center text-white text-xs font-bold shrink-0">
+          <div className="flex items-center gap-2 text-xs text-gray-400">
+            <div className="w-6 h-6 bg-gradient-to-br from-[#1e3a8a] to-blue-400 rounded-full flex items-center justify-center text-white text-[10px] font-black shrink-0">
               {lecture.instructor[0]?.toUpperCase()}
             </div>
-            <span>{lecture.instructor}</span>
+            <span className="font-medium">{lecture.instructor}</span>
           </div>
         )}
       </div>
@@ -116,24 +125,24 @@ function VideoModal({ lecture, onClose }) {
       onClick={onClose}
     >
       <div
-        className="bg-white rounded-3xl overflow-hidden w-full max-w-4xl shadow-2xl"
+        className="bg-white rounded-[2.5rem] overflow-hidden w-full max-w-4xl shadow-2xl transition-all duration-500"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-start justify-between p-5 border-b border-gray-100">
-          <div className="flex-1 pr-4">
-            <h2 className="font-black text-gray-900 text-lg leading-snug line-clamp-2">{lecture.title}</h2>
-            <div className="flex flex-wrap items-center gap-2 mt-2">
-              <span className="bg-blue-50 text-blue-700 text-xs font-bold px-2.5 py-1 rounded-full">{lecture.course}</span>
-              <span className="text-gray-400 text-xs">{lecture.subject}</span>
-              {lecture.instructor && <span className="text-gray-400 text-xs">👤 {lecture.instructor}</span>}
-              {lecture.duration && <span className="text-gray-400 text-xs font-mono">⏱ {lecture.duration}</span>}
+        <div className="flex items-start justify-between p-6 md:p-8 border-b border-gray-100">
+          <div className="flex-1 pr-8">
+            <h2 className="font-black text-gray-900 text-xl leading-snug line-clamp-2">{lecture.title}</h2>
+            <div className="flex flex-wrap items-center gap-3 mt-4">
+              <span className="bg-blue-50 text-[#1e3a8a] text-xs font-black px-3 py-1.5 rounded-full uppercase tracking-wider">{lecture.course}</span>
+              <span className="text-gray-400 text-xs font-bold uppercase tracking-tight">{lecture.subject}</span>
+              {lecture.instructor && <span className="text-gray-400 text-xs flex items-center gap-1.5"><User size={14} /> {lecture.instructor}</span>}
+              {lecture.duration && <span className="text-gray-400 text-xs flex items-center gap-1.5 font-mono"><Clock size={14} /> {lecture.duration}</span>}
             </div>
           </div>
           <button
             onClick={onClose}
-            className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 hover:text-gray-900 transition-all shrink-0 text-xl leading-none"
+            className="w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 hover:bg-red-50 hover:text-red-500 transition-all shrink-0"
             aria-label="Close"
-          >✕</button>
+          ><X size={20} /></button>
         </div>
         <div className="aspect-video bg-black">
           {lecture.videoType === "upload" ? (
@@ -151,8 +160,8 @@ function VideoModal({ lecture, onClose }) {
           )}
         </div>
         {lecture.description && (
-          <div className="p-5 border-t border-gray-100">
-            <p className="text-sm text-gray-600 leading-relaxed">{lecture.description}</p>
+          <div className="p-8 border-t border-gray-100 bg-gray-50/50">
+            <p className="text-sm text-gray-600 leading-relaxed font-medium">{lecture.description}</p>
           </div>
         )}
       </div>
@@ -209,63 +218,67 @@ export default function LecturesPage() {
 
       <main className="min-h-screen bg-gray-50">
         {/* Hero */}
-        <section className="bg-gradient-to-br from-[#0f172a] via-[#1e3a8a] to-[#1d4ed8] py-20 pt-28 relative overflow-hidden">
+        <section className="bg-gradient-to-br from-[#0f172a] via-[#1e3a8a] to-[#1d4ed8] py-24 pt-32 relative overflow-hidden">
           <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-3xl" />
-            <div className="absolute bottom-0 left-0 w-64 h-64 bg-amber-400/10 rounded-full blur-3xl" />
+            <div className="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-3xl animate-float" />
+            <div className="absolute bottom-0 left-0 w-64 h-64 bg-amber-400/10 rounded-full blur-3xl animate-float" style={{ animationDelay: "1s" }} />
           </div>
           <div className="container mx-auto px-4 text-center relative z-10">
-            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur border border-white/20 rounded-full px-4 py-2 mb-6">
-              <span className="text-xl">🎬</span>
-              <span className="text-white/90 text-sm font-semibold">Free Lecture Library</span>
+            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-5 py-2 mb-8">
+              <Video size={16} fill="white" className="opacity-80" />
+              <span className="text-white text-[10px] font-black uppercase tracking-[0.2em]">Free Lecture Library</span>
             </div>
-            <h1 className="text-4xl md:text-6xl font-black text-white mb-4 leading-tight">
-              Learn From India&apos;s <br />
-              <span className="text-amber-400">Best UPSC Faculty</span>
+            <h1 className="text-4xl md:text-7xl font-black text-white mb-6 leading-[1.1] tracking-tight">
+              Master the UPSC <br />
+              <span className="text-amber-400">Expert Lectures</span>
             </h1>
-            <p className="text-blue-200 text-lg max-w-2xl mx-auto mb-8">
-              Access free video lectures on History, Geography, Polity, Economy, Current Affairs, Ethics, and more — curated by Mentor Merits Academy.
+            <p className="text-blue-100/80 text-lg max-w-2xl mx-auto mb-10 leading-relaxed">
+              Unlock professional insights across all core subjects. Quality preparation 
+              now accessible for every dedicated aspirant.
             </p>
             {/* Search */}
-            <div className="max-w-lg mx-auto relative">
-              <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
+            <div className="max-w-xl mx-auto relative group">
+              <div className="absolute left-5 top-1/2 -translate-y-1/2 text-[#1e3a8a] group-focus-within:scale-110 transition-transform">
+                <Search size={20} />
               </div>
               <input
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search lectures, subjects, topics..."
-                className="w-full pl-12 pr-4 py-3.5 rounded-2xl text-gray-900 focus:outline-none focus:ring-4 focus:ring-white/30 shadow-xl text-sm"
+                placeholder="Search lectures, topics, or faculty..."
+                className="w-full pl-14 pr-6 py-4.5 rounded-[1.5rem] bg-white text-gray-900 focus:outline-none focus:ring-4 focus:ring-white/30 shadow-2xl transition-all"
               />
             </div>
             {/* Stats */}
-            <div className="flex flex-wrap justify-center gap-8 mt-10">
+            <div className="flex flex-wrap justify-center gap-12 mt-12 bg-white/5 backdrop-blur-sm border border-white/10 p-6 rounded-[2rem] max-w-2xl mx-auto">
               {[
-                { label: "Total Lectures", value: lectures.length + "+" },
-                { label: "Subjects Covered", value: "15+" },
-                { label: "Expert Faculty", value: "20+" },
+                { label: "Free Lectures", value: lectures.length + "+" },
+                { label: "Core Subjects", value: "15+" },
+                { label: "Expert Faculty", value: "10+" },
               ].map((s) => (
-                <div key={s.label} className="text-center">
-                  <div className="text-2xl font-black text-amber-400">{s.value}</div>
-                  <div className="text-blue-200 text-xs">{s.label}</div>
+                <div key={s.label} className="text-center group">
+                  <div className="text-3xl font-black text-amber-400 group-hover:scale-110 transition-transform">{s.value}</div>
+                  <div className="text-blue-200 text-[10px] font-bold uppercase tracking-widest mt-1 opacity-70">{s.label}</div>
                 </div>
               ))}
             </div>
           </div>
         </section>
 
-        <div className="container mx-auto px-4 py-10">
+        <div className="container mx-auto px-4 py-16">
           {/* Featured Lectures */}
           {featured.length > 0 && !search && activeCourse === "All" && activeSubject === "All" && (
-            <section className="mb-12">
-              <div className="flex items-center gap-3 mb-6">
-                <span className="text-2xl">⭐</span>
-                <h2 className="text-2xl font-black text-gray-900">Featured Lectures</h2>
+            <section className="mb-16">
+              <div className="flex items-center gap-4 mb-8">
+                <div className="p-3 bg-amber-400/20 rounded-2xl text-amber-500">
+                  <Star size={24} fill="currentColor" />
+                </div>
+                <div>
+                  <h2 className="text-2xl font-black text-gray-900 tracking-tight">Handpicked Features</h2>
+                  <p className="text-gray-400 text-sm font-medium">Top-rated sessions for high-yield preparation</p>
+                </div>
               </div>
-              <div className="grid md:grid-cols-3 gap-6">
+              <div className="grid md:grid-cols-3 gap-8">
                 {featured.map((lec) => (
                   <LectureCard key={lec._id || lec.id} lecture={lec} onPlay={setPlaying} />
                 ))}
@@ -274,33 +287,33 @@ export default function LecturesPage() {
           )}
 
           {/* Filters */}
-          <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 mb-8">
-            <div className="space-y-4">
+          <div className="bg-white rounded-[2rem] p-8 shadow-sm border border-gray-100 mb-12">
+            <div className="space-y-6">
               <div>
-                <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Filter by Course</p>
-                <div className="flex flex-wrap gap-2">
+                <p className="text-[10px] font-black text-[#1e3a8a]/40 uppercase tracking-[0.2em] mb-4">Course Stream</p>
+                <div className="flex flex-wrap gap-2.5">
                   {COURSES.map((c) => (
                     <button
                       key={c}
                       onClick={() => setActiveCourse(c)}
-                      className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-all ${activeCourse === c
-                          ? "bg-[#1e3a8a] text-white shadow-md"
-                          : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                      className={`px-5 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all duration-300 ${activeCourse === c
+                          ? "bg-[#1e3a8a] text-white shadow-xl -translate-y-0.5"
+                          : "bg-gray-100 text-gray-500 hover:bg-gray-200"
                         }`}
                     >{c}</button>
                   ))}
                 </div>
               </div>
               <div>
-                <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Filter by Subject</p>
-                <div className="flex flex-wrap gap-2">
+                <p className="text-[10px] font-black text-[#1e3a8a]/40 uppercase tracking-[0.2em] mb-4">Subject Focus</p>
+                <div className="flex flex-wrap gap-2.5">
                   {SUBJECTS.map((s) => (
                     <button
                       key={s}
                       onClick={() => setActiveSubject(s)}
-                      className={`px-3 py-1 rounded-full text-xs font-semibold transition-all ${activeSubject === s
-                          ? "bg-amber-500 text-white shadow-md"
-                          : "bg-gray-50 border border-gray-200 text-gray-600 hover:border-amber-300"
+                      className={`px-4 py-2 rounded-lg text-xs font-bold transition-all duration-300 ${activeSubject === s
+                          ? "bg-amber-500 text-white shadow-xl -translate-y-0.5"
+                          : "bg-white border-2 border-gray-100 text-gray-500 hover:border-amber-300"
                         }`}
                     >{s}</button>
                   ))}
@@ -310,33 +323,40 @@ export default function LecturesPage() {
           </div>
 
           {/* Grid */}
-          <div className="flex items-center justify-between mb-5">
-            <h2 className="font-black text-gray-900 text-xl">
-              {search ? `Search results for "${search}"` : activeCourse === "All" ? "All Lectures" : `${activeCourse} Lectures`}
+          <div className="flex items-center justify-between mb-8 border-b border-gray-100 pb-4">
+            <h2 className="font-black text-gray-900 text-2xl tracking-tight">
+              {search ? search : activeCourse === "All" ? "Full Library" : activeCourse} 
+              <span className="text-[#1e3a8a] ml-1">Lectures</span>
             </h2>
-            {!loading && <span className="text-gray-400 text-sm">{allVisible.length} lecture{allVisible.length !== 1 ? "s" : ""}</span>}
+            {!loading && (
+              <div className="px-3 py-1 bg-blue-50 text-[#1e3a8a] rounded-lg text-xs font-black uppercase tracking-tighter">
+                {allVisible.length} Found
+              </div>
+            )}
           </div>
 
           {loading ? (
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
               {Array.from({ length: 8 }).map((_, i) => <SkeletonCard key={i} />)}
             </div>
           ) : allVisible.length === 0 ? (
-            <div className="text-center py-24">
-              <div className="text-6xl mb-4">🎬</div>
-              <h3 className="text-xl font-black text-gray-700 mb-2">No lectures found</h3>
-              <p className="text-gray-400 mb-6">
-                {search ? `No results for "${search}".` : "No lectures available for the selected filters."}
+            <div className="text-center py-32 bg-white rounded-[3rem] border border-dashed border-gray-200">
+              <div className="flex justify-center mb-6 text-gray-200">
+                <Video size={64} strokeWidth={1} />
+              </div>
+              <h3 className="text-2xl font-black text-gray-800 mb-2">No Matching Lectures</h3>
+              <p className="text-gray-400 mb-8 font-medium">
+                Try clinical search terms or adjust your filters.
               </p>
               <button
                 onClick={() => { setSearch(""); setActiveCourse("All"); setActiveSubject("All"); }}
-                className="bg-[#1e3a8a] text-white px-6 py-3 rounded-xl font-bold hover:bg-[#1d4ed8] transition-colors"
+                className="bg-[#1e3a8a] text-white px-8 py-3.5 rounded-2xl font-black text-sm hover:bg-[#1d4ed8] shadow-lg transition-all active:scale-95"
               >
-                Clear Filters
+                Reset All Filters
               </button>
             </div>
           ) : (
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
               {allVisible.map((lec) => (
                 <LectureCard key={lec._id || lec.id} lecture={lec} onPlay={setPlaying} />
               ))}
@@ -344,37 +364,43 @@ export default function LecturesPage() {
           )}
 
           {/* CTA */}
-          <div className="mt-16 bg-gradient-to-br from-[#0f172a] to-[#1e3a8a] rounded-3xl p-8 text-center text-white">
-            <h2 className="text-2xl font-black mb-2">Want Personalized Guidance?</h2>
-            <p className="text-blue-200 mb-6">Join thousands of students achieving their UPSC dreams with Mentor Merits Academy.</p>
-            <div className="flex flex-wrap gap-3 justify-center">
-              <a href="/#admission" className="bg-amber-500 hover:bg-amber-400 text-[#0f172a] font-black px-6 py-3 rounded-xl transition-all hover:shadow-lg">
-                Apply for Admission →
-              </a>
-              <a
-                href={`https://wa.me/${whatsapp.replace(/\D/g, "")}`}
-                target="_blank"
-                rel="noreferrer"
-                className="bg-green-500 hover:bg-green-400 text-white font-bold px-6 py-3 rounded-xl transition-all flex items-center gap-2"
-              >
-                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.521.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-                </svg>
-                Talk to Counsellor
-              </a>
-            </div>
+          <div className="mt-24 relative">
+             <div className="absolute inset-0 bg-blue-600 blur-[120px] opacity-20" />
+             <div className="relative bg-gradient-to-br from-[#0f172a] to-[#1e3a8a] rounded-[3rem] p-12 md:p-16 text-center text-white shadow-2xl overflow-hidden">
+                <div className="absolute top-0 right-0 p-8 opacity-10">
+                   <Video size={120} strokeWidth={1} />
+                </div>
+                <h2 className="text-3xl md:text-5xl font-black mb-4 leading-tight">Join Our Mentorship <br /> Programmes Today</h2>
+                <p className="text-blue-100/70 text-lg mb-10 max-w-xl mx-auto font-medium">Standardize your preparation with India&apos;s most student-focused ecosystem.</p>
+                <div className="flex flex-wrap gap-4 justify-center">
+                  <a href="/#admission" className="shimmer-btn bg-amber-500 text-white font-black px-10 py-4.5 rounded-[1.5rem] transition-all hoverShadow-blue hover:-translate-y-1">
+                    Book Personalized Counseling <ArrowRight size={20} className="ml-1 inline" />
+                  </a>
+                  <a
+                    href={`https://wa.me/${whatsapp.replace(/\D/g, "")}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 text-white font-black px-10 py-4.5 rounded-[1.5rem] transition-all flex items-center gap-3"
+                  >
+                    <ArrowRight size={20} className="rotate-[135deg]" />
+                    Official Inquiry
+                  </a>
+                </div>
+             </div>
           </div>
         </div>
       </main>
 
       <VideoModal lecture={playing} onClose={() => setPlaying(null)} />
 
-      <footer className="bg-[#0f172a] text-white py-8 text-center text-sm">
-        <p className="text-gray-400">© 2026 Mentor Merits Academy. All rights reserved.</p>
-        <div className="flex justify-center gap-4 mt-2">
-          <Link href="/" className="text-gray-500 hover:text-white transition-colors">Home</Link>
-          <Link href="/gallery" className="text-gray-500 hover:text-white transition-colors">Gallery</Link>
-          <Link href="/lectures" className="text-amber-400 font-semibold">Lectures</Link>
+      <footer className="bg-white border-t border-gray-100 py-12 text-center">
+        <div className="container mx-auto px-4">
+           <div className="flex justify-center gap-8 mb-6">
+              <Link href="/" className="text-gray-400 hover:text-[#1e3a8a] font-bold transition-all">Portal</Link>
+              <Link href="/gallery" className="text-gray-400 hover:text-[#1e3a8a] font-bold transition-all">Gallery</Link>
+              <Link href="/lectures" className="text-[#1e3a8a] font-black border-b-2 border-[#1e3a8a] pb-1">Lectures</Link>
+           </div>
+           <p className="text-gray-300 text-[10px] font-black uppercase tracking-[0.3em]">© 2026 Mentor Merits Academy · Precision Coaching</p>
         </div>
       </footer>
     </>

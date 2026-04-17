@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { apiUrl } from "@/lib/api";
+import { Trophy, Star, ArrowRight } from "lucide-react";
 
 // ── "Why Choose Us" features – static marketing content, no API needed ──────
 const features = [
@@ -36,7 +37,7 @@ function AchieverSkeleton() {
 export default function AchievementsSection() {
   const [achievers, setAchievers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [ticker, setTicker] = useState("🏆 Loading latest achievements...");
+  const [ticker, setTicker] = useState("Loading latest achievements...");
 
   useEffect(() => {
     fetch(apiUrl("/api/achievers"))
@@ -46,7 +47,7 @@ export default function AchievementsSection() {
           setAchievers(d.data);
           const items = d.data
             .slice(0, 8)
-            .map((a) => `🏆 ${a.name} – ${a.rank} (${a.exam || "UPSC"} ${a.year || ""})`)
+            .map((a) => `${a.name} – ${a.rank} (${a.exam || "UPSC"} ${a.year || ""})`)
             .join(" \u00a0|\u00a0 ");
           setTicker(items + " \u00a0|\u00a0 ");
         }
@@ -60,49 +61,18 @@ export default function AchievementsSection() {
       {/* Ticker */}
       <div className="bg-[#1e3a8a] py-2.5 overflow-hidden" id="ticker">
         <div className="ticker-wrap">
-          <div className="ticker-content text-white text-sm">
-            {ticker}
+          <div className="ticker-content text-white text-sm flex items-center gap-2">
+            <Trophy size={14} className="text-amber-400" /> {ticker}
           </div>
         </div>
       </div>
-
-      {/* Why Choose Us */}
-      <section className="py-20 bg-white" id="why-us">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center mb-12">
-            <div className="inline-flex items-center gap-2 bg-amber-50 text-amber-700 px-4 py-1.5 rounded-full text-sm font-semibold mb-4">
-              ⭐ Why Choose Us
-            </div>
-            <h2 className="text-3xl md:text-4xl font-black text-gray-900 mb-4">
-              What Makes Us{" "}
-              <span className="gradient-text">India&apos;s Best?</span>
-            </h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              Mentor Merits Academy stands as the best academy,
-              offering a holistic, structured, and result-oriented approach.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {features.map((f) => (
-              <div key={f.title} className="p-6 rounded-2xl border border-gray-100 card-hover bg-white shadow-sm group">
-                <div className="text-3xl mb-3">{f.icon}</div>
-                <h3 className="font-bold text-gray-900 mb-2 group-hover:text-[#1e3a8a] transition-colors">
-                  {f.title}
-                </h3>
-                <p className="text-gray-600 text-sm leading-relaxed">{f.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* Toppers / Achievers */}
       <section className="py-20 bg-gradient-to-br from-[#0f172a] to-[#1e3a8a]" id="achievements">
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-12">
             <div className="inline-flex items-center gap-2 bg-amber-400/20 text-amber-400 px-4 py-1.5 rounded-full text-sm font-semibold mb-4">
-              🌟 Our Rank Holders
+              <Star size={16} fill="currentColor" /> Our Rank Holders
             </div>
             <h2 className="text-3xl md:text-4xl font-black text-white mb-4">
               Achievers From Our Academy
@@ -118,7 +88,9 @@ export default function AchievementsSection() {
               : achievers.length === 0
                 ? (
                   <div className="col-span-3 text-center py-12 text-blue-200">
-                    <div className="text-5xl mb-3">🏆</div>
+                    <div className="flex justify-center mb-3 text-amber-400">
+                      <Trophy size={48} />
+                    </div>
                     <p>Achiever profiles will appear here once added.</p>
                   </div>
                 )
@@ -142,7 +114,7 @@ export default function AchievementsSection() {
               href="#admission"
               className="inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-white px-8 py-3 rounded-xl font-bold transition-all hover:shadow-lg hover:scale-105"
             >
-              Apply for Admission →
+              Apply for Admission <ArrowRight size={18} />
             </a>
           </div>
         </div>

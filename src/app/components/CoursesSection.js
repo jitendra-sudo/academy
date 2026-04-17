@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { apiUrl } from "@/lib/api";
+import { Library, ArrowRight } from "lucide-react";
 
 // Color palette for categories (cycles if more than 4 courses added)
 const PALETTE = [
@@ -47,7 +48,7 @@ export default function CoursesSection() {
         {/* Section Header */}
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 bg-[#1e3a8a]/10 text-[#1e3a8a] px-4 py-1.5 rounded-full text-sm font-semibold mb-4">
-            📚 Our Programmes
+            <Library size={16} /> Our Programmes
           </div>
           <h2 className="text-3xl md:text-4xl font-black text-gray-900 mb-4">
             Comprehensive{" "}
@@ -65,8 +66,10 @@ export default function CoursesSection() {
             {Array.from({ length: 3 }).map((_, i) => <CourseSkeleton key={i} />)}
           </div>
         ) : courses.length === 0 ? (
-          <div className="text-center py-16 text-gray-400">
-            <div className="text-5xl mb-3">📚</div>
+          <div className="text-center py-16 text-gray-400 font-medium">
+            <div className="flex justify-center mb-4">
+              <Library size={48} className="opacity-20 text-[#1e3a8a]" />
+            </div>
             <p>Courses coming soon. Check back later!</p>
           </div>
         ) : (
@@ -101,9 +104,9 @@ export default function CoursesSection() {
                   </ul>
                   <a
                     href="#admission"
-                    className={`mt-5 block w-full text-center ${accent} text-white py-2.5 rounded-xl text-sm font-semibold hover:opacity-90 hover:shadow-md transition-all`}
+                    className={`mt-5 w-full text-center ${accent} text-white py-2.5 rounded-xl text-sm font-semibold hover:opacity-90 hover:shadow-md transition-all flex items-center justify-center gap-2`}
                   >
-                    Enquire Now →
+                    Enquire Now <ArrowRight size={16} />
                   </a>
                 </div>
               );

@@ -2,6 +2,18 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { apiUrl } from "@/lib/api";
+import { 
+  Globe as Facebook, 
+  Send as Twitter, 
+  Play as Youtube, 
+  Camera as Instagram, 
+  Briefcase as Linkedin, 
+  MapPin, 
+  Phone, 
+  Mail, 
+  MessageCircle,
+  ChevronRight 
+} from "lucide-react";
 
 export default function Footer() {
   const [contact, setContact] = useState(null);
@@ -39,11 +51,11 @@ export default function Footer() {
   ].filter(Boolean);
 
   const socialIcons = {
-    facebook: "f",
-    twitter: "𝕏",
-    youtube: "▶",
-    instagram: "📸",
-    linkedin: "in",
+    facebook: <Facebook size={16} />,
+    twitter: <Twitter size={16} />,
+    youtube: <Youtube size={16} />,
+    instagram: <Instagram size={16} />,
+    linkedin: <Linkedin size={16} />,
   };
 
   return (
@@ -160,7 +172,7 @@ export default function Footer() {
             ].map((item) => (
               <li key={item.label}>
                 <Link href={item.href} className="text-gray-400 hover:text-white text-sm transition-colors flex items-center gap-1 group">
-                  <span className="text-amber-400 group-hover:translate-x-1 transition-transform">›</span>
+                  <ChevronRight size={14} className="text-amber-400 group-hover:translate-x-1 transition-transform" />
                   {item.label}
                 </Link>
               </li>
@@ -174,9 +186,7 @@ export default function Footer() {
           <div className="space-y-3">
             <div className="flex items-start gap-3">
               <div className="w-8 h-8 bg-[#1e3a8a] rounded-full flex items-center justify-center shrink-0 mt-0.5">
-                <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
-                </svg>
+                <MapPin size={16} className="text-white" />
               </div>
               <div>
                 <p className="text-gray-300 text-sm">{address}</p>
@@ -185,9 +195,7 @@ export default function Footer() {
             </div>
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 bg-[#1e3a8a] rounded-full flex items-center justify-center shrink-0">
-                <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
-                </svg>
+                <Phone size={16} className="text-white" />
               </div>
               <div>
                 <p className="text-gray-300 text-sm">7397236970 </p>
@@ -196,10 +204,7 @@ export default function Footer() {
             </div>
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 bg-[#1e3a8a] rounded-full flex items-center justify-center shrink-0">
-                <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
-                  <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
-                </svg>
+                <Mail size={16} className="text-white" />
               </div>
               <p className="text-gray-300 text-sm">mentormerits@gmail.com</p>
             </div>

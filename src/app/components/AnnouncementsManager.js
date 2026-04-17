@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
 import { apiUrl } from "@/lib/api";
+import { Megaphone, Edit, Trash2, Plus, X, Save, Loader2, CheckCircle2 } from "lucide-react";
 
 const EMPTY_FORM = {
   text: "",
@@ -45,7 +46,7 @@ export default function AnnouncementsManager() {
       const r = await fetch(apiUrl(url), { method, headers, body: JSON.stringify(form) });
       const d = await r.json();
       if (d.success) {
-        flash(isEdit ? "✅ Updated" : "✅ Created");
+        flash(isEdit ? "Updated" : "Created");
         setForm(EMPTY_FORM);
         setEditing(null);
         load();
@@ -59,7 +60,7 @@ export default function AnnouncementsManager() {
     const headers = { Authorization: `Bearer ${sessionStorage.getItem("admin_token")}` };
     const r = await fetch(apiUrl(`/api/announcements/${id}`), { method: "DELETE", headers });
     const d = await r.json();
-    if (d.success) { flash("🗑️ Deleted"); load(); }
+    if (d.success) { flash("Deleted"); load(); }
   };
 
   const startEdit = (item) => {
@@ -75,10 +76,12 @@ export default function AnnouncementsManager() {
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
         <div className="p-5 border-b border-gray-100 flex items-center justify-between">
           <h2 className="font-black text-gray-900 flex items-center gap-2">
-            {editing ? "✏️ Edit Announcement" : "➕ New Announcement"}
+            {editing ? <><Edit size={18} /> Edit Announcement</> : <><Plus size={18} /> New Announcement</>}
           </h2>
           {editing && (
-            <button onClick={() => { setEditing(null); setForm(EMPTY_FORM); }} className="text-gray-400 hover:text-gray-600 text-sm font-semibold">✕ Cancel</button>
+            <button onClick={() => { setEditing(null); setForm(EMPTY_FORM); }} className="text-gray-400 hover:text-gray-600 text-sm font-semibold flex items-center gap-1">
+              <X size={14} /> Cancel
+            </button>
           )}
         </div>
         <div className="p-5 space-y-4">
@@ -130,7 +133,7 @@ export default function AnnouncementsManager() {
             disabled={saving}
             className="bg-[#1e3a8a] hover:bg-[#1d4ed8] text-white px-6 py-2 rounded-xl font-bold text-sm transition-all shadow-md flex items-center gap-2"
           >
-            {saving ? "Saving..." : editing ? "Update" : "Create"}
+            {saving ? <><Loader2 size={16} className="animate-spin" /> Saving...</> : editing ? <><Save size={16} /> Update</> : <><Plus size={16} /> Create</>}
           </button>
         </div>
       </div>
@@ -159,8 +162,8 @@ export default function AnnouncementsManager() {
                   {item.link && <p className="text-xs text-blue-600 truncate">{item.link}</p>}
                 </div>
                 <div className="flex items-center gap-2">
-                  <button onClick={() => startEdit(item)} className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Edit">✏️</button>
-                  <button onClick={() => del(item._id)} className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Delete">🗑️</button>
+                  <button onClick={() => startEdit(item)} className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Edit"><Edit size={16} /></button>
+                  <button onClick={() => del(item._id)} className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Delete"><Trash2 size={16} /></button>
                 </div>
               </div>
             ))

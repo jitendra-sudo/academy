@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { apiUrl } from "@/lib/api";
+import { Play, Video, Clock, ArrowRight, User, X } from "lucide-react";
 
 function toEmbedUrl(url, type) {
   if (type === "youtube") {
@@ -25,14 +26,16 @@ function VideoModal({ lecture, onClose }) {
         <div className="flex items-start justify-between p-5 border-b border-gray-100">
           <div className="flex-1 pr-4">
             <h3 className="font-black text-gray-900 text-base line-clamp-2">{lecture.title}</h3>
-            <div className="flex flex-wrap gap-2 mt-1">
-              <span className="bg-blue-50 text-blue-700 text-xs font-bold px-2 py-0.5 rounded-full">{lecture.course}</span>
-              {lecture.subject && <span className="text-gray-400 text-xs">{lecture.subject}</span>}
-              {lecture.instructor && <span className="text-gray-400 text-xs">👤 {lecture.instructor}</span>}
-              {lecture.duration && <span className="text-gray-400 text-xs font-mono">⏱ {lecture.duration}</span>}
+            <div className="flex flex-wrap gap-3 mt-2">
+              <span className="bg-blue-50 text-[#1e3a8a] text-xs font-bold px-3 py-1 rounded-full">{lecture.course}</span>
+              {lecture.subject && <span className="text-gray-500 text-xs flex items-center gap-1">{lecture.subject}</span>}
+              {lecture.instructor && <span className="text-gray-500 text-xs flex items-center gap-1"><User size={12} /> {lecture.instructor}</span>}
+              {lecture.duration && <span className="text-gray-500 text-xs flex items-center gap-1 font-mono"><Clock size={12} /> {lecture.duration}</span>}
             </div>
           </div>
-          <button onClick={onClose} className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 text-lg shrink-0">✕</button>
+          <button onClick={onClose} className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 transition-colors shrink-0">
+            <X size={18} />
+          </button>
         </div>
         <div className="aspect-video bg-black">
           {lecture.videoType === "upload" ? (
@@ -74,15 +77,15 @@ export default function HomepageLectures() {
         <div className="max-w-7xl mx-auto px-4">
           {/* Section header */}
           <div className="text-center mb-12">
-            <div className="inline-flex items-center gap-2 bg-blue-50 border border-blue-100 rounded-full px-4 py-2 mb-4">
-              <span className="text-lg">🎬</span>
-              <span className="text-[#1e3a8a] font-semibold text-sm">Free Video Lectures</span>
+            <div className="inline-flex items-center gap-2 bg-[#1e3a8a]/5 text-[#1e3a8a] px-4 py-2 rounded-full mb-4">
+              <Video size={18} fill="currentColor" className="opacity-80" />
+              <span className="font-bold text-sm tracking-tight">Free Video Lectures</span>
             </div>
             <h2 className="text-3xl md:text-4xl font-black text-gray-900 mb-3">
               Learn From Expert <span className="text-[#1e3a8a]">UPSC Faculty</span>
             </h2>
-            <p className="text-gray-500 max-w-xl mx-auto">
-              Access free video lectures on all UPSC subjects — History, Polity, Economy, Current Affairs, Ethics and more.
+            <p className="text-gray-500 max-w-xl mx-auto text-base leading-relaxed">
+              Access curated video lectures on History, Polity, Economy, Current Affairs, and more — completely free.
             </p>
           </div>
 
@@ -100,47 +103,58 @@ export default function HomepageLectures() {
               ))}
             </div>
           ) : (
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {lectures.map((lec) => (
                 <div
                   key={lec._id || lec.id}
-                  className="group bg-white rounded-2xl overflow-hidden border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer"
+                  className="group bg-white rounded-3xl overflow-hidden border border-gray-100/80 hover:shadow-2xl hoverShadow-blue transition-all duration-500 cursor-pointer"
                   onClick={() => setPlaying(lec)}
                 >
                   {/* Thumbnail */}
                   <div className="relative aspect-video bg-gradient-to-br from-[#0f172a] to-[#1e3a8a] overflow-hidden">
                     {lec.thumbnailUrl ? (
-                      <img src={lec.thumbnailUrl} alt={lec.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                      <img src={lec.thumbnailUrl} alt={lec.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center text-5xl">🎬</div>
+                      <div className="w-full h-full flex items-center justify-center text-white/20">
+                        <Video size={48} />
+                      </div>
                     )}
                     {/* Play button overlay */}
-                    <div className="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                      <div className="w-14 h-14 bg-white/95 rounded-full flex items-center justify-center text-[#1e3a8a] shadow-2xl">
-                        <svg className="w-6 h-6 ml-1" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
+                    <div className="absolute inset-0 bg-[#1e3a8a]/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <div className="w-16 h-16 bg-white text-[#1e3a8a] rounded-full flex items-center justify-center shadow-2lx group-hover:scale-110 transition-transform duration-300">
+                        <Play size={24} fill="currentColor" className="ml-1" />
                       </div>
                     </div>
                     {/* Course badge */}
-                    <div className="absolute top-3 left-3">
-                      <span className="bg-[#1e3a8a]/90 text-white text-xs font-bold px-2.5 py-1 rounded-full">{lec.course}</span>
+                    <div className="absolute top-4 left-4">
+                      <span className="bg-[#1e3a8a]/90 backdrop-blur-md text-white text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-lg shadow-lg">
+                        {lec.course}
+                      </span>
                     </div>
-                    {lec.isFeatured && (
-                      <div className="absolute top-3 right-3">
-                        <span className="bg-amber-500/90 text-white text-xs font-bold px-2 py-1 rounded-full">⭐ Featured</span>
-                      </div>
-                    )}
                     {lec.duration && (
-                      <div className="absolute bottom-3 right-3">
-                        <span className="bg-black/70 text-white text-xs font-mono px-2 py-0.5 rounded-full">⏱ {lec.duration}</span>
+                      <div className="absolute bottom-4 right-4">
+                        <span className="bg-black/60 backdrop-blur-md text-white text-[10px] font-bold px-2.5 py-1 rounded-full flex items-center gap-1.5 border border-white/10">
+                          <Clock size={10} /> {lec.duration}
+                        </span>
                       </div>
                     )}
                   </div>
                   {/* Info */}
-                  <div className="p-4">
-                    <h3 className="font-bold text-gray-900 text-sm line-clamp-2 mb-2 group-hover:text-[#1e3a8a] transition-colors">{lec.title}</h3>
-                    <div className="flex items-center gap-2">
-                      {lec.subject && <span className="bg-blue-50 text-blue-700 text-xs px-2 py-0.5 rounded-full font-medium">{lec.subject}</span>}
-                      {lec.instructor && <span className="text-gray-400 text-xs">👤 {lec.instructor}</span>}
+                  <div className="p-6">
+                    <h3 className="font-bold text-gray-900 text-base line-clamp-2 mb-3 leading-tight group-hover:text-[#1e3a8a] transition-colors duration-300">
+                      {lec.title}
+                    </h3>
+                    <div className="flex items-center gap-4">
+                      {lec.instructor && (
+                        <span className="text-gray-400 text-xs flex items-center gap-1.5">
+                          <User size={12} /> {lec.instructor}
+                        </span>
+                      )}
+                      {lec.subject && (
+                        <span className="text-amber-600 font-bold text-[10px] uppercase tracking-wider">
+                          {lec.subject}
+                        </span>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -150,17 +164,17 @@ export default function HomepageLectures() {
 
           {/* View All CTA */}
           {lectures.length > 0 && (
-            <div className="text-center mt-10">
+            <div className="text-center mt-12">
               <Link
                 href="/lectures"
-                className="inline-flex items-center gap-2 bg-[#1e3a8a] hover:bg-[#1d4ed8] text-white font-bold px-8 py-3.5 rounded-2xl transition-all hover:shadow-lg hover:-translate-y-0.5"
+                className="shimmer-btn inline-flex items-center gap-3 text-white font-black px-10 py-4 rounded-2xl transition-all hover:shadow-2lx hoverShadow-blue hover:-translate-y-1"
               >
-                View All Lectures
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
+                Explore Full Lecture Library
+                <ArrowRight size={20} />
               </Link>
-              <p className="text-gray-400 text-sm mt-2">100% free · No signup required</p>
+              <p className="text-gray-400 text-xs mt-4 font-medium tracking-wide uppercase">
+                Free Educational Content · Quality Education for All
+              </p>
             </div>
           )}
         </div>

@@ -1,6 +1,31 @@
 "use client";
 import { useState, useEffect, useCallback, useRef } from "react";
 import { apiUrl } from "@/lib/api";
+import { 
+  Play, 
+  Folder, 
+  Cloud, 
+  Video, 
+  AlertTriangle, 
+  CheckCircle2, 
+  FileEdit, 
+  LayoutGrid, 
+  List, 
+  Search, 
+  Trash2, 
+  User, 
+  Clock, 
+  Settings, 
+  Plus, 
+  X, 
+  ExternalLink,
+  Shield,
+  Eye,
+  EyeOff,
+  Star as StarIcon,
+  ChevronRight,
+  Loader2
+} from "lucide-react";
 
 const COURSES = [
   "UPSC CSE", "UPSC IFS", "UPSC EPFO", "TNPSC Group I",
@@ -14,10 +39,10 @@ const SUBJECTS = [
 ];
 
 const VIDEO_TYPES = [
-  { value: "youtube", label: "YouTube Link", icon: "▶️" },
-  { value: "drive", label: "Google Drive Link", icon: "📁" },
-  { value: "upload", label: "Upload Video to R2", icon: "☁️" },
-  { value: "vimeo", label: "Vimeo Link", icon: "🎬" },
+  { value: "youtube", label: "YouTube Link", icon: <Play size={16} /> },
+  { value: "drive", label: "Google Drive Link", icon: <Folder size={16} /> },
+  { value: "upload", label: "Upload Video to R2", icon: <Cloud size={16} /> },
+  { value: "vimeo", label: "Vimeo Link", icon: <Video size={16} /> },
 ];
 
 // ─── Helper: extract YouTube thumbnail ────────────────────────────────────────
@@ -135,7 +160,9 @@ function VideoUploader({ onUploaded, uploadProgress, setUploadProgress }) {
         />
         {uploading ? (
           <div className="space-y-3">
-            <div className="text-3xl">☁️</div>
+             <div className="flex justify-center text-[#1e3a8a] animate-bounce">
+              <Cloud size={32} />
+            </div>
             <p className="text-sm font-semibold text-gray-700">Uploading to Cloudflare R2...</p>
             <div className="w-full bg-gray-100 rounded-full h-3 overflow-hidden">
               <div
@@ -147,25 +174,29 @@ function VideoUploader({ onUploaded, uploadProgress, setUploadProgress }) {
           </div>
         ) : result ? (
           <div className="space-y-2">
-            <div className="text-3xl">✅</div>
+            <div className="flex justify-center text-green-500">
+              <CheckCircle2 size={32} />
+            </div>
             <p className="text-sm font-bold text-green-700">Uploaded successfully!</p>
             <p className="text-xs text-gray-500">{result.name} · {result.sizeMB}MB</p>
             <button onClick={(e) => { e.stopPropagation(); setResult(null); }} className="text-xs text-blue-600 underline">Upload another</button>
           </div>
         ) : (
           <div className="space-y-2">
-            <div className="text-4xl">🎬</div>
+            <div className="flex justify-center text-gray-300">
+              <Video size={48} />
+            </div>
             <p className="text-sm font-semibold text-gray-700">Drag & drop your lecture video here</p>
             <p className="text-xs text-gray-400">MP4, WebM, MOV, AVI · Max 500MB</p>
-            <div className="inline-flex items-center gap-1 bg-[#1e3a8a] text-white text-xs px-3 py-1.5 rounded-lg font-semibold">
-              <span>Browse Files</span>
+            <div className="inline-flex items-center gap-2 bg-[#1e3a8a] text-white text-xs px-3 py-1.5 rounded-lg font-semibold">
+              <Plus size={14} /> <span>Browse Files</span>
             </div>
           </div>
         )}
       </div>
       {error && (
-        <div className="mt-2 text-xs text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
-          ⚠️ {error}
+        <div className="mt-2 text-xs text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2 flex items-center gap-2">
+          <AlertTriangle size={14} /> {error}
         </div>
       )}
     </div>
@@ -238,7 +269,7 @@ export default function LecturesManager() {
       });
       const d = await r.json();
       if (d.success) {
-        flash(editing ? "✅ Lecture updated!" : "✅ Lecture added!");
+        flash(editing ? "Lecture updated!" : "Lecture added!");
         setForm(EMPTY_FORM);
         setEditing(null);
         setActiveTab("list");
@@ -262,7 +293,7 @@ export default function LecturesManager() {
     const headers = { Authorization: `Bearer ${sessionStorage.getItem("admin_token")}` };
     const r = await fetch(apiUrl(`/api/lectures/${id}`), { method: "DELETE", headers });
     const d = await r.json();
-    if (d.success) { flash("🗑️ Deleted"); load(); }
+    if (d.success) { flash("Deleted"); load(); }
   };
 
   const togglePublic = async (lec) => {
@@ -287,9 +318,9 @@ export default function LecturesManager() {
       {/* Stats bar */}
       <div className="grid grid-cols-3 gap-4">
         {[
-          { l: "Total Lectures", v: lectures.length, c: "from-blue-500 to-blue-600", i: "🎬" },
-          { l: "Published", v: lectures.filter(l => l.isPublic).length, c: "from-green-500 to-green-600", i: "✅" },
-          { l: "Drafts", v: lectures.filter(l => !l.isPublic).length, c: "from-amber-500 to-amber-600", i: "📝" },
+          { l: "Total Lectures", v: lectures.length, c: "from-blue-500 to-blue-600", i: <Video size={18} className="text-white" /> },
+          { l: "Published", v: lectures.filter(l => l.isPublic).length, c: "from-green-500 to-green-600", i: <CheckCircle2 size={18} className="text-white" /> },
+          { l: "Drafts", v: lectures.filter(l => !l.isPublic).length, c: "from-amber-500 to-amber-600", i: <FileEdit size={18} className="text-white" /> },
         ].map((s) => (
           <div key={s.l} className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 flex items-center gap-3">
             <div className={`bg-gradient-to-br ${s.c} w-10 h-10 rounded-xl flex items-center justify-center text-xl shrink-0`}>{s.i}</div>
@@ -300,11 +331,11 @@ export default function LecturesManager() {
 
       {/* Tab switcher */}
       <div className="flex gap-2">
-        <button onClick={() => setActiveTab("list")} className={`px-5 py-2 rounded-xl font-bold text-sm transition-all ${activeTab === "list" ? "bg-[#1e3a8a] text-white" : "bg-white border border-gray-200 text-gray-600 hover:border-[#1e3a8a]"}`}>
-          📋 All Lectures
+        <button onClick={() => setActiveTab("list")} className={`px-5 py-2 rounded-xl font-bold text-sm transition-all flex items-center gap-2 ${activeTab === "list" ? "bg-[#1e3a8a] text-white shadow-lg" : "bg-white border border-gray-200 text-gray-600 hover:border-[#1e3a8a]"}`}>
+          <List size={16} /> All Lectures
         </button>
-        <button onClick={() => { setEditing(null); setForm(EMPTY_FORM); setActiveTab("add"); }} className={`px-5 py-2 rounded-xl font-bold text-sm transition-all ${activeTab === "add" ? "bg-[#1e3a8a] text-white" : "bg-white border border-gray-200 text-gray-600 hover:border-[#1e3a8a]"}`}>
-          ➕ {editing ? "Edit Lecture" : "Add Lecture"}
+        <button onClick={() => { setEditing(null); setForm(EMPTY_FORM); setActiveTab("add"); }} className={`px-5 py-2 rounded-xl font-bold text-sm transition-all flex items-center gap-2 ${activeTab === "add" ? "bg-[#1e3a8a] text-white shadow-lg" : "bg-white border border-gray-200 text-gray-600 hover:border-[#1e3a8a]"}`}>
+          <Plus size={16} /> {editing ? "Edit Lecture" : "Add Lecture"}
         </button>
       </div>
 
@@ -440,8 +471,8 @@ export default function LecturesManager() {
               <button onClick={save} disabled={saving}
                 className="bg-[#1e3a8a] hover:bg-[#1d4ed8] text-white px-6 py-2.5 rounded-xl font-bold text-sm transition-all disabled:opacity-60 flex items-center gap-2">
                 {saving
-                  ? <><svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>Saving...</>
-                  : editing ? "✏️ Update Lecture" : "➕ Add Lecture"}
+                  ? <><Loader2 className="w-4 h-4 animate-spin" />Saving...</>
+                  : editing ? <><FileEdit size={16} /> Update Lecture</> : <><Plus size={16} /> Add Lecture</>}
               </button>
               {editing && (
                 <button onClick={() => { setEditing(null); setForm(EMPTY_FORM); setActiveTab("list"); }} className="bg-gray-100 text-gray-700 px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-gray-200">
@@ -470,8 +501,8 @@ export default function LecturesManager() {
                 {SUBJECTS.map((s) => <option key={s}>{s}</option>)}
               </select>
               <div className="flex gap-1">
-                <button onClick={() => setView("grid")} className={`p-2 rounded-lg ${view === "grid" ? "bg-[#1e3a8a] text-white" : "bg-gray-100 text-gray-500"}`} title="Grid view">▦</button>
-                <button onClick={() => setView("list")} className={`p-2 rounded-lg ${view === "list" ? "bg-[#1e3a8a] text-white" : "bg-gray-100 text-gray-500"}`} title="List view">☰</button>
+                <button onClick={() => setView("grid")} className={`p-2 rounded-lg ${view === "grid" ? "bg-[#1e3a8a] text-white shadow-md font-bold" : "bg-gray-100 text-gray-500"}`} title="Grid view"><LayoutGrid size={18}/></button>
+                <button onClick={() => setView("list")} className={`p-2 rounded-lg ${view === "list" ? "bg-[#1e3a8a] text-white shadow-md font-bold" : "bg-gray-100 text-gray-500"}`} title="List view"><List size={18}/></button>
               </div>
             </div>
           </div>
@@ -494,19 +525,21 @@ export default function LecturesManager() {
                     </div>
                     {/* Badges */}
                     <div className="absolute top-2 left-2 flex gap-1">
-                      <span className={`px-2 py-0.5 text-xs font-bold rounded-full ${lec.isPublic ? "bg-green-500 text-white" : "bg-gray-500 text-white"}`}>
+                      <span className={`px-2 py-0.5 text-[10px] font-black uppercase rounded-lg border border-white/20 shadow-lg ${lec.isPublic ? "bg-green-500 text-white" : "bg-gray-500 text-white"}`}>
                         {lec.isPublic ? "Published" : "Draft"}
                       </span>
-                      {lec.isFeatured && <span className="px-2 py-0.5 text-xs font-bold rounded-full bg-amber-500 text-white">⭐ Featured</span>}
+                      {lec.isFeatured && <span className="px-2 py-0.5 text-[10px] font-black uppercase rounded-lg bg-amber-500 text-white flex items-center gap-1 shadow-lg"><StarIcon size={10} fill="currentColor" /> Featured</span>}
                     </div>
                     {/* Source badge */}
-                    <div className="absolute top-2 right-2">
-                      <span className="px-2 py-0.5 text-xs font-bold rounded-full bg-black/60 text-white capitalize">
-                        {lec.videoType === "upload" ? "☁️ R2" : lec.videoType === "youtube" ? "▶️ YT" : lec.videoType === "drive" ? "📁 Drive" : "🎬"}
+                    <div className="absolute top-3 right-3">
+                      <span className="px-2 py-0.5 text-[10px] font-black uppercase rounded-lg bg-black/40 backdrop-blur-md text-white border border-white/10 shadow-lg">
+                        {lec.videoType === "upload" ? "Cloud R2" : lec.videoType === "youtube" ? "YouTube" : lec.videoType === "drive" ? "Drive" : "Video"}
                       </span>
                     </div>
                     {lec.duration && (
-                      <div className="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-0.5 rounded-full font-mono">{lec.duration}</div>
+                      <div className="absolute bottom-3 right-3 bg-black/60 backdrop-blur-md text-white text-[10px] font-bold px-2 py-1 rounded-full flex items-center gap-1.5 border border-white/10">
+                        <Clock size={10} /> {lec.duration}
+                      </div>
                     )}
                   </div>
                   {/* Info */}
@@ -581,10 +614,10 @@ export default function LecturesManager() {
                         </button>
                       </td>
                       <td className="px-4 py-3">
-                        <div className="flex gap-2 items-center">
-                          <button onClick={() => setPreview(lec)} className="text-blue-500 text-xs font-bold hover:underline" title="Preview">▶️</button>
-                          <button onClick={() => startEdit(lec)} className="text-[#1e3a8a] text-xs font-bold hover:underline">Edit</button>
-                          <button onClick={() => deleteLec(lec._id || lec.id)} className="text-red-500 text-xs font-bold hover:underline">🗑️</button>
+                        <div className="flex gap-3 items-center">
+                          <button onClick={() => setPreview(lec)} className="text-[#1e3a8a] hover:opacity-75 transition-opacity" title="Preview"><Play size={16} fill="currentColor" /></button>
+                          <button onClick={() => startEdit(lec)} className="text-amber-600 hover:opacity-75 transition-opacity" title="Edit"><FileEdit size={16} /></button>
+                          <button onClick={() => deleteLec(lec._id || lec.id)} className="text-red-500 hover:opacity-75 transition-opacity" title="Delete"><Trash2 size={16} /></button>
                         </div>
                       </td>
                     </tr>

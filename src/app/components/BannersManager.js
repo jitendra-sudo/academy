@@ -2,6 +2,21 @@
 import { useState, useEffect, useCallback } from "react";
 import { apiUrl } from "@/lib/api";
 import ImageUploader from "./ImageUploader";
+import { 
+  Image as ImageIcon, 
+  Paintbrush, 
+  Plus, 
+  Trash2, 
+  Edit, 
+  Save, 
+  Loader2, 
+  CheckCircle2, 
+  AlertTriangle, 
+  X, 
+  ChevronRight,
+  Eye,
+  EyeOff
+} from "lucide-react";
 
 const POSITIONS = ["home", "courses", "achievers", "gallery", "about"];
 
@@ -90,7 +105,7 @@ export default function BannersManager() {
       const res = await fetch(url, { method, headers, body: JSON.stringify(form) });
       const d = await res.json();
       if (d.success) {
-        flash(isEdit ? "✅ Banner updated!" : "✅ Banner created!");
+        flash(isEdit ? "Banner updated!" : "Banner created!");
         cancel();
         load();
       } else {
@@ -109,7 +124,7 @@ export default function BannersManager() {
       const headers = { Authorization: `Bearer ${sessionStorage.getItem("admin_token")}` };
       const res = await fetch(apiUrl(`/api/banners/${banner._id || banner.id}`), { method: "DELETE", headers });
       const d = await res.json();
-      if (d.success) { flash("🗑️ Banner deleted"); load(); }
+      if (d.success) { flash("Banner deleted"); load(); }
       else flash(d.error || "Delete failed", "error");
     } catch {
       flash("Network error", "error");
@@ -137,9 +152,11 @@ export default function BannersManager() {
           {/* Header */}
           <div className="p-5 border-b border-gray-100 flex items-center justify-between">
             <h2 className="font-black text-gray-900 flex items-center gap-2">
-              🖼️ {isEdit ? `Edit Banner: ${editing.title}` : "Add New Banner"}
+              <ImageIcon size={20} className="text-[#1e3a8a]" /> {isEdit ? `Edit Banner: ${editing.title}` : "Add New Banner"}
             </h2>
-            <button onClick={cancel} className="text-gray-400 hover:text-gray-600 text-sm font-semibold">✕ Cancel</button>
+            <button onClick={cancel} className="text-gray-400 hover:text-gray-600 text-sm font-semibold flex items-center gap-1">
+              <X size={14} /> Cancel
+            </button>
           </div>
 
           <div className="p-5 space-y-6">
@@ -268,10 +285,9 @@ export default function BannersManager() {
               <button
                 onClick={save}
                 disabled={saving}
-                className="bg-[#1e3a8a] hover:bg-[#1d4ed8] text-white px-6 py-2.5 rounded-xl font-bold text-sm transition-all disabled:opacity-60 flex items-center gap-2"
+                className="bg-[#1e3a8a] hover:bg-[#1d4ed8] text-white px-6 py-2.5 rounded-xl font-bold text-sm transition-all shadow-md flex items-center gap-2 disabled:opacity-60"
               >
-                {saving && <svg className="w-3 h-3 animate-spin" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg>}
-                {saving ? "Saving..." : isEdit ? "Update Banner" : "Create Banner"}
+                {saving ? <><Loader2 size={16} className="animate-spin" /> Saving...</> : isEdit ? <><Save size={16} /> Update Banner</> : <><Plus size={16} /> Create Banner</>}
               </button>
               <button onClick={cancel} className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-6 py-2.5 rounded-xl font-bold text-sm transition-all">
                 Cancel
@@ -310,15 +326,15 @@ export default function BannersManager() {
         </div>
         <button
           onClick={openNew}
-          className="bg-[#1e3a8a] hover:bg-[#1d4ed8] text-white px-5 py-2 rounded-xl font-bold text-sm flex items-center gap-2 transition-all shrink-0"
+          className="bg-[#1e3a8a] hover:bg-[#1d4ed8] text-white px-5 py-2 rounded-xl font-bold text-sm flex items-center gap-2 transition-all shadow-md shrink-0"
         >
-          ➕ Add Banner
+          <Plus size={18} /> Add Banner
         </button>
       </div>
 
       {/* Info card */}
       <div className="bg-blue-50 border border-blue-100 rounded-xl px-4 py-3 flex items-start gap-3">
-        <span className="text-xl">🖼️</span>
+        <ImageIcon size={20} className="text-[#1e3a8a] mt-0.5" />
         <div>
           <p className="text-sm font-semibold text-blue-800">Hero Slider Banners</p>
           <p className="text-xs text-blue-600 mt-0.5">
@@ -330,21 +346,20 @@ export default function BannersManager() {
       {/* List */}
       {loading ? (
         <div className="text-center py-20 text-gray-400">
-          <svg className="w-6 h-6 animate-spin mx-auto mb-2 text-[#1e3a8a]" fill="none" viewBox="0 0 24 24">
-            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-          </svg>
+          <Loader2 size={32} className="animate-spin mx-auto mb-2 text-[#1e3a8a]" />
           Loading banners...
         </div>
       ) : displayed.length === 0 ? (
         <div className="bg-white border border-gray-100 rounded-2xl py-16 text-center shadow-sm">
-          <div className="text-5xl mb-4">🖼️</div>
+          <div className="flex justify-center mb-4 text-gray-200">
+            <ImageIcon size={64} />
+          </div>
           <p className="font-bold text-gray-700 mb-1">No banners yet</p>
           <p className="text-sm text-gray-400 mb-4">
             {filterPos === "all" ? "Create your first banner to display in the hero slider" : `No banners for "${filterPos}" position`}
           </p>
-          <button onClick={openNew} className="bg-[#1e3a8a] text-white px-5 py-2 rounded-xl font-bold text-sm hover:bg-[#1d4ed8]">
-            ➕ Add First Banner
+          <button onClick={openNew} className="bg-[#1e3a8a] text-white px-5 py-2 rounded-xl font-bold text-sm shadow-md hover:bg-[#1d4ed8]">
+            <Plus size={16} className="inline mr-2" /> Add First Banner
           </button>
         </div>
       ) : (
@@ -357,11 +372,11 @@ export default function BannersManager() {
             {[...displayed].sort((a, b) => (a.order ?? 0) - (b.order ?? 0)).map((banner) => (
               <div key={banner._id || banner.id} className="flex items-center gap-4 px-5 py-4 hover:bg-gray-50 transition-colors">
                 {/* Thumbnail */}
-                <div className="w-20 h-12 rounded-lg overflow-hidden bg-gradient-to-br from-[#1e3a8a] to-[#2563eb] shrink-0 flex items-center justify-center">
+                <div className="w-20 h-12 rounded-lg overflow-hidden bg-gradient-to-br from-[#1e3a8a] to-[#2563eb] shrink-0 flex items-center justify-center border border-gray-100">
                   {banner.imageUrl ? (
                     <img src={banner.imageUrl} alt={banner.title} className="w-full h-full object-cover" />
                   ) : (
-                    <span className="text-white text-2xl">🖼️</span>
+                    <ImageIcon size={24} className="text-white/50" />
                   )}
                 </div>
 
@@ -369,7 +384,7 @@ export default function BannersManager() {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
                     <span className="font-bold text-gray-900 text-sm truncate">{banner.title}</span>
-                    <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${(banner.isPublished || banner.active) ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-500"
+                    <span className={`text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-lg ${(banner.isPublished || banner.active) ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-500"
                       }`}>
                       {(banner.isPublished || banner.active) ? "Active" : "Inactive"}
                     </span>
@@ -383,9 +398,9 @@ export default function BannersManager() {
                 </div>
 
                 {/* Actions */}
-                <div className="flex gap-3 shrink-0">
-                  <button onClick={() => openEdit(banner)} className="text-[#1e3a8a] text-xs font-bold hover:underline">✏️ Edit</button>
-                  <button onClick={() => deleteBanner(banner)} className="text-red-500 text-xs font-bold hover:underline">🗑️ Delete</button>
+                <div className="flex gap-4 shrink-0 px-2">
+                  <button onClick={() => openEdit(banner)} className="text-[#1e3a8a] hover:opacity-75 transition-opacity" title="Edit"><Edit size={16} /></button>
+                  <button onClick={() => deleteBanner(banner)} className="text-red-500 hover:opacity-75 transition-opacity" title="Delete"><Trash2 size={16} /></button>
                 </div>
               </div>
             ))}
