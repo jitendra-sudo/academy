@@ -36,7 +36,7 @@ const MentorshipValue = () => {
     },
     {
       title: "Recommended Sources + Smart Scheduling",
-      desc: "Laxmikant, NCERTs, Spectrum, Shankar, and more - all mapped to your prep stage.",
+      desc: "lakshmikanth, NCERTs, Spectrum, shankar Ganesh, and more- all mapped to your preparation stage",
       bg: "bg-green-100",
       border: "border-green-200",
     },

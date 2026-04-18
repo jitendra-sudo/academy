@@ -75,11 +75,10 @@ export default function AchievementsSection() {
               <Star size={16} fill="currentColor" /> Our Rank Holders
             </div>
             <h2 className="text-3xl md:text-4xl font-black text-white mb-4">
-              Achievers From Our Academy
+              Our Future Achievers Top Line
             </h2>
             <p className="text-blue-200 max-w-xl mx-auto">
-              Our students have consistently secured top ranks in UPSC civil services examinations.
-            </p>
+              Our first batch is being prepared with strong fundamentals and focused mentorship to shape future rank holders.            </p>
           </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-10">
@@ -91,7 +90,7 @@ export default function AchievementsSection() {
                     <div className="flex justify-center mb-3 text-amber-400">
                       <Trophy size={48} />
                     </div>
-                    <p>Achiever profiles will appear here once added.</p>
+                    <p>Success stories will be featured here as our students achieve milestones.</p>
                   </div>
                 )
                 : achievers.map((a) => (

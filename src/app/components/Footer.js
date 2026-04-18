@@ -2,17 +2,17 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { apiUrl } from "@/lib/api";
-import { 
-  Globe as Facebook, 
-  Send as Twitter, 
-  Play as Youtube, 
-  Camera as Instagram, 
-  Briefcase as Linkedin, 
-  MapPin, 
-  Phone, 
-  Mail, 
+import {
+  Globe as Facebook,
+  Send as Twitter,
+  Play as Youtube,
+  Camera as Instagram,
+  Briefcase as Linkedin,
+  MapPin,
+  Phone,
+  Mail,
   MessageCircle,
-  ChevronRight 
+  ChevronRight
 } from "lucide-react";
 
 export default function Footer() {
@@ -60,25 +60,6 @@ export default function Footer() {
 
   return (
     <footer className="bg-[#0f172a] text-white">
-      {/* Stats Bar */}
-      <div className="bg-gradient-to-r from-[#1e3a8a] to-[#1d4ed8] py-10">
-        <div className="max-w-7xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-          {[
-            { number: "29+", label: "IAS/IPS/IFS Selections" },
-            { number: "10", label: "UPSC CSE 2025 Selections" },
-            { number: "7", label: "TNPSC Group I Selections" },
-            { number: "10+", label: "Years of Excellence" },
-          ].map((stat) => (
-            <div key={stat.label} className="group">
-              <div className="text-3xl md:text-4xl font-black text-amber-400 group-hover:scale-110 transition-transform">
-                {stat.number}
-              </div>
-              <div className="text-blue-200 text-sm mt-1">{stat.label}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-
       {/* Main Footer */}
       <div className="max-w-7xl mx-auto px-4 py-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
         {/* Brand */}
@@ -99,8 +80,8 @@ export default function Footer() {
             </div>
           </div>
           <p className="text-gray-400 text-sm leading-relaxed mb-4">
-            India&apos;s premier UPSC coaching institute with 10+ years
-            of excellence, producing toppers and meriting success consistently.
+            Built on purpose. Driven by discipline.
+            Shaping your journey to civil services.
           </p>
           {socialLinks.length > 0 && (
             <div className="flex gap-3">

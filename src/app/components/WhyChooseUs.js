@@ -16,7 +16,7 @@ const WhyChooseUs = () => {
   const cards = [
     {
       title: "Consistently Producing Toppers",
-      desc: "Since 2022, our structured methodology has produced thousands of civil service officers.",
+      desc: "Consistently Producing Merit Since 2023: At Mentor Merits Academy, we build success through structured mentoring and strategic preparation. Since 2023, we have shaped disciplined, confident aspirants ready for UPSC. Our first batch steps into the 2026 Prelims with clarity and determination.",
       icon: <Trophy size={28} />,
       image: "/classroom/classroom1.png",
     },

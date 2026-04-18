@@ -76,7 +76,6 @@ const AboutSection = () => {
               <div className="grid gap-4">
                 {[
                   "Comprehensive coaching for UPSC, TNPSC, TNUSRB, BANKING, RRB, SSC, RBI, NABARD, SEBI, & PSU exams",
-                  "Structured programs like “College to Collector” initiative",
                   "Regular tests, MCQs, and current affairs sessions",
                   "Personal mentoring and doubt-clearing support",
                   "Focus on answer writing and analytical thinking"
